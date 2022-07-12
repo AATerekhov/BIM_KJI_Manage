@@ -1,0 +1,53 @@
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\BIM_KJI_Manage.exe.config
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\BIM_KJI_Manage.exe
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\BIM_KJI_Manage.pdb
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\Fusion.dll
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_Excel.dll
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\Fusion.xml
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCProjectObject.pdb
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_RevisionDrawingLib.pdb
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\Users_KM.pdb
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_Excel.pdb
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csprojAssemblyReference.cache
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.exe.config
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\Properties\DesignTimeResources.baml
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\MainWindow.g.cs
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage_MarkupCompile.cache
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage_MarkupCompile.lref
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\MainWindow.baml
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.g.resources
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csproj.CoreCompileInputs.cache
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csproj.CopyComplete
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.exe
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.pdb
+F:\MyPrograms\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_RevisionDrawingLib.dll
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\GeneratedInternalTypeHelper.g.cs
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\TreeViewMain\AlbumKJIControlView.g.cs
+F:\MyPrograms\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\TreeViewMain\AlbumKJIControlView.baml
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\BIM_KJI_Manage.exe.config
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\BIM_KJI_Manage.exe
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\BIM_KJI_Manage.pdb
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\Fusion.dll
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_RevisionDrawingLib.dll
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_Excel.dll
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\Fusion.xml
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCProjectObject.pdb
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\Users_KM.pdb
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_RevisionDrawingLib.pdb
+G:\My Drive\API_Solutions\BIM_KJI_Manage\BIM_KJI_Manage\bin\Debug\RCP_Excel.pdb
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csproj.AssemblyReference.cache
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csproj.SuggestedBindingRedirects.cache
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.exe.config
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\Properties\DesignTimeResources.baml
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\MainWindow.g.cs
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\TreeViewMain\AlbumKJIControlView.g.cs
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\GeneratedInternalTypeHelper.g.cs
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage_MarkupCompile.cache
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage_MarkupCompile.lref
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\MainWindow.baml
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\TreeViewMain\AlbumKJIControlView.baml
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.g.resources
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csproj.CoreCompileInputs.cache
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.csproj.CopyComplete
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.exe
+G:\My Drive\API_Solutions\BIM_KJI_Manage\ObjDir\2019\BIM_KJI_Manage\BIM_KJI_Manage.pdb

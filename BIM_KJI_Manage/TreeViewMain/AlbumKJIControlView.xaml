@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="BIM_KJI_Manage.TreeViewMain.AlbumKJIControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.trimble.com/fusion"
+             xmlns:local="clr-namespace:BIM_KJI_Manage.TreeViewMain"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400" Name="albumTreeView">
+    <DockPanel>
+        <StackPanel>
+            <Button  Height="30" Command="{ui:CommandHandler TestModule}" >Дебагинг</Button>
+        </StackPanel>
+        <TreeView ItemsSource="{Binding Albums}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="FontWeight" Value="Normal" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.Resources>
+
+                <DataTemplate DataType="{x:Type local:AlbumViewModel}">
+                    <StackPanel Orientation="Horizontal">                        
+                        <TextBlock Text="{Binding AlbumName}" />
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </DockPanel>
+</UserControl>
