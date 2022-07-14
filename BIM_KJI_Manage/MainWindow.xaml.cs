@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BIM_KJI_Manage
+namespace Propotype_Manage
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

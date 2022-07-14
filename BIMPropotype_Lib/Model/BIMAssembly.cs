@@ -16,7 +16,9 @@ namespace BIMPropotype_Lib.Model
         }
         public BIMAssembly(List<Beam> beams)
         {
+            //На текущий момент происходит сохранение только балок.
             this.Beams = beams;
+
             InBeamAssemblies = new List<BIMAssembly>();
         }
 

@@ -13,7 +13,7 @@ using BIMPropotype_Lib.Model;
 
 
 
-namespace BIM_KJI_Manage
+namespace Propotype_Manage
 {
     using System.Collections;
     using System.Collections.ObjectModel;

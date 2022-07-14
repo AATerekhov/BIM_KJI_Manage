@@ -1,5 +1,5 @@
 ﻿
-namespace BIM_KJI_Manage
+namespace Propotype_Manage
 {
     using System;
     using System.Windows.Input;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Tekla.Structures.Model;
 
 
-namespace BIM_KJI_Manage.Model
+namespace Propotype_Manage.Model
 {
     public class ModelPartInfo
     {
