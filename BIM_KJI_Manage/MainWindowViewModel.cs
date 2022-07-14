@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 using TSM=Tekla.Structures.Model;
 using UI = Tekla.Structures.Model.UI;
 using TSMO = Tekla.Structures.Model.Operations;
-using RCProjectObject.Controller;
-using RCProjectObject.Model;
-using Users_KM.Model;
-using Users_KM.Controller;
-using BIM_KJI_Manage.TreeViewMain;
-using BIM_KJI_Manage.DataModel;
 using Tekla.Structures;
 using Tekla.Structures.Model.Operations;
 using BIMPropotype_Lib.Controller;
@@ -91,32 +85,6 @@ namespace BIM_KJI_Manage
 
         #endregion //Prototype
 
-        #region Свойства Альбомов.
-
-        private Tom inTom;
-        private List<Album> inListAlbums;
-        private Album inAlbum;
-
-        public Tom InTom
-        {
-            get { return this.inTom; }
-            private set { this.SetValue(ref this.inTom, value); }
-        }
-
-        public List<Album> InListAlbums
-        {
-            get { return this.inListAlbums; }
-            private set { this.SetValue(ref this.inListAlbums, value); }
-        }
-
-        public Album InAlbum
-        {
-            get { return this.inAlbum; }
-            set {this.SetValue(ref this.inAlbum, value);}
-        }
-        #endregion
-
-
         #region Property
         private string _prefixAssembly;
 
@@ -169,16 +137,6 @@ namespace BIM_KJI_Manage
                 InModel = new TSM.Model();
                 this.ModelName = InModel.GetInfo().ModelName;
 
-                InTom = new Tom();
-                InTom.DeserializeXML();
-                if (InTom.ListAlbums != null)
-                {
-                    InListAlbums = InTom.ListAlbums;
-                    if (InListAlbums.Count != 0)
-                    {
-                        InAlbum = InListAlbums[0];
-                    }
-                }
                 PrototypeList = new ObservableCollection<PrototypeFile>();
 
                 PrototypeWorker.GetModelPrototype(InModel, PrototypeList);

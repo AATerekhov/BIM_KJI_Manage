@@ -28,18 +28,7 @@ namespace BIM_KJI_Manage
         public ViewModel CreateMainWindow(object parameter)
         {
             return new MainWindowViewModel();
-        }
-
-        /// <summary>
-        /// Создает главное окно.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        /// <returns>Модель просмотра главного окна.</returns>
-        [PublishedView("Example.TreeViewMain.AlbumKJIControl")]
-        public ViewModel CreateAlbumView(object parameter)
-        {
-            return new TreeViewMain.AlbumKJIControlViewModel();
-        }
+        }              
 
 
 

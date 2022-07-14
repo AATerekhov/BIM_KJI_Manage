@@ -53,16 +53,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BIMPropotype_Lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\BIMPropotype_Lib\bin\Debug\BIMPropotype_Lib.dll</HintPath>
-    </Reference>
     <Reference Include="Fusion, Version=3.0.0.0, Culture=neutral, PublicKeyToken=175f9db2faa2c710, processorArchitecture=MSIL">
-      <HintPath>..\packages\TeklaFusion.3.5.250\lib\net451\Fusion.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RCProjectObject">
-      <HintPath>..\..\Fusion\MyTeklaExtensionSample\RCProjectObject\bin\Debug\RCProjectObject.dll</HintPath>
+      <HintPath>..\packages\TeklaFusion.3.5.278\lib\net451\Fusion.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -111,36 +103,22 @@
       <HintPath>..\packages\TeklaOpenAPI.2021.0.1\lib\Tekla.Structures.Plugins.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Users_KM">
-      <HintPath>..\..\Fusion\MyTeklaExtensionSample\RCProjectObject\bin\Debug\Users_KM.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ModelPartInfo.cs" />
-    <Compile Include="TreeViewMain\AlbumKJIControlView.xaml.cs">
-      <DependentUpon>AlbumKJIControlView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TreeViewMain\AlbumViewModel.cs" />
-    <Compile Include="TreeViewMain\AlbumKJIControlViewModel.cs" />
-    <Compile Include="TreeViewMain\TreeViewItemViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="DataModel\DataTom.cs" />
     <Compile Include="ExampleApp.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Properties\DesignTimeResources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TreeViewMain\AlbumKJIControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,6 +150,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BIMPropotype_Lib\BIMPropotype_Lib.csproj">
+      <Project>{c3d95443-f82c-4470-9011-e838dd774721}</Project>
+      <Name>BIMPropotype_Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

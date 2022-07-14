@@ -10,10 +10,8 @@ namespace BIM_KJI_Manage.Model
 {
     public class ModelPartInfo
     {
-
         public ModelObject InObject { get; set; }
         public  ModelObject.ModelObjectEnum TeklaType { get; set; }
-
         public double Weight { get; set; }
         public int Layout { get; set; }
         public int Number { get; set; }
@@ -49,10 +47,5 @@ namespace BIM_KJI_Manage.Model
                 Layout = layput;                
             }
         }
-
-
-
-
-
     }
 }
