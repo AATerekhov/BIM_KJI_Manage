@@ -6,39 +6,93 @@ using System.Linq;
 
 namespace BIMPropotype_Lib.Model
 {
-    public class BIMPart
+    public abstract class BIMPart
     {
         public BIMPart() { }
-        public BIMPart(Part inPart)
+        public BIMPart(Beam inPart)
         {
             InPart = inPart;
             Rebars = GetRebar();
+            if(CheckMainPart(inPart)) PutInAssembly = GetPutInAssembly();
         }
-        public Part InPart { get; set; }
+        public Beam InPart { get; set; }
 
-        public List<Reinforcement> Rebars { get; set; }
+        public List<SingleRebar> Rebars { get; set; }
+
+        public List<BIMPart> PutInAssembly { get; set; }
 
         public IEnumerator GetChildren() 
         {
             return  InPart.GetChildren().GetEnumerator();
         }
 
-        public List<Reinforcement> GetRebar() 
+        public virtual List<SingleRebar> GetRebar() 
         {
             var partEnum = this.GetChildren();
-            List<Reinforcement> rebars = new List<Reinforcement>();
+            List<SingleRebar> rebars = new List<SingleRebar>();
             while (partEnum.MoveNext())
             {
-                if (partEnum.Current is Reinforcement reinforcement) rebars.Add(reinforcement);
+                if (partEnum.Current is SingleRebar reinforcement) rebars.Add(reinforcement);
             }
 
             return rebars;
         }
-        public void Insert() 
+        public virtual List<BIMPart> GetPutInAssembly()
         {
-            InPart.Insert();
+            var mainAssembly = InPart.GetAssembly();
+            var partEnumChildren = mainAssembly.GetSubAssemblies();
+
+            List<BIMPart> components = new List<BIMPart>();
+
+            foreach (var assembly in partEnumChildren) 
+            {
+                if (assembly is Assembly assemlyChild)
+                {
+                    if (assemlyChild.GetMainPart() is Beam beam)
+                    {
+                        components.Add(new BIMBeam(beam));
+                    }
+                }
+
+            }
+
+            return components;
         }
 
+        private bool CheckMainPart(Part part) 
+        {
+            int main = 0;
+            part.GetReportProperty("MAIN_PART", ref main);
+            if (main!= 0) return true;
+            else return false;
+        }
 
+        //TODO: Рассмотерть возможность работы с группами через разложение и обьединение в простые стержни.
+        public virtual void Insert() 
+        {
+            InPart.Insert();//При вставле деталь получает новый GUID.
+            
+            foreach (var rebar in Rebars)
+            {
+                rebar.Father = InPart;
+                rebar.Insert();
+            }
+            if (PutInAssembly != null)
+            {
+                if (PutInAssembly.Count != 0)
+                {
+                    var mainAssembly = InPart.GetAssembly();
+                    foreach (var item in PutInAssembly)
+                    {
+                        item.Insert();
+                        var hisAssembly = item.InPart.GetAssembly();
+                        mainAssembly.Add(hisAssembly);
+                    }
+                    mainAssembly.Modify();
+                }
+                    
+            }
+             
+        }
     }
 }

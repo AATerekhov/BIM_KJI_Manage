@@ -151,17 +151,6 @@ namespace BIMPropotype_Lib.Controller
             return beams;
         }
 
-        //private Beam TrancformBeam(Beam beam, Matrix matrix, CoordinateSystem mainCS)
-        //{
-        //    var vbeamCS = beam.GetCoordinateSystem();
-        //    vbeamCS.Origin = mainCS.Origin;
-        //    var LocalMatrix = MatrixFactory.ByCoordinateSystems(mainCS, vbeamCS);
-
-        //    beam.StartPoint = matrix.Transform(LocalMatrix.Transform(beam.StartPoint));
-        //    beam.EndPoint = matrix.Transform(LocalMatrix.Transform(beam.EndPoint));
-        //    return beam;
-        //}
-
         /// <summary>
         /// Матрица трансформации CS Part перенесенная в StartPoint
         /// </summary>
