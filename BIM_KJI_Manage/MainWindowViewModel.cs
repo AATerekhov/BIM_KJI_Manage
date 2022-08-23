@@ -326,7 +326,6 @@ namespace Propotype_Manage
                 TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
                 if (modelEnum.GetSize() == 1)
                 {
-                    ArrayList listConnection = new ArrayList();
                     while (modelEnum.MoveNext())
                     {
                         if (modelEnum.Current is TSM.Assembly assemblyModel)

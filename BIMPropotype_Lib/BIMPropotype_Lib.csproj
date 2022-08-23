@@ -83,6 +83,8 @@
     <Compile Include="Controller\BeamLoader.cs" />
     <Compile Include="Controller\PrototypeWorker.cs" />
     <Compile Include="Model\BIMAssembly.cs" />
+    <Compile Include="Model\BIMBeam.cs" />
+    <Compile Include="Model\BIMPart.cs" />
     <Compile Include="Model\PrototypeFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

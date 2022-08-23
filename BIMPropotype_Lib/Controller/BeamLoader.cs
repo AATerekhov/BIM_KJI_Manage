@@ -18,14 +18,9 @@ namespace BIMPropotype_Lib.Controller
     public class BeamLoader
     {
         public BIMAssembly InBIMAssembly { get; set; }
-
-
         public string Path { get; set; }
 
-        public BeamLoader()
-        {
-
-        }
+        public BeamLoader() { }
         public BeamLoader(TSM.Assembly InAssembly)
         {
             var SecondaryBeams = new List<Beam>();
@@ -37,33 +32,16 @@ namespace BIMPropotype_Lib.Controller
             }
 
             var ArreyChildren = InAssembly.GetSecondaries();
-            var ArreyAssemblwies = InAssembly.GetSubAssemblies();
 
             foreach (var child in ArreyChildren) 
             {
-
                 if (child is Beam beamChild)
                 {
                     SecondaryBeams.Add(beamChild);
                 }
             }
 
-            foreach (var subAssembly in ArreyAssemblwies)
-            {
-                if (subAssembly is Assembly assembly)
-                {
-                    //TODO: Цикл в цикле, сделать отдельный метод, подвтор кода выше...
-                }
-            }
-
-            if (ArreyAssemblwies.Count == 0)
-            {
-                InBIMAssembly = new BIMAssembly(GetAllBeams(MainPart, SecondaryBeams));
-            }
-            else
-            {
-               
-            }    
+            InBIMAssembly = new BIMAssembly(GetAllBeams(MainPart, SecondaryBeams));
 
             SerializeXML();
         }
@@ -90,10 +68,12 @@ namespace BIMPropotype_Lib.Controller
 
             if (Path != string.Empty)
             {
-                File.Delete($"{Path}\\RCP_Data\\Prototype_{InBIMAssembly.Beams[0].AssemblyNumber.Prefix}.xml");
+                string path = $"{Path}\\RCP_Data\\Prototype_{InBIMAssembly.Elements[0].InPart.AssemblyNumber.Prefix}.xml";
+               if (File.Exists(path)) File.Delete(path);
+
                 XmlSerializer formatter = new XmlSerializer(typeof(BIMAssembly));
 
-                using (FileStream fs = new FileStream($"{Path}\\RCP_Data\\Prototype_{InBIMAssembly.Beams[0].AssemblyNumber.Prefix}.xml", FileMode.OpenOrCreate))
+                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
                 {
                     formatter.Serialize(fs, InBIMAssembly);
                     fs.Close();

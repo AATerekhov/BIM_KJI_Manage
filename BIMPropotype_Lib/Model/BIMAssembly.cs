@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Tekla.Structures.Model;
+using System.Linq;
 
 
 namespace BIMPropotype_Lib.Model
@@ -8,31 +9,19 @@ namespace BIMPropotype_Lib.Model
     [Serializable]
     public class BIMAssembly
     {
-        public List<Beam> Beams { get; set; }
-        public List<BIMAssembly> InBeamAssemblies { get; set; }
-        public BIMAssembly()
-        {
+        public List<BIMPart> Elements { get; set; }
+        public BIMAssembly() { }
 
-        }
         public BIMAssembly(List<Beam> beams)
         {
-            //На текущий момент происходит сохранение только балок.
-            this.Beams = beams;
-
-            InBeamAssemblies = new List<BIMAssembly>();
+            this.Elements = new List<BIMPart>(from beam in beams select new BIMBeam(beam));
         }
 
-        public BIMAssembly(List<Beam> beams, List<BIMAssembly> bIMAssemblies)
+        public void Insert()
         {
-            this.Beams = beams;
-            InBeamAssemblies = bIMAssemblies;
-        }
-
-        public void Insert() 
-        {
-            foreach (var beam in Beams)
+            foreach (var element in Elements)
             {
-                beam.Insert();
+                element.Insert();
             }
         }
     }
