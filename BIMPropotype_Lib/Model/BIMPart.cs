@@ -6,93 +6,120 @@ using System.Linq;
 
 namespace BIMPropotype_Lib.Model
 {
-    public abstract class BIMPart
+    public class BIMPart
     {
         public BIMPart() { }
         public BIMPart(Beam inPart)
         {
             InPart = inPart;
-            Rebars = GetRebar();
-            if(CheckMainPart(inPart)) PutInAssembly = GetPutInAssembly();
+            Rebars = GetRebar(InPart.GetReinforcements());
+            Pruning = new BIMPruning(InPart.GetBooleans());
+            if (CheckMainPart(inPart)) GetPutInAssembly(InPart);
         }
         public Beam InPart { get; set; }
-
         public List<SingleRebar> Rebars { get; set; }
+        public List<BIMPart> PutInAssemblyBeam { get; set; }
+        public List<BIMPlate> PutInAssemblyPlate { get; set; }
+        public List<BooleanPart> Antidetails { get; set; }
+        public BIMPruning Pruning { get; set; }
 
-        public List<BIMPart> PutInAssembly { get; set; }
+        //TODO: Рассмотерть возможность работы с группами через разложение и объединение в простые стержни.
 
-        public IEnumerator GetChildren() 
+        public virtual void Insert() => Insert(this.InPart);
+        public void Insert(Part  part) 
         {
-            return  InPart.GetChildren().GetEnumerator();
-        }
+            part.Insert();//При вставке деталь получает новый GUID.
+            Pruning.Insert(part);
 
-        public virtual List<SingleRebar> GetRebar() 
-        {
-            var partEnum = this.GetChildren();
-            List<SingleRebar> rebars = new List<SingleRebar>();
-            while (partEnum.MoveNext())
+            foreach (var rebar in Rebars)//Вставка арматуры в деталь.
             {
-                if (partEnum.Current is SingleRebar reinforcement) rebars.Add(reinforcement);
-            }
-
-            return rebars;
-        }
-        public virtual List<BIMPart> GetPutInAssembly()
-        {
-            var mainAssembly = InPart.GetAssembly();
-            var partEnumChildren = mainAssembly.GetSubAssemblies();
-
-            List<BIMPart> components = new List<BIMPart>();
-
-            foreach (var assembly in partEnumChildren) 
-            {
-                if (assembly is Assembly assemlyChild)
-                {
-                    if (assemlyChild.GetMainPart() is Beam beam)
-                    {
-                        components.Add(new BIMBeam(beam));
-                    }
-                }
-
-            }
-
-            return components;
-        }
-
-        private bool CheckMainPart(Part part) 
-        {
-            int main = 0;
-            part.GetReportProperty("MAIN_PART", ref main);
-            if (main!= 0) return true;
-            else return false;
-        }
-
-        //TODO: Рассмотерть возможность работы с группами через разложение и обьединение в простые стержни.
-        public virtual void Insert() 
-        {
-            InPart.Insert();//При вставле деталь получает новый GUID.
-            
-            foreach (var rebar in Rebars)
-            {
-                rebar.Father = InPart;
+                rebar.Father = part;
                 rebar.Insert();
             }
-            if (PutInAssembly != null)
+
+            if (PutInAssemblyBeam != null || PutInAssemblyPlate != null)
             {
-                if (PutInAssembly.Count != 0)
+                var mainAssembly = part.GetAssembly();
+
+                if (PutInAssemblyBeam.Count != 0)//Если есть подсборки, то вставка.
                 {
-                    var mainAssembly = InPart.GetAssembly();
-                    foreach (var item in PutInAssembly)
+                    foreach (var item in PutInAssemblyBeam)
                     {
                         item.Insert();
                         var hisAssembly = item.InPart.GetAssembly();
                         mainAssembly.Add(hisAssembly);
                     }
-                    mainAssembly.Modify();
                 }
-                    
+
+                if (PutInAssemblyPlate.Count != 0)//Если есть подсборки, то вставка.
+                {
+                    foreach (var item in PutInAssemblyPlate)
+                    {
+                        item.Insert();
+                        var hisAssembly = item.ContourPlate.GetAssembly();
+                        mainAssembly.Add(hisAssembly);
+                    };
+                }
+
+                mainAssembly.Modify();
             }
-             
+
+            
         }
+
+        #region internal method
+        internal virtual List<SingleRebar> GetRebar(ModelObjectEnumerator modelObjectEnumerator)
+        {
+            List<SingleRebar> rebars = new List<SingleRebar>();
+            while (modelObjectEnumerator.MoveNext())
+            {
+                if (modelObjectEnumerator.Current is SingleRebar reinforcement) rebars.Add(reinforcement);
+            }
+            return rebars;
+        }
+
+
+        internal virtual void GetPutInAssembly(Part part)
+        {
+            var mainAssembly = part.GetAssembly();
+            var partEnumChildren = mainAssembly.GetSubAssemblies();
+
+            PutInAssemblyBeam = new List<BIMPart>();
+            PutInAssemblyPlate = new List<BIMPlate>();
+
+            foreach (var assembly in partEnumChildren)
+            {
+                if (assembly is Assembly assemlyChild)
+                {
+                    var mainPart = assemlyChild.GetMainPart();
+                    if (mainPart is Beam beam)
+                    {
+                        PutInAssemblyBeam.Add(new BIMBeam(beam));
+                        continue;
+                    }
+                    if (mainPart is ContourPlate plate)
+                    {
+                        PutInAssemblyPlate.Add(new BIMPlate(plate));
+                    }
+                }
+            }
+        }
+        #endregion//internal method
+
+        #region private method
+        /// <summary>
+        /// Проверка детали на гравность.
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
+        private bool CheckMainPart(Part part)
+        {
+            int main = 0;
+            part.GetReportProperty("MAIN_PART", ref main);
+            if (main != 0) return true;
+            else return false;
+        }
+        #endregion//private method
+
     }
 }

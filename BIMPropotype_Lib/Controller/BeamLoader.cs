@@ -19,23 +19,22 @@ namespace BIMPropotype_Lib.Controller
     {
         public BIMAssembly InBIMAssembly { get; set; }
         public string Path { get; set; }
-
         public BeamLoader() { }
         public BeamLoader(TSM.Assembly InAssembly)
         {
-            var SecondaryBeams = new List<Beam>();
-            Beam MainPart = null;
-
-            if (InAssembly.GetMainPart() is Beam beam)
+            var SecondaryBeams = new List<Part>();
+            Part MainPart = null;
+            //TODO: Сделать проверку всех деталей на два типа Beam и ContourPlate.
+            if (InAssembly.GetMainPart() is Part beam)//TODO: Работет только с Baem, рассмотреть варианты с пластиной.
             {
                 MainPart = beam;
             }
 
-            var ArreyChildren = InAssembly.GetSecondaries();
+            var ArreyChildren = InAssembly.GetSecondaries();//Получение второстепенных деталей в сборке.
 
             foreach (var child in ArreyChildren) 
             {
-                if (child is Beam beamChild)
+                if (child is Part beamChild)
                 {
                     SecondaryBeams.Add(beamChild);
                 }
@@ -68,7 +67,7 @@ namespace BIMPropotype_Lib.Controller
 
             if (Path != string.Empty)
             {
-                string path = $"{Path}\\RCP_Data\\Prototype_{InBIMAssembly.Elements[0].InPart.AssemblyNumber.Prefix}.xml";
+                string path = $"{Path}\\RCP_Data\\Prototype_{InBIMAssembly.Prefix}.xml";
                if (File.Exists(path)) File.Delete(path);
 
                 XmlSerializer formatter = new XmlSerializer(typeof(BIMAssembly));
@@ -99,7 +98,6 @@ namespace BIMPropotype_Lib.Controller
                     using (var fs = new FileStream($"{Path}\\RCP_Data\\{fileName}.xml", FileMode.OpenOrCreate))
                     {
                         InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
-
                         InBIMAssembly.Insert();
                         TSM.Model model = new TSM.Model();
                         model.CommitChanges();
@@ -136,9 +134,9 @@ namespace BIMPropotype_Lib.Controller
 
         #region private
 
-        private List<Beam> GetAllBeams(Beam MainPart, List<Beam> SecondaryBeams)
+        private List<Part> GetAllBeams(Part MainPart, List<Part> SecondaryBeams)
         {
-            var beams = new List<Beam>();
+            var beams = new List<Part>();
             if (MainPart != null)
             {
                 beams.Add(MainPart);
@@ -149,97 +147,6 @@ namespace BIMPropotype_Lib.Controller
                 beams.AddRange(SecondaryBeams);
             }
             return beams;
-        }
-
-        /// <summary>
-        /// Матрица трансформации CS Part перенесенная в StartPoint
-        /// </summary>
-        /// <param name="inBeam"></param>
-        /// <returns></returns>
-        private Matrix GetMatrixBeamPoints(TSM.Beam inBeam)
-        {
-            var CSPart = inBeam.GetCoordinateSystem();
-            Vector X = new Vector(inBeam.EndPoint - inBeam.StartPoint);
-            CoordinateSystem coordinateSystem = new CoordinateSystem(inBeam.StartPoint, X, X.Cross(new Vector(0, 0, -1)) );
-            //TSM.Model inModel = new TSM.Model();
-            //var workHundler = inModel.GetWorkPlaneHandler();
-
-            TransformationPlane transformationPlane = new TransformationPlane(coordinateSystem);
-            var matrixtransform = transformationPlane.TransformationMatrixToLocal;
-
-            return matrixtransform;
-        }
-
-        private Matrix GetMatrixPointAndPlane()
-        {
-            Point startPoint = null;
-            Vector vectorZ = null;
-            Vector vectorX = null;
-            var Input = PickAFace("Грань");
-            IEnumerator MyEnum = Input.GetEnumerator();
-            while (MyEnum.MoveNext())
-            {
-                InputItem Item = MyEnum.Current as InputItem;
-                if (Item.GetInputType() == InputItem.InputTypeEnum.INPUT_1_OBJECT)
-                {
-                    ModelObject M = Item.GetData() as ModelObject;
-                    if (M is Beam beam) 
-                    {
-                        startPoint = beam.StartPoint;
-                        vectorX = new Vector(beam.EndPoint - beam.StartPoint);
-                    }
-                       
-                }
-                if (Item.GetInputType() == InputItem.InputTypeEnum.INPUT_POLYGON)
-                {
-                    ArrayList Points = Item.GetData() as ArrayList;
-                    if (Points.Count > 3)
-                    {
-                        vectorZ = (new Vector((Point)Points[1] - (Point)Points[0]).Cross(new Vector((Point)Points[1] - (Point)Points[2])));
-                    }
-                }
-            }
-
-            CoordinateSystem coordinateSystem = new CoordinateSystem(startPoint, vectorX, vectorX.Cross(-1*vectorZ));
-
-            TransformationPlane transformationPlane = new TransformationPlane(coordinateSystem);
-            var matrixtransform = transformationPlane.TransformationMatrixToLocal;
-
-            return matrixtransform;
-        }
-
-        private Point PickAPoint(string prompt = "Pick a point")
-        {
-            Point myPoint = null;
-            try
-            {
-                var picker = new UI.Picker();
-                myPoint = picker.PickPoint(prompt);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message != "User interrupt")
-                {
-                    Console.WriteLine(ex.Message + ex.StackTrace);
-                }
-            }
-
-            return myPoint;
-        }
-        public static UI.PickInput PickAFace(string prompt = "Pick a surface")
-        {
-            UI.PickInput face = null;
-            try
-            {
-                var picker = new UI.Picker();
-                face = picker.PickFace(prompt);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + ex.StackTrace);
-            }
-
-            return face;
         }
         #endregion // private
     }
