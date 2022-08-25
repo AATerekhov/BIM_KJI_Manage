@@ -10,7 +10,7 @@ namespace BIMPropotype_Lib.Model
     [Serializable]
     public class BIMBooleanPlate
     {
-        public TSM.BooleanPart Boolean { get; set; }
+        public TSM.BooleanPart.BooleanTypeEnum BooleanType { get; set; }
         public CustomPlate Plate { get; set; }
         public BIMBooleanPlate()
         {
@@ -20,8 +20,7 @@ namespace BIMPropotype_Lib.Model
         public BIMBooleanPlate(TSM.BooleanPart booleanPart)
         {
             if(booleanPart.OperativePart is TSM.ContourPlate plate) Plate = new CustomPlate(plate);
-            booleanPart.OperativePart = null;
-            Boolean = booleanPart;
+            BooleanType = booleanPart.Type;
         }
     }
 }

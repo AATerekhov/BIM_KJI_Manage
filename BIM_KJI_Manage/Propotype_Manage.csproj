@@ -108,6 +108,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\WorkPlaneWorker.cs" />
     <Compile Include="Model\ModelPartInfo.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

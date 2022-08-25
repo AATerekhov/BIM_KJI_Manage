@@ -324,15 +324,16 @@ namespace Propotype_Manage
             if (InModel.GetConnectionStatus())
             {
                 TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-                if (modelEnum.GetSize() == 1)
+                while (modelEnum.MoveNext())
                 {
-                    while (modelEnum.MoveNext())
+                    if (modelEnum.Current is TSM.Assembly assemblyModel)
                     {
-                        if (modelEnum.Current is TSM.Assembly assemblyModel)
-                        {
-                            new BeamLoader(assemblyModel);
-                        }
+                        Controller.WorkPlaneWorker workPlaneWorker = new Controller.WorkPlaneWorker(InModel, assemblyModel);
+                        workPlaneWorker.GetWorkPlace();
+                        new BeamLoader(assemblyModel);
+                        workPlaneWorker.RerutnWorkPlace();
                     }
+                    RefreshList();
                 }
             }
         }
