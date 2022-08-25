@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMPlate : BIMPart
+    public class BIMPlate : BIMPart, iBIMModelObject
     {
         [XmlIgnore]
         public ContourPlate ContourPlate { get; set; }
@@ -20,12 +20,12 @@ namespace BIMPropotype_Lib.Model
 
         }
 
-        public BIMPlate(ContourPlate inPart) 
+        public BIMPlate(ContourPlate inPlate) 
         {
-            ContourPlate = inPart;
-            Plate = new CustomPlate(inPart);
-            Rebars = GetRebar(ContourPlate.GetReinforcements());
-            Pruning = new BIMPruning(ContourPlate.GetBooleans());
+            ContourPlate = inPlate;
+            Plate = new CustomPlate(inPlate);
+            GetRebar(inPlate.GetReinforcements());
+            Pruning = new BIMPruning(inPlate.GetBooleans());
         }
 
         public override void Insert()

@@ -7,7 +7,7 @@ using System.Linq;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly
+    public class BIMAssembly: iBIMModelObject
     {
         public string Name { get; set; }
         public string Prefix { get; set; }

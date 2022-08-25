@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace BIMPropotype_Lib.Model
 {
-    public class BIMPart
+    public class BIMPart : iBIMModelObject
     {
         public BIMPart() { }
         public BIMPart(Beam inPart)
         {
             InPart = inPart;
-            Rebars = GetRebar(InPart.GetReinforcements());
+            GetRebar(InPart.GetReinforcements());
             Pruning = new BIMPruning(InPart.GetBooleans());
             if (CheckMainPart(inPart)) GetPutInAssembly(InPart);
         }
@@ -21,6 +21,7 @@ namespace BIMPropotype_Lib.Model
         public List<BIMPart> PutInAssemblyBeam { get; set; }
         public List<BIMPlate> PutInAssemblyPlate { get; set; }
         public List<BooleanPart> Antidetails { get; set; }
+        public List<BIMRebarGroup> RebarGroups { get; set; }
         public BIMPruning Pruning { get; set; }
 
         //TODO: Рассмотерть возможность работы с группами через разложение и объединение в простые стержни.
@@ -33,6 +34,12 @@ namespace BIMPropotype_Lib.Model
 
             foreach (var rebar in Rebars)//Вставка арматуры в деталь.
             {
+                rebar.Father = part;
+                rebar.Insert();
+            }
+            foreach (var rebarGroup in RebarGroups)//Вставка арматуры в деталь.
+            {
+                var rebar = rebarGroup.GetRebarGroup();
                 rebar.Father = part;
                 rebar.Insert();
             }
@@ -68,14 +75,25 @@ namespace BIMPropotype_Lib.Model
         }
 
         #region internal method
-        internal virtual List<SingleRebar> GetRebar(ModelObjectEnumerator modelObjectEnumerator)
+        internal virtual void GetRebar(ModelObjectEnumerator modelObjectEnumerator)
         {
-            List<SingleRebar> rebars = new List<SingleRebar>();
+            Rebars = new List<SingleRebar>();
+            RebarGroups = new List<BIMRebarGroup>();  
             while (modelObjectEnumerator.MoveNext())
             {
-                if (modelObjectEnumerator.Current is SingleRebar reinforcement) rebars.Add(reinforcement);
+                if (modelObjectEnumerator.Current is SingleRebar reinforcement)
+                {
+                    reinforcement.Father = null;
+                    Rebars.Add(reinforcement);
+                    continue;
+                }
+                if (modelObjectEnumerator.Current is RebarGroup group)
+                {
+                    group.Father = null;
+                    RebarGroups.Add(new BIMRebarGroup(group));
+                    continue;
+                }
             }
-            return rebars;
         }
 
 
