@@ -13,20 +13,20 @@ namespace BIMPropotype_Lib.Model
     {
         [XmlIgnore]
         public ContourPlate ContourPlate { get; set; }
-
         public CustomPlate Plate { get; set; }
-        public BIMPlate()
-        {
 
-        }
+        public BIMPlate() { }
 
-        public BIMPlate(ContourPlate inPlate) 
+        public BIMPlate(ContourPlate inPlate)
         {
-            ContourPlate = inPlate;
-            GetUDAList(ContourPlate);
             Plate = new CustomPlate(inPlate);
-            GetRebar(inPlate.GetReinforcements());
-            Pruning = new BIMPruning(inPlate.GetBooleans());
+
+            ContourPlate = inPlate;
+            UDAList = new UDACollection(ContourPlate);
+            GetRebar(ContourPlate.GetReinforcements());
+            Pruning = new BIMPruning(ContourPlate.GetBooleans());
+            //GetBolts(ContourPlate.GetBolts());
+            if (CheckMainPart(ContourPlate)) GetPutInAssembly(ContourPlate);
         }
 
         public override void Insert()

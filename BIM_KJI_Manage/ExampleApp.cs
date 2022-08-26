@@ -4,19 +4,28 @@ namespace Propotype_Manage
     using System;
     using System.Windows.Input;
     using Fusion;
+    using Propotype_Manage.Conductor;
+    using BIMPropotype_Lib.ViewModel;
 
     /// <summary>
     /// Example application.
     /// </summary>
     public class ExampleApp : Fusion.App
     {
+        public ConductorViewModel InConductorViewModel { get; set; }
+        public PrefixDirectory InPrefixDirectory { get; set; }
         /// <summary>
         /// Определяет точку входа в приложение.
         /// </summary>
         [STAThread]
         public static void Main()
         {
-            Fusion.App.Start(new ExampleApp());
+            var prefixDirectory = new PrefixDirectory();
+            Fusion.App.Start(new ExampleApp()
+            {
+                InPrefixDirectory = prefixDirectory,
+                InConductorViewModel = new ConductorViewModel(prefixDirectory),
+            });
         }
 
         /// <summary>
@@ -27,8 +36,19 @@ namespace Propotype_Manage
         [PublishedView("App.MainWindow")]
         public ViewModel CreateMainWindow(object parameter)
         {
-            return new MainWindowViewModel();
-        }              
+            return new MainWindowViewModel(InPrefixDirectory);
+        }
+
+        /// <summary>
+        /// TreeView просетов.
+        /// </summary>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>Модель просмотра главного окна.</returns>
+        [PublishedView("Example.Conductor.Conductor")]
+        public ViewModel ConductorView(object parameter)
+        {
+            return InConductorViewModel;
+        }
 
 
 

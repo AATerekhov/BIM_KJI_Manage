@@ -23,13 +23,13 @@ namespace BIMPropotype_Lib.Model
            if (value is double doubleValue) DoubleValue = doubleValue;
         }
 
-        internal void WriteToDetail(Part part) 
+        internal void WriteToDetail(ModelObject modelObject) 
         {
             if (Key != null)
             {
-                if (Value != null) part.SetUserProperty(Key, Value);
-                if (IntValue != 0) part.SetUserProperty(Key, IntValue);
-                if (DoubleValue != 0) part.SetUserProperty(Key, DoubleValue);
+                if (Value != null) modelObject.SetUserProperty(Key, Value);
+                if (IntValue != 0) modelObject.SetUserProperty(Key, IntValue);
+                if (DoubleValue != 0) modelObject.SetUserProperty(Key, DoubleValue);
             }
         }
     }

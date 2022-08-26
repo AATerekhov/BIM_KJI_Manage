@@ -103,13 +103,32 @@
       <HintPath>..\packages\TeklaOpenAPI.2021.0.1\lib\Tekla.Structures.Plugins.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Tekla.Structures.Ui.WpfKit">
+      <HintPath>..\..\..\..\..\..\..\TeklaStructures\2021.0\nt\bin\Tekla.Structures.Ui.WpfKit.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conductor\ConductorView.xaml.cs">
+      <DependentUpon>ConductorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Conductor\Controller\Database.cs" />
+    <Compile Include="Conductor\Model\FieldPrototype.cs" />
+    <Compile Include="Conductor\Model\ModelDirectory.cs" />
+    <Compile Include="Conductor\Model\PrototypeName.cs" />
+    <Compile Include="Conductor\ViewModel\FieldPrototypeViewModel.cs" />
+    <Compile Include="Conductor\ViewModel\ModelDirectoryViewModel.cs" />
+    <Compile Include="Conductor\ViewModel\PrototypeNameViewModel.cs" />
+    <Compile Include="Conductor\ViewModel\TreeViewItemViewModel.cs" />
     <Compile Include="Controller\WorkPlaneWorker.cs" />
     <Compile Include="Model\ModelPartInfo.cs" />
+    <Compile Include="Conductor\ConductorViewModel.cs" />
+    <Page Include="Conductor\ConductorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,7 +157,9 @@
     <Resource Include="ts-ext.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <Resource Include="Conductor\Image\Block.png" />
+    <Resource Include="Conductor\Image\Preset.png" />
+    <Resource Include="Conductor\Image\Space.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

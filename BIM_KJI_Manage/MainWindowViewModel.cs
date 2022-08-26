@@ -10,6 +10,7 @@ using Tekla.Structures;
 using Tekla.Structures.Model.Operations;
 using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.Model;
+using BIMPropotype_Lib.ViewModel;
 
 
 
@@ -27,6 +28,19 @@ namespace Propotype_Manage
 
     class MainWindowViewModel : WindowViewModel
     {
+        private PrefixDirectory _inPrefixDirectory;
+
+        public PrefixDirectory InPrefixDirectory
+        {
+            get { return this._inPrefixDirectory; }
+            private set { this.SetValue(ref this._inPrefixDirectory, value); }
+        }
+
+        public MainWindowViewModel(PrefixDirectory inPrefixDirectory)
+        {
+            InPrefixDirectory = inPrefixDirectory;
+            this.Initialize();
+        }
         /// <summary>
         /// Указывает, подключено ли приложение к Tekla Structures.
         /// </summary>
@@ -135,11 +149,13 @@ namespace Propotype_Manage
             if (this.IsConnected)
             {
                 InModel = new TSM.Model();
-                this.ModelName = InModel.GetInfo().ModelName;
+                InPrefixDirectory.GetPath(InModel);
+                this.ModelName = InPrefixDirectory.ModelInfo.ModelName;
+
 
                 PrototypeList = new ObservableCollection<PrototypeFile>();
 
-                PrototypeWorker.GetModelPrototype(InModel, PrototypeList);
+                PrototypeWorker.GetModelPrototype(InPrefixDirectory, PrototypeList);
             }
         }
         #region Command.
@@ -330,7 +346,7 @@ namespace Propotype_Manage
                     {
                         Controller.WorkPlaneWorker workPlaneWorker = new Controller.WorkPlaneWorker(InModel, assemblyModel);
                         workPlaneWorker.GetWorkPlace();
-                        new BeamLoader(assemblyModel);
+                        new BeamLoader(assemblyModel, InPrefixDirectory);
                         workPlaneWorker.RerutnWorkPlace();
                     }
                     RefreshList();
@@ -363,7 +379,7 @@ namespace Propotype_Manage
             if (InModel.GetConnectionStatus())
             {
                 PrototypeList.Clear();
-                PrototypeWorker.GetModelPrototype(InModel, PrototypeList);
+                PrototypeWorker.GetModelPrototype(InPrefixDirectory, PrototypeList);
             }
         }
         // <summary>

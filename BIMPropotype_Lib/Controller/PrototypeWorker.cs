@@ -9,31 +9,34 @@ using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 using Tekla.Structures;
 using Tekla.Structures.Model;
+using BIMPropotype_Lib.ViewModel;
 
 namespace BIMPropotype_Lib.Controller
 {
     public static class PrototypeWorker
     {
-        public static void GetModelPrototype(TSM.Model Model, ObservableCollection<Model.PrototypeFile> listPrototype) 
+        public static void GetModelPrototype(PrefixDirectory prefixDirectory, ObservableCollection<Model.PrototypeFile> listPrototype) 
         {
-            TSM.ModelInfo Info = Model.GetInfo();
-            string modelPath = Info.ModelPath;
-            var path = $"{modelPath}\\RCP_Data";
+            var path = prefixDirectory.GetDataDirectory();
             int indexStart = path.Length + 1;
 
-            var listName = Directory.GetFiles(path);
+            var listName = Directory.GetDirectories(path);
 
-            string subString = "Prototype_";
-
-            for (int i = 0; i < listName.Length; i++)
+            string subString = prefixDirectory.typeFile;
+            foreach (var direct in listName)
             {
-                var index = listName[i].IndexOf(subString);
-                if (index != -1)
+                var listNameFile = Directory.GetFiles(direct);
+                for (int i = 0; i < listNameFile.Length; i++)
                 {
-                    string name = listName[i].Substring(indexStart, listName[i].Length-4 - indexStart);
-                    listPrototype.Add(new Model.PrototypeFile($"{name}"));
+                    var index = listNameFile[i].IndexOf(subString);
+                    if (index != -1)
+                    {
+                        string name =$"{listNameFile[i].Substring(indexStart, listNameFile[i].Length - 4 - indexStart)}" ;
+                        listPrototype.Add(new Model.PrototypeFile($"{name}"));
+                    }
                 }
             }
+            
         }
 
         public static void DeliteFile(string fileName)
