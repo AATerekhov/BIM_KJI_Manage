@@ -21,30 +21,10 @@ namespace BIMPropotype_Lib.Controller
         public string Path { get; set; }
         public BeamLoader() { }
         public BeamLoader(TSM.Assembly InAssembly)
-        {
-            var SecondaryBeams = new List<Part>();
-            Part MainPart = null;
-            //TODO: Сделать проверку всех деталей на два типа Beam и ContourPlate.
-            if (InAssembly.GetMainPart() is Part beam)//TODO: Работет только с Baem, рассмотреть варианты с пластиной.
-            {
-                MainPart = beam;
-            }
-
-            var ArreyChildren = InAssembly.GetSecondaries();//Получение второстепенных деталей в сборке.
-
-            foreach (var child in ArreyChildren) 
-            {
-                if (child is Part beamChild)
-                {
-                    SecondaryBeams.Add(beamChild);
-                }
-            }
-
-            InBIMAssembly = new BIMAssembly(GetAllBeams(MainPart, SecondaryBeams));
-
+        {    
+            InBIMAssembly = new BIMAssembly(InAssembly);
             SerializeXML();
-        }
-
+        }    
 
         public void GetPath()
         {
@@ -134,20 +114,7 @@ namespace BIMPropotype_Lib.Controller
 
         #region private
 
-        private List<Part> GetAllBeams(Part MainPart, List<Part> SecondaryBeams)
-        {
-            var beams = new List<Part>();
-            if (MainPart != null)
-            {
-                beams.Add(MainPart);
-            }
-
-            if (SecondaryBeams.Count > 0)
-            {
-                beams.AddRange(SecondaryBeams);
-            }
-            return beams;
-        }
+      
         #endregion // private
     }
 }

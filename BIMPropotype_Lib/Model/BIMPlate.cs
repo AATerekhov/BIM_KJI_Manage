@@ -23,6 +23,7 @@ namespace BIMPropotype_Lib.Model
         public BIMPlate(ContourPlate inPlate) 
         {
             ContourPlate = inPlate;
+            GetUDAList(ContourPlate);
             Plate = new CustomPlate(inPlate);
             GetRebar(inPlate.GetReinforcements());
             Pruning = new BIMPruning(inPlate.GetBooleans());

@@ -12,14 +12,15 @@ namespace BIMPropotype_Lib.Model
         public BIMPart(Beam inPart)
         {
             InPart = inPart;
+            GetUDAList(InPart);
             GetRebar(InPart.GetReinforcements());
             Pruning = new BIMPruning(InPart.GetBooleans());
             if (CheckMainPart(inPart)) GetPutInAssembly(InPart);
         }
         public Beam InPart { get; set; }
+        public List<BIMUda> UDAList { get; set; }
         public List<SingleRebar> Rebars { get; set; }
-        public List<BIMPart> PutInAssemblyBeam { get; set; }
-        public List<BIMPlate> PutInAssemblyPlate { get; set; }
+        public List<BIMAssembly> PutInAssembly { get; set; }
         public List<BooleanPart> Antidetails { get; set; }
         public List<BIMRebarGroup> RebarGroups { get; set; }
         public BIMPruning Pruning { get; set; }
@@ -30,6 +31,8 @@ namespace BIMPropotype_Lib.Model
         public void Insert(Part  part) 
         {
             part.Insert();//При вставке деталь получает новый GUID.
+            GetUDAToPart(part);
+
             Pruning.Insert(part);
 
             foreach (var rebar in Rebars)//Вставка арматуры в деталь.
@@ -44,34 +47,17 @@ namespace BIMPropotype_Lib.Model
                 rebar.Insert();
             }
 
-            if (PutInAssemblyBeam != null || PutInAssemblyPlate != null)
+            if (PutInAssembly.Count != 0)//Если есть подсборки, то вставка.
             {
                 var mainAssembly = part.GetAssembly();
-
-                if (PutInAssemblyBeam.Count != 0)//Если есть подсборки, то вставка.
+                foreach (var item in PutInAssembly)
                 {
-                    foreach (var item in PutInAssemblyBeam)
-                    {
-                        item.Insert();
-                        var hisAssembly = item.InPart.GetAssembly();
-                        mainAssembly.Add(hisAssembly);
-                    }
+                    item.Insert();
+                    var hisAssembly = item.GetAssembly();
+                    mainAssembly.Add(hisAssembly);
                 }
-
-                if (PutInAssemblyPlate.Count != 0)//Если есть подсборки, то вставка.
-                {
-                    foreach (var item in PutInAssemblyPlate)
-                    {
-                        item.Insert();
-                        var hisAssembly = item.ContourPlate.GetAssembly();
-                        mainAssembly.Add(hisAssembly);
-                    };
-                }
-
                 mainAssembly.Modify();
-            }
-
-            
+            }            
         }
 
         #region internal method
@@ -95,30 +81,30 @@ namespace BIMPropotype_Lib.Model
                 }
             }
         }
+        internal virtual void GetUDAList(Part part)
+        {
+            UDAList = new List<BIMUda>();
+
+            Hashtable hashtable = new Hashtable();
+            part.GetAllUserProperties(ref hashtable);
+            foreach (var item in hashtable) 
+            {
+                if (item is DictionaryEntry dictionary) UDAList.Add(new BIMUda(dictionary.Key, dictionary.Value));
+            } 
+        }
 
 
         internal virtual void GetPutInAssembly(Part part)
         {
-            var mainAssembly = part.GetAssembly();
-            var partEnumChildren = mainAssembly.GetSubAssemblies();
+            var partEnumChildren = part.GetAssembly().GetSubAssemblies();
 
-            PutInAssemblyBeam = new List<BIMPart>();
-            PutInAssemblyPlate = new List<BIMPlate>();
+            PutInAssembly = new List<BIMAssembly>();
 
             foreach (var assembly in partEnumChildren)
             {
                 if (assembly is Assembly assemlyChild)
                 {
-                    var mainPart = assemlyChild.GetMainPart();
-                    if (mainPart is Beam beam)
-                    {
-                        PutInAssemblyBeam.Add(new BIMBeam(beam));
-                        continue;
-                    }
-                    if (mainPart is ContourPlate plate)
-                    {
-                        PutInAssemblyPlate.Add(new BIMPlate(plate));
-                    }
+                    PutInAssembly.Add(new BIMAssembly(assemlyChild));
                 }
             }
         }
@@ -136,6 +122,14 @@ namespace BIMPropotype_Lib.Model
             part.GetReportProperty("MAIN_PART", ref main);
             if (main != 0) return true;
             else return false;
+        }
+
+        protected void GetUDAToPart(Part part) 
+        {
+            foreach (var uda in UDAList)
+            {
+                uda.WriteToDetail(part);
+            }
         }
         #endregion//private method
 

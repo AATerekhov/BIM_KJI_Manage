@@ -87,6 +87,7 @@
     <Compile Include="Model\BIMBooleanPlate.cs" />
     <Compile Include="Model\BIMPart.cs" />
     <Compile Include="Model\BIMPlate.cs" />
+    <Compile Include="Model\BIMUda.cs" />
     <Compile Include="Model\CustomPolygon.cs" />
     <Compile Include="Model\BIMPruning.cs" />
     <Compile Include="Model\BIMRebarGroup.cs" />
