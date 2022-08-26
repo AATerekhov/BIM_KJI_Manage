@@ -11,10 +11,12 @@ namespace Propotype_Manage.Conductor.ViewModel
     public class PrototypeNameViewModel : TreeViewItemViewModel
     {
         readonly PrototypeName _prototypeName;
+        public Database Database { get; set; }
 
-        public PrototypeNameViewModel(PrototypeName prototypeName, FieldPrototypeViewModel parentField)
+        public PrototypeNameViewModel(PrototypeName prototypeName, FieldPrototypeViewModel parentField, Database database)
            : base(parentField, false)
         {
+            Database =  database;
             _prototypeName = prototypeName;
         }
 

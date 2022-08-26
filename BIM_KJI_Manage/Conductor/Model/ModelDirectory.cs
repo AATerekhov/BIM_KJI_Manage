@@ -18,9 +18,10 @@ namespace Propotype_Manage.Conductor.Model
             get { return _fields; }
         }
 
-        public ModelDirectory(TSM.Model model) 
+        public ModelDirectory(string path, string name) 
         {
-        
+            Path = path;
+            ModelName = name;
         }
     }
 }

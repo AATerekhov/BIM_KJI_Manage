@@ -9,10 +9,12 @@ namespace Propotype_Manage.Conductor.Model
     public class FieldPrototype
     {
         public string Name { get; private set; }
+        public string Path { get; set; }
 
-        public FieldPrototype(string name)
+        public FieldPrototype(string name, string path)
         {
             Name = name;
+            Path = path;
         }
 
         readonly List<PrototypeName> _prefix = new List<PrototypeName>();

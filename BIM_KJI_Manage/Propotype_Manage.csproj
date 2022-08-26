@@ -157,9 +157,9 @@
     <Resource Include="ts-ext.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Conductor\Image\Block.png" />
-    <Resource Include="Conductor\Image\Preset.png" />
-    <Resource Include="Conductor\Image\Space.png" />
+    <Resource Include="Conductor\Images\Block.png" />
+    <Resource Include="Conductor\Images\Preset.png" />
+    <Resource Include="Conductor\Images\Space.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

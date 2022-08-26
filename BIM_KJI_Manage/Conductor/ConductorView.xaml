@@ -16,8 +16,7 @@
                         <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Home}"/>
                     </StackPanel>
                 </Button>
-                <TextBox Height="25" Width="150"  Text="{Binding PathFull, Mode=TwoWay}"/>
-                
+                <TextBox Height="25" Width="150"  Text="{Binding PathFull, Mode=TwoWay}"/>                
             </StackPanel>
             <TreeView ItemsSource="{Binding Conductor}" MinWidth="200">
                 <TreeView.ItemContainerStyle>

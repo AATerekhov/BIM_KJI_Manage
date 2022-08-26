@@ -11,10 +11,12 @@ namespace Propotype_Manage.Conductor.ViewModel
     public class ModelDirectoryViewModel : TreeViewItemViewModel
     {
         readonly ModelDirectory _directory;
-        public ModelDirectoryViewModel(ModelDirectory directory)
-            : base(null, false)
+        public Database Database { get; set; }
+        public ModelDirectoryViewModel(ModelDirectory directory, Database database)
+            : base(null, true)
         {
             _directory = directory;
+            Database = database;
         }
 
         public string ModelName
@@ -25,7 +27,7 @@ namespace Propotype_Manage.Conductor.ViewModel
         protected override void LoadChildren()
         {
             foreach (FieldPrototype fieldPrototyfe in Database.GetFieldPrototypes(_directory))
-                base.Children.Add(new FieldPrototypeViewModel(fieldPrototyfe, this));
+                base.Children.Add(new FieldPrototypeViewModel(fieldPrototyfe, this,Database));
         }
     }
 }

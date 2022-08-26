@@ -57,7 +57,11 @@ namespace BIMPropotype_Lib.ViewModel
         public TSM.ProjectInfo ProjectlInfo { get; set; }
         public TSM.ModelInfo ModelInfo { get; set; }
 
-        public PrefixDirectory() { }
+        public PrefixDirectory() 
+        {
+            var model = new TSM.Model();
+            if(model.GetConnectionStatus()) GetPath(model);
+        }
         public PrefixDirectory(TSM.Model model) 
         {
             GetPath(model);
@@ -85,12 +89,28 @@ namespace BIMPropotype_Lib.ViewModel
 
         public string GetDirectory()
         {
-            return Path.Combine(ModelDirectory, addModelDirectory, FieldName);
+            var path = Path.Combine(ModelDirectory, addModelDirectory, FieldName);
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            return path;
         }
         public string GetDataDirectory()
         {
-            return Path.Combine(ModelDirectory, addModelDirectory);
+            var path = Path.Combine(ModelDirectory, addModelDirectory);
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            return path;
         }
+
+        public string[] GetFields(string directopy) 
+        {
+         var vs = Directory.GetDirectories(directopy);
+            return vs;
+        }
+        public string[] GetFiles(string directopy) 
+        {
+            var vs = Directory.GetFiles(directopy);
+            return vs;
+        }
+
 
 
         #region INotifyPropertyChanged Members

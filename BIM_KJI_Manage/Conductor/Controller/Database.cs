@@ -1,21 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Propotype_Manage.Conductor.Model;
+using BIMPropotype_Lib.ViewModel;
 
 namespace Propotype_Manage.Conductor.Controller
 {
-    public static class Database//TODO: переделать на объектную
+    public  class Database//TODO: переделать на объектную
     {
-        public static List<FieldPrototype> GetFieldPrototypes(ModelDirectory modelDirectory) 
+        public PrefixDirectory PrefixDirectory { get; set; }
+        public Database(PrefixDirectory prefixDirectory)
         {
-            return null;
+            PrefixDirectory = prefixDirectory;
         }
-        public static List<PrototypeName> GetPrototype(FieldPrototype fieldPrototype)
+
+        public  List<FieldPrototype> GetFieldPrototypes(ModelDirectory modelDirectory) 
         {
-            return null;
+           return  new List<FieldPrototype>(from item in PrefixDirectory.GetFields(modelDirectory.Path) select new FieldPrototype(new DirectoryInfo(item).Name, item));
+        }
+        public List<PrototypeName> GetPrototype(FieldPrototype fieldPrototype)
+        {
+            return new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
+        }
+        public List<ModelDirectory> GetModelDirectories()
+        {
+            var modelDirectoryList = new List<ModelDirectory>() { new ModelDirectory(PrefixDirectory.GetDataDirectory(), PrefixDirectory.ModelInfo.ModelName) };
+
+            return modelDirectoryList;
         }
 
     }

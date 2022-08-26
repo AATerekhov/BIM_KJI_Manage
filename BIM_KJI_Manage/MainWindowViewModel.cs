@@ -148,8 +148,7 @@ namespace Propotype_Manage
 
             if (this.IsConnected)
             {
-                InModel = new TSM.Model();
-                InPrefixDirectory.GetPath(InModel);
+                
                 this.ModelName = InPrefixDirectory.ModelInfo.ModelName;
 
 

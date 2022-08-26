@@ -7,6 +7,7 @@ using Fusion;
 using System.Collections.ObjectModel;
 using Propotype_Manage.Conductor.ViewModel;
 using BIMPropotype_Lib.ViewModel;
+using Propotype_Manage.Conductor.Controller;
 
 namespace Propotype_Manage.Conductor
 {
@@ -25,11 +26,15 @@ namespace Propotype_Manage.Conductor
         {
             get { return _conductor; }
         }
-
+        public Database Database { get; set; }
 
         public ConductorViewModel(PrefixDirectory InPrefixDirectory)
         {
-            //Get Conductor
+            Database = new Database(InPrefixDirectory);
+            _conductor = new ReadOnlyCollection<ModelDirectoryViewModel>(
+                   (from directory in Database.GetModelDirectories()
+                    select new ModelDirectoryViewModel(directory, Database))
+                   .ToList());            
         }
     }
 }
