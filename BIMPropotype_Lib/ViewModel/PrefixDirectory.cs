@@ -12,8 +12,6 @@ namespace BIMPropotype_Lib.ViewModel
     public class PrefixDirectory : INotifyPropertyChanged
     {
         const string addModelDirectory = "RCP_Data\\Prototype";
-        const string extention = ".xml";
-        public string typeFile = "prot_";
 
         private string _pathThisModel;
 
@@ -54,16 +52,19 @@ namespace BIMPropotype_Lib.ViewModel
                 this.OnPropertyChanged("Prefix");
             }
         }
+        public TSM.Model Model { get; set; }
         public TSM.ProjectInfo ProjectlInfo { get; set; }
         public TSM.ModelInfo ModelInfo { get; set; }
 
         public PrefixDirectory() 
         {
-            var model = new TSM.Model();
-            if(model.GetConnectionStatus()) GetPath(model);
+            //Тут может быть более подробная проверка на GetConnectionStatus
+            Model = new TSM.Model();
+            if(Model.GetConnectionStatus()) GetPath(Model);
         }
         public PrefixDirectory(TSM.Model model) 
         {
+            Model = model;
             GetPath(model);
         }
 
@@ -84,7 +85,7 @@ namespace BIMPropotype_Lib.ViewModel
         public string GetFile() 
         {
             if (!Directory.Exists(this.GetDirectory())) Directory.CreateDirectory(this.GetDirectory());
-            return Path.Combine(ModelDirectory, addModelDirectory, FieldName,$"{typeFile}{Prefix}{extention}" );
+            return Path.Combine(ModelDirectory, addModelDirectory, FieldName, Prefix);
         }
 
         public string GetDirectory()

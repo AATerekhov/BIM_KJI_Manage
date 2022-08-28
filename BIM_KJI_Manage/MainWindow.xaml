@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:Propotype_Manage" 
              xmlns:controls ="clr-namespace:Tekla.Structures.Ui.WpfKit.Controls;assembly=Tekla.Structures.Ui.WpfKit"   
         Title="BIM Prototype Manage 0.1"
-        Width="700" Height="440"
+        Width="600" Height="440"
         WindowStartupLocation="CenterScreen"
         Icon="ts-ext.ico" Topmost="True">
     <DockPanel>
@@ -15,18 +15,15 @@
         <Run Text="Connected to " />
         <Run Text="{Binding ModelName, Mode=OneWay}" />
             </TextBlock>
-        </StatusBar>
-        <StackPanel DockPanel.Dock="Left">
-            <ui:PublishedView Margin="2" ViewName="Example.Conductor.Conductor" />
-        </StackPanel>
-        <StackPanel  Margin="20" VerticalAlignment="Top">
+        </StatusBar>        
+        <StackPanel  Margin="5" DockPanel.Dock="Top" VerticalAlignment="Top">
 
             <StackPanel Orientation="Horizontal">
 
                 <Button Margin="2" Height="30" Command="{ui:CommandHandler ModifySelectedPart}">Назначить атрибуты</Button>
                 <Button Margin="2" Height="30" Command="{ui:CommandHandler GetSelectedPartAttributes}">Считать атирбуты</Button>
                 <Button Margin="2" Height="30"  Command="{ui:CommandHandler Serialize}" Cursor="Hand">GetXML</Button>
-                <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertPartXML}">InsertPart</Button>
+                <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertPartXML}" Cursor="Hand">InsertPart</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Префикс сборки"/>
@@ -38,15 +35,9 @@
                 <Label Content="Копия"/>
                 <CheckBox x:Name="copyAssembly" IsChecked="{Binding IsCopyAssembly, Mode=TwoWay}"/>
             </StackPanel>
-
-            <DataGrid Name="PrototypeList"
-                  AutoGenerateColumns="True"
-                  VerticalScrollBarVisibility="Auto"
-                    ItemsSource="{Binding PrototypeList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding SelectPrototype, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            </DataGrid>
-            <Button Margin="2" Height="30"  Command="{ui:CommandHandler RefreshList}">RefreshList</Button>
-            <Button Margin="2" Height="30"  Command="{ui:CommandHandler DelitedSelected}">DelitedSelected</Button>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <ui:PublishedView Margin="2" ViewName="Example.Conductor.Conductor" />
         </StackPanel>
     </DockPanel>
 </Window>

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
 
-namespace Propotype_Manage.Conductor.ViewModel
+namespace PrototypeConductor.ViewModel
 {
     public class TreeViewItemViewModel: INotifyPropertyChanged
     {

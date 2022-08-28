@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Fusion;
 using System.Collections.ObjectModel;
-using Propotype_Manage.Conductor.ViewModel;
+using PrototypeConductor.ViewModel;
 using BIMPropotype_Lib.ViewModel;
-using Propotype_Manage.Conductor.Controller;
+using PrototypeConductor.Controller;
 
-namespace Propotype_Manage.Conductor
+namespace Propotype_Manage.ViewConductor
 {
     public class ConductorViewModel : Fusion.ViewModel
     {

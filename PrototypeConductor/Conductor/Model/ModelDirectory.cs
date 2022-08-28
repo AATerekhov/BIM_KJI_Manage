@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 
-namespace Propotype_Manage.Conductor.Model
+namespace PrototypeConductor.Model
 {
     public class ModelDirectory
     {

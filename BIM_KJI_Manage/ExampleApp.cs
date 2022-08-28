@@ -4,7 +4,7 @@ namespace Propotype_Manage
     using System;
     using System.Windows.Input;
     using Fusion;
-    using Propotype_Manage.Conductor;
+    using Propotype_Manage.ViewConductor;
     using BIMPropotype_Lib.ViewModel;
 
     /// <summary>

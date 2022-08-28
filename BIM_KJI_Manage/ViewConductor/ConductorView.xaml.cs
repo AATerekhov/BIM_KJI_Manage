@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Propotype_Manage.Conductor
+namespace Propotype_Manage.ViewConductor
 {
     /// <summary>
     /// Interaction logic for ConductorView.xaml

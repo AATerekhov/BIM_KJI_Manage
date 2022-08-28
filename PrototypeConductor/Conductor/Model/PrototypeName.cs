@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Propotype_Manage.Conductor.Model
+namespace PrototypeConductor.Model
 {
     public class PrototypeName
     {

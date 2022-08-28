@@ -21,33 +21,19 @@ namespace BIMPropotype_Lib.Controller
         public PrefixDirectory WorkDirectory { get; set; }
         public BIMAssembly InBIMAssembly { get; set; }
         public string Path { get; set; }
-        public BeamLoader() { }
+        public BeamLoader(PrefixDirectory prefixDirectory)
+        {
+            WorkDirectory = prefixDirectory;
+        }
         public BeamLoader(TSM.Assembly InAssembly, PrefixDirectory prefixDirectory)
         {
            WorkDirectory = prefixDirectory;
            InBIMAssembly = new BIMAssembly(InAssembly);
            SerializeXML();
-        }    
-
-        //public void GetPath()
-        //{
-        //    string modelPath = string.Empty;
-        //    TSM.Model model = new TSM.Model();
-        //    if (model.GetConnectionStatus())
-        //    {
-        //        ModelInfo Info = model.GetInfo();
-        //        modelPath = Info.ModelPath;
-        //    }
-        //    Path = modelPath;
-        //}
-
+        }
+       
         public void SerializeXML()
         {
-            //if (Path == string.Empty || Path == null)
-            //{
-            //    this.GetPath();
-            //}
-
             if (Path != string.Empty)
             {
                 WorkDirectory.FieldName = InBIMAssembly.Name;
@@ -57,30 +43,28 @@ namespace BIMPropotype_Lib.Controller
 
                 XmlSerializer formatter = new XmlSerializer(typeof(BIMAssembly));
 
-                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                using (FileStream fs = new FileStream(path, FileMode.CreateNew))
                 {
                     formatter.Serialize(fs, InBIMAssembly);
                     fs.Close();
                 }
             }
         }
+
         /// <summary>
         /// Вставка балки из xml файла.
         /// </summary>
         /// <param name="fileName"></param>
-        public void InsertPartXML(string fileName)
+        public void InsertPartXML()
         {
-            //if (Path == string.Empty || Path == null)
-            //{
-            //    this.GetPath();
-            //}
-            if (File.Exists($"{Path}\\RCP_Data\\{fileName}.xml"))
+           var path = WorkDirectory.GetFile();
+            if (File.Exists(path))
             {
                 var formatter = new XmlSerializer(typeof(BIMAssembly));
 
                 if (this.Path != string.Empty)
                 {
-                    using (var fs = new FileStream($"{Path}\\RCP_Data\\{fileName}.xml", FileMode.OpenOrCreate))
+                    using (var fs = new FileStream(path, FileMode.OpenOrCreate))
                     {
                         InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
                         InBIMAssembly.Insert();
@@ -89,37 +73,6 @@ namespace BIMPropotype_Lib.Controller
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Вставка балки из xml файла.
-        /// </summary>
-        /// <param name="fileName"></param>
-        public BIMAssembly GetPartXML(string fileName)
-        {
-            //if (Path == string.Empty || Path == null)
-            //{
-            //    this.GetPath();
-            //}
-            if (File.Exists($"{Path}\\RCP_Data\\{fileName}.xml"))
-            {
-                var formatter = new XmlSerializer(typeof(BIMAssembly));
-
-                if (this.Path != string.Empty)
-                {
-                    using (var fs = new FileStream($"{Path}\\RCP_Data\\{fileName}.xml", FileMode.OpenOrCreate))
-                    {
-                       return (BIMAssembly)formatter.Deserialize(fs);
-                    }
-                }
-            }
-            return null;
-        }
-        
-
-        #region private
-
-      
-        #endregion // private
+        }        
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Propotype_Manage.Conductor.Model;
-using Propotype_Manage.Conductor.Controller;
+using PrototypeConductor.Model;
+using PrototypeConductor.Controller;
 
-namespace Propotype_Manage.Conductor.ViewModel
+namespace PrototypeConductor.ViewModel
 {
     public class ModelDirectoryViewModel : TreeViewItemViewModel
     {

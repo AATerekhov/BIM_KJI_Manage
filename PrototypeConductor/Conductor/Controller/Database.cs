@@ -4,10 +4,10 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Propotype_Manage.Conductor.Model;
+using PrototypeConductor.Model;
 using BIMPropotype_Lib.ViewModel;
 
-namespace Propotype_Manage.Conductor.Controller
+namespace PrototypeConductor.Controller
 {
     public  class Database//TODO: переделать на объектную
     {
@@ -27,9 +27,8 @@ namespace Propotype_Manage.Conductor.Controller
         }
         public List<ModelDirectory> GetModelDirectories()
         {
-            var modelDirectoryList = new List<ModelDirectory>() { new ModelDirectory(PrefixDirectory.GetDataDirectory(), PrefixDirectory.ModelInfo.ModelName) };
+            return new List<ModelDirectory>() { new ModelDirectory(PrefixDirectory.GetDataDirectory(), PrefixDirectory.ModelInfo.ModelName) };
 
-            return modelDirectoryList;
         }
 
     }
