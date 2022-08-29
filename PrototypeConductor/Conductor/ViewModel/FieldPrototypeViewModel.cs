@@ -17,6 +17,18 @@ namespace PrototypeConductor.ViewModel
         {
             Database = database;
             _field = field;
+            this.PropertyChanged += FieldPrototypeViewModel_PropertyChanged; ;
+        }
+
+        private void FieldPrototypeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsSelected")
+            {
+                if ((sender as TreeViewItemViewModel).IsSelected)
+                {
+                    Database.PrefixDirectory.FieldName = Name;
+                }
+            }
         }
 
         public string Name

@@ -22,7 +22,6 @@
 
                 <Button Margin="2" Height="30" Command="{ui:CommandHandler ModifySelectedPart}">Назначить атрибуты</Button>
                 <Button Margin="2" Height="30" Command="{ui:CommandHandler GetSelectedPartAttributes}">Считать атирбуты</Button>
-                <Button Margin="2" Height="30"  Command="{ui:CommandHandler Serialize}" Cursor="Hand">GetXML</Button>
                 <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertPartXML}" Cursor="Hand">InsertPart</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">

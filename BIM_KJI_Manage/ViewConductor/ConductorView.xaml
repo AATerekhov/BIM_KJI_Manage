@@ -7,7 +7,7 @@
              xmlns:vmtree="clr-namespace:PrototypeConductor.ViewModel;assembly=PrototypeConductor"
              xmlns:controls ="clr-namespace:Tekla.Structures.Ui.WpfKit.Controls;assembly=Tekla.Structures.Ui.WpfKit"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
@@ -16,9 +16,19 @@
                         <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Home}"/>
                     </StackPanel>
                 </Button>
+                <Button   Command="{ui:CommandHandler Delete}" Background="LightGray" Height="25">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Error}"/>
+                    </StackPanel>
+                </Button>
+                <Button   Command="{ui:CommandHandler AddAssemblys}" Background="LightGray" Height="25">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Extensions}"/>
+                    </StackPanel>
+                </Button>
                 <TextBox Height="25" Width="400"  Text="{Binding Path=Database.PrefixDirectory.ModelDirectory, Mode=TwoWay}"/>                
             </StackPanel>
-            <TreeView ItemsSource="{Binding Conductor}" MinWidth="200">
+            <TreeView ItemsSource="{Binding Conductor,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />

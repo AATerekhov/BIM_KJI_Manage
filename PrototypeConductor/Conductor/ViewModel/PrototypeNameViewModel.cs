@@ -25,7 +25,7 @@ namespace PrototypeConductor.ViewModel
         {
             if (e.PropertyName == "IsSelected")
             {
-                if ((sender as PrototypeNameViewModel).IsSelected)
+                if ((sender as TreeViewItemViewModel).IsSelected)
                 {
                     Database.PrefixDirectory.Prefix = Prefix;
                     Database.PrefixDirectory.FieldName = (this.Parent as FieldPrototypeViewModel).Name;
