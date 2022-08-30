@@ -25,7 +25,7 @@ namespace BIMPropotype_Lib.Model
             UDAList = new UDACollection(ContourPlate);
             GetRebar(ContourPlate.GetReinforcements());
             Pruning = new BIMPruning(ContourPlate.GetBooleans());
-            //GetBolts(ContourPlate.GetBolts());
+            GetBolts(ContourPlate.GetBolts());
             if (CheckMainPart(ContourPlate)) GetPutInAssembly(ContourPlate);
         }
 

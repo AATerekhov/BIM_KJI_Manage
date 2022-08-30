@@ -84,6 +84,7 @@
     <Compile Include="Model\BIMAssembly.cs" />
     <Compile Include="Model\BIMBeam.cs" />
     <Compile Include="Model\BIMBolt.cs" />
+    <Compile Include="Model\BIMBoltSet.cs" />
     <Compile Include="Model\BIMBooleanPlate.cs" />
     <Compile Include="Model\BIMPart.cs" />
     <Compile Include="Model\BIMPlate.cs" />
