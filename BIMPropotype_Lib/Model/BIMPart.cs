@@ -15,7 +15,7 @@ namespace BIMPropotype_Lib.Model
             UDAList = new UDACollection(InPart);
             GetRebar(InPart.GetReinforcements());
             Pruning = new BIMPruning(InPart.GetBooleans());
-            //GetBolts(InPart.GetBolts());
+            GetBolts(InPart.GetBolts());
             if (CheckMainPart(inPart)) GetPutInAssembly(InPart);
         }
         public Beam InPart { get; set; }
@@ -40,6 +40,11 @@ namespace BIMPropotype_Lib.Model
             foreach (var rebar in Rebars)//Вставка арматуры в деталь.
             {
                 rebar.Insert(part);
+            }
+
+            foreach (var bolt in Bolts)
+            {
+                bolt.Inser(part);
             }
 
             if (PutInAssembly.Count != 0)//Если есть подсборки, то вставка.
