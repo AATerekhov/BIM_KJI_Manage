@@ -103,12 +103,20 @@
       <HintPath>..\packages\TeklaOpenAPI.2021.0.1\lib\Tekla.Structures.Plugins.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Tekla.Structures.Ui.WpfKit">
+      <HintPath>..\..\..\..\..\..\..\TeklaStructures\2021.0\nt\bin\Tekla.Structures.Ui.WpfKit.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\WorkPlaneWorker.cs" />
     <Compile Include="Model\ModelPartInfo.cs" />
+    <Compile Include="ViewConductor\ConductorView.xaml.cs">
+      <DependentUpon>ConductorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewConductor\ConductorViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -121,6 +129,10 @@
     <Page Include="Properties\DesignTimeResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewConductor\ConductorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -135,9 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ts-ext.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -156,6 +165,19 @@
       <Project>{c3d95443-f82c-4470-9011-e838dd774721}</Project>
       <Name>BIMPropotype_Lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrototypeConductor\PrototypeConductor.csproj">
+      <Project>{63758fba-0176-4f02-b441-c3f68c5d3007}</Project>
+      <Name>PrototypeConductor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\Block.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\Preset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\Space.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

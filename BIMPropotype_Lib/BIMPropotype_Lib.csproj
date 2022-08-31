@@ -81,18 +81,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\BeamLoader.cs" />
-    <Compile Include="Controller\PrototypeWorker.cs" />
     <Compile Include="Model\BIMAssembly.cs" />
     <Compile Include="Model\BIMBeam.cs" />
+    <Compile Include="Model\BIMBolt.cs" />
     <Compile Include="Model\BIMBooleanPlate.cs" />
     <Compile Include="Model\BIMPart.cs" />
     <Compile Include="Model\BIMPlate.cs" />
+    <Compile Include="Model\BIMReinforcement.cs" />
+    <Compile Include="Model\BIMUda.cs" />
     <Compile Include="Model\CustomPolygon.cs" />
     <Compile Include="Model\BIMPruning.cs" />
     <Compile Include="Model\BIMRebarGroup.cs" />
     <Compile Include="Model\CustomPlate.cs" />
     <Compile Include="Model\iBIMModelObject.cs" />
+    <Compile Include="ViewModel\PrefixDirectory.cs" />
     <Compile Include="Model\PrototypeFile.cs" />
+    <Compile Include="Model\UDACollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

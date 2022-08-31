@@ -92,7 +92,7 @@ namespace BIMPropotype_Lib.Model
                 var operativePart = item.Plate.GetContourPlate();
                 operativePart.Insert();
                 operativePart.Class = TSM.BooleanPart.BooleanOperativeClassName;
-                TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = item.Boolean.Type, Father = part };
+                TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = item.BooleanType, Father = part };
                 boolean.SetOperativePart(operativePart);
                 if (boolean.Insert()) operativePart.Delete();               
             }

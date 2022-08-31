@@ -7,7 +7,7 @@ using System.Linq;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly: iBIMModelObject
+    public class BIMAssembly : iBIMModelObject
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
@@ -16,8 +16,9 @@ namespace BIMPropotype_Lib.Model
         public MainTypa Type { get; set; }
         public BIMAssembly() { }
 
-        public BIMAssembly(List<Part> parts)
+        public BIMAssembly(Assembly assembly)
         {
+            var parts = GetPartsToAssembly(assembly);
             this.Elements = new List<BIMBeam>();
             this.Plates = new List<BIMPlate>();
             for (int i = 0; i < parts.Count; i++)
@@ -65,7 +66,7 @@ namespace BIMPropotype_Lib.Model
 
             foreach (var plate in Plates)
             {
-                plate.Insert();//TODO: Требуетя разделить создание файла и считывание из файл, на каком этаме мы получает уже деталь? При считывании деталь нужно получать сразу и хванить ее. 
+                plate.Insert();
             }
 
             BuildAssembly();
@@ -116,6 +117,73 @@ namespace BIMPropotype_Lib.Model
             }
             assembly.Modify();
         }
+
+        internal Assembly GetAssembly()
+        {
+            if ((int)Type == 0)
+            {
+                return Elements[0].InPart.GetAssembly();              
+            }
+            else
+            {
+                return Plates[0].ContourPlate.GetAssembly();               
+            }
+        }
+
+        #region Privet
+        private List<Part> GetPartsToAssembly(Assembly assembly)
+        {
+            var SecondaryBeams = new List<Part>();
+            Part MainPart = null;
+            if (assembly.GetMainPart() is Part beam)
+            {
+                MainPart = beam;
+            }
+
+            var ArreyChildren = assembly.GetSecondaries();//Получение второстепенных деталей в сборке.
+
+            foreach (var child in ArreyChildren)
+            {
+                if (child is Part beamChild)
+                {
+                    SecondaryBeams.Add(beamChild);
+                }
+            }
+
+            return GetAllBeams(MainPart, SecondaryBeams);
+        }
+        private List<Part> GetAllBeams(Part MainPart, List<Part> SecondaryBeams)
+        {
+            var beams = new List<Part>();
+            if (MainPart != null)
+            {
+                if(CheckPartForAvailability(MainPart)) beams.Add(MainPart);
+            }
+
+            if (SecondaryBeams.Count > 0)
+            {
+                foreach (var part in SecondaryBeams) 
+                {
+                    if (CheckPartForAvailability(part)) beams.Add(part);
+                }
+            }
+            return beams;
+        }
+
+        /// <summary>
+        /// Проверка на доступность.
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
+        internal bool CheckPartForAvailability(Part part) 
+        {
+            if (part is Beam) return true;
+            if (part is ContourPlate) return true;
+            return false;
+        }
+        #endregion//Privet
+
+
         public enum MainTypa
         {
             beam = 0,

@@ -12,90 +12,59 @@ using System.IO;
 using BIMPropotype_Lib.Model;
 using UI = Tekla.Structures.Model.UI;
 using System.Collections;
+using BIMPropotype_Lib.ViewModel;
 
 namespace BIMPropotype_Lib.Controller
 {
     public class BeamLoader
     {
+        public PrefixDirectory WorkDirectory { get; set; }
         public BIMAssembly InBIMAssembly { get; set; }
         public string Path { get; set; }
-        public BeamLoader() { }
-        public BeamLoader(TSM.Assembly InAssembly)
+        public BeamLoader(PrefixDirectory prefixDirectory)
         {
-            var SecondaryBeams = new List<Part>();
-            Part MainPart = null;
-            //TODO: Сделать проверку всех деталей на два типа Beam и ContourPlate.
-            if (InAssembly.GetMainPart() is Part beam)//TODO: Работет только с Baem, рассмотреть варианты с пластиной.
-            {
-                MainPart = beam;
-            }
-
-            var ArreyChildren = InAssembly.GetSecondaries();//Получение второстепенных деталей в сборке.
-
-            foreach (var child in ArreyChildren) 
-            {
-                if (child is Part beamChild)
-                {
-                    SecondaryBeams.Add(beamChild);
-                }
-            }
-
-            InBIMAssembly = new BIMAssembly(GetAllBeams(MainPart, SecondaryBeams));
-
-            SerializeXML();
+            WorkDirectory = prefixDirectory;
         }
-
-
-        public void GetPath()
+        public BeamLoader(TSM.Assembly InAssembly, PrefixDirectory prefixDirectory)
         {
-            string modelPath = string.Empty;
-            TSM.Model model = new TSM.Model();
-            if (model.GetConnectionStatus())
-            {
-                ModelInfo Info = model.GetInfo();
-                modelPath = Info.ModelPath;
-            }
-            Path = modelPath;
+           WorkDirectory = prefixDirectory;
+           InBIMAssembly = new BIMAssembly(InAssembly);
+           SerializeXML();
         }
-
+       
         public void SerializeXML()
         {
-            if (Path == string.Empty || Path == null)
-            {
-                this.GetPath();
-            }
-
             if (Path != string.Empty)
             {
-                string path = $"{Path}\\RCP_Data\\Prototype_{InBIMAssembly.Prefix}.xml";
+                WorkDirectory.FieldName = InBIMAssembly.Name;
+                WorkDirectory.Prefix = InBIMAssembly.Prefix;
+                string path = WorkDirectory.GetFile();
                if (File.Exists(path)) File.Delete(path);
 
                 XmlSerializer formatter = new XmlSerializer(typeof(BIMAssembly));
 
-                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+                using (FileStream fs = new FileStream(path, FileMode.CreateNew))
                 {
                     formatter.Serialize(fs, InBIMAssembly);
                     fs.Close();
                 }
             }
         }
+
         /// <summary>
         /// Вставка балки из xml файла.
         /// </summary>
         /// <param name="fileName"></param>
-        public void InsertPartXML(string fileName)
+        public void InsertPartXML()
         {
-            if (Path == string.Empty || Path == null)
-            {
-                this.GetPath();
-            }
-            if (File.Exists($"{Path}\\RCP_Data\\{fileName}.xml"))
+           var path = WorkDirectory.GetFile();
+            if (File.Exists(path))
             {
                 var formatter = new XmlSerializer(typeof(BIMAssembly));
 
                 if (this.Path != string.Empty)
                 {
-                    using (var fs = new FileStream($"{Path}\\RCP_Data\\{fileName}.xml", FileMode.OpenOrCreate))
+                    using (var fs = new FileStream(path, FileMode.OpenOrCreate))
                     {
                         InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
                         InBIMAssembly.Insert();
@@ -104,50 +73,6 @@ namespace BIMPropotype_Lib.Controller
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Вставка балки из xml файла.
-        /// </summary>
-        /// <param name="fileName"></param>
-        public BIMAssembly GetPartXML(string fileName)
-        {
-            if (Path == string.Empty || Path == null)
-            {
-                this.GetPath();
-            }
-            if (File.Exists($"{Path}\\RCP_Data\\{fileName}.xml"))
-            {
-                var formatter = new XmlSerializer(typeof(BIMAssembly));
-
-                if (this.Path != string.Empty)
-                {
-                    using (var fs = new FileStream($"{Path}\\RCP_Data\\{fileName}.xml", FileMode.OpenOrCreate))
-                    {
-                       return (BIMAssembly)formatter.Deserialize(fs);
-                    }
-                }
-            }
-            return null;
-        }
-        
-
-        #region private
-
-        private List<Part> GetAllBeams(Part MainPart, List<Part> SecondaryBeams)
-        {
-            var beams = new List<Part>();
-            if (MainPart != null)
-            {
-                beams.Add(MainPart);
-            }
-
-            if (SecondaryBeams.Count > 0)
-            {
-                beams.AddRange(SecondaryBeams);
-            }
-            return beams;
-        }
-        #endregion // private
+        }        
     }
 }

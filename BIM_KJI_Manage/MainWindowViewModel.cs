@@ -10,6 +10,7 @@ using Tekla.Structures;
 using Tekla.Structures.Model.Operations;
 using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.Model;
+using BIMPropotype_Lib.ViewModel;
 
 
 
@@ -27,6 +28,19 @@ namespace Propotype_Manage
 
     class MainWindowViewModel : WindowViewModel
     {
+        private PrefixDirectory _inPrefixDirectory;
+
+        public PrefixDirectory InPrefixDirectory
+        {
+            get { return this._inPrefixDirectory; }
+            private set { this.SetValue(ref this._inPrefixDirectory, value); }
+        }
+
+        public MainWindowViewModel(PrefixDirectory inPrefixDirectory)
+        {
+            InPrefixDirectory = inPrefixDirectory;
+            this.Initialize();
+        }
         /// <summary>
         /// Указывает, подключено ли приложение к Tekla Structures.
         /// </summary>
@@ -56,14 +70,7 @@ namespace Propotype_Manage
             get { return this.modelName; }
             private set { this.SetValue(ref this.modelName, value); }
         }
-        private TSM.Model _inModel;
-
-        public TSM.Model InModel
-        {
-            get { return _inModel; }
-            set { _inModel = value; }
-        }
-
+       
         #region Prototype 
 
         private PrototypeFile _selectPrototype;
@@ -94,9 +101,9 @@ namespace Propotype_Manage
             set { this.SetValue(ref this._prefixAssembly, value); }
         }
 
-        private int _numberAssembly;
+        private string _numberAssembly;
 
-        public int NumberAssembly
+        public string NumberAssembly
         {
             get { return this._numberAssembly; }
             set { this.SetValue(ref this._numberAssembly, value); }
@@ -134,15 +141,120 @@ namespace Propotype_Manage
 
             if (this.IsConnected)
             {
-                InModel = new TSM.Model();
-                this.ModelName = InModel.GetInfo().ModelName;
+                
+                this.ModelName = InPrefixDirectory.ModelInfo.ModelName;
+
 
                 PrototypeList = new ObservableCollection<PrototypeFile>();
 
-                PrototypeWorker.GetModelPrototype(InModel, PrototypeList);
             }
         }
         #region Command.
+
+
+        /// <summary>
+        /// Вставка деталей в модель.
+        /// </summary>
+        [CommandHandler]
+        public void InsertPartXML()
+        {
+            var loader = new BeamLoader(InPrefixDirectory);
+            loader.InsertPartXML();
+        }
+
+        
+        /// <summary>
+        /// Назначить данные в деталь.
+        /// </summary>
+        [CommandHandler]
+        public void ModifySelectedPart()
+        {
+            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
+            if (modelEnum.GetSize() == 1)
+            {
+                while (modelEnum.MoveNext())
+                {
+                    TSM.Assembly assemblyModel = null;
+                    if (modelEnum.Current is TSM.Assembly assembly)
+                    {
+                        assemblyModel = assembly;
+                    }
+                    else if (modelEnum.Current is TSM.Part partModel)
+                    {
+                        assemblyModel = partModel.GetAssembly();
+                     
+                    }
+                    assemblyModel.AssemblyNumber.Prefix = string.Empty;
+                    assemblyModel.AssemblyNumber.StartNumber = 0;
+                    assemblyModel.Modify();
+                    if (assemblyModel.GetMainPart() is TSM.Part mainPart)
+                    {
+                        mainPart.AssemblyNumber.StartNumber = 1;
+                        mainPart.AssemblyNumber.Prefix = $"{PrefixAssembly}-{NumberAssembly}";
+                        mainPart.SetUserProperty("BIM_MARK_KJI", $"{PrefixAssembly}-{NumberAssembly}");
+                        mainPart.SetUserProperty("BIM_MAIN", ConvertBoolByUDA(IsMainAssembly));
+                        mainPart.SetUserProperty("BIM_COPY", ConvertBoolByUDA(IsCopyAssembly));
+                        mainPart.Modify();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Создание ревизии по заполненным данным. 
+        /// </summary>
+        [CommandHandler]
+        public void GetSelectedPartAttributes()
+        {
+            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
+            if (modelEnum.GetSize() == 1)
+            {
+                while (modelEnum.MoveNext())
+                {
+                    TSM.Assembly assemblyModel = null;
+                    if (modelEnum.Current is TSM.Assembly assembly)
+                    {
+                        assemblyModel = assembly;
+                    }
+                    else if (modelEnum.Current is TSM.Part partModel)
+                    {
+                        assemblyModel = partModel.GetAssembly();
+                        
+                    }
+
+                    if (assemblyModel?.GetMainPart() is TSM.Part mainPart)
+                    {
+                        var prefix = mainPart.AssemblyNumber.Prefix;
+                        string[] words = prefix.Split(new char[] { '-' });
+                        PrefixAssembly = string.Empty;
+                        for (int i = 0; i < words.Length-1; i++)
+                        {
+                            PrefixAssembly += words[i];
+                            if (i != words.Length-2) PrefixAssembly += '-';
+                        }
+                        if (words.Length > 1)
+                        {
+                            NumberAssembly = words.Last();
+                        }
+                        else
+                        {
+                            PrefixAssembly = words[0];
+                        }
+                        var bimMain = 0;
+                        mainPart.GetUserProperty("BIM_MAIN", ref bimMain);
+                        IsMainAssembly = ConvertUDAByBool(bimMain);
+                        var bimCopy = 0;
+                        mainPart.GetUserProperty("BIM_COPY", ref bimCopy);
+                        IsCopyAssembly = ConvertUDAByBool(bimCopy);
+                    }
+                    
+                }
+            }
+        }
+
+        #endregion //Command.
+
+        #region ArchiveCommand
 
         /// <summary>
         /// Разрушение компонентов соединений 
@@ -151,34 +263,31 @@ namespace Propotype_Manage
         public void Exploding()
         {
             //TODO: пока не развиваем эту идею, прототипы перспективнее.
-            if (InModel.GetConnectionStatus())
+            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
+            if (modelEnum.GetSize() == 1)
             {
-                TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-                if (modelEnum.GetSize() == 1)
+                ArrayList listConnection = new ArrayList();
+                while (modelEnum.MoveNext())
                 {
-                    ArrayList listConnection = new ArrayList();
-                    while (modelEnum.MoveNext())
-                    {
-                        //if (modelEnum.Current is TSM.Assembly assemblyModel)
-                        //{
-                        //    var enumModel = assemblyModel.GetFatherComponent();
+                    //if (modelEnum.Current is TSM.Assembly assemblyModel)
+                    //{
+                    //    var enumModel = assemblyModel.GetFatherComponent();
 
-                        //}
-                        if (modelEnum.Current is TSM.Part partModel)
+                    //}
+                    if (modelEnum.Current is TSM.Part partModel)
+                    {
+                        var enumModel = partModel.GetComponents();
+                        while (enumModel.MoveNext())
                         {
-                            var enumModel = partModel.GetComponents();
-                            while (enumModel.MoveNext())
-                            {
-                                var connectionObject = enumModel.Current as TSM.BaseComponent;
-                                listConnection.Add(connectionObject);
-                            }                           
+                            var connectionObject = enumModel.Current as TSM.BaseComponent;
+                            listConnection.Add(connectionObject);
                         }
                     }
-
-                    UI.ModelObjectSelector modelObjectSelector = new UI.ModelObjectSelector();
-                    modelObjectSelector.Select(listConnection, false);
-                    ExplodeConnection();
                 }
+
+                UI.ModelObjectSelector modelObjectSelector = new UI.ModelObjectSelector();
+                modelObjectSelector.Select(listConnection, false);
+                ExplodeConnection();
             }
         }
 
@@ -209,7 +318,7 @@ namespace Propotype_Manage
                 //if (DrawingHandler.GetActiveDrawing() != null)
                 //    MacrosPath = "drawings";
                 //else
-                    MacrosPath = "modeling";
+                MacrosPath = "modeling";
 
                 var pathFullCommon = Path.Combine(macrosPathFull, MacrosPath, Name);
 
@@ -256,7 +365,7 @@ namespace Propotype_Manage
 
                 if (CurrentModel.GetConnectionStatus())
                 {
-                    
+
                     while (Operation.IsMacroRunning())
                         Thread.Sleep(100);
                     result = Operation.RunMacro(NameMacros);
@@ -291,216 +400,27 @@ namespace Propotype_Manage
         public void CreatePart()
         {
             //TODO: пока не развиваем эту идею, прототипы перспективнее.
-            if (InModel.GetConnectionStatus())
+            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
+            if (modelEnum.GetSize() == 1)
             {
-                TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-                if (modelEnum.GetSize() == 1)
+                ArrayList listConnection = new ArrayList();
+                while (modelEnum.MoveNext())
                 {
-                    ArrayList listConnection = new ArrayList();
-                    while (modelEnum.MoveNext())
+                    if (modelEnum.Current is TSM.Assembly assemblyModel)
                     {
-                        if (modelEnum.Current is TSM.Assembly assemblyModel)
-                        {
-                            listConnection = assemblyModel.GetSecondaries();
-                            var mainPart = assemblyModel.GetMainPart();
-                            listConnection.Add(mainPart as TSM.Part);
-                        }
-                    }
-
-                    UI.ModelObjectSelector modelObjectSelector = new UI.ModelObjectSelector();
-                    modelObjectSelector.Select(listConnection, false);
-                    //ExplodeConnection();
-                    CraeteComponetnPartType("TestPart1");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Создание прототипа XML сборки.
-        /// </summary>
-        [CommandHandler]
-        public void Serialize()
-        {
-            if (InModel.GetConnectionStatus())
-            {
-                TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-                if (modelEnum.GetSize() == 1)
-                {
-                    while (modelEnum.MoveNext())
-                    {
-                        if (modelEnum.Current is TSM.Assembly assemblyModel)
-                        {
-                            new BeamLoader(assemblyModel);
-                        }
+                        listConnection = assemblyModel.GetSecondaries();
+                        var mainPart = assemblyModel.GetMainPart();
+                        listConnection.Add(mainPart as TSM.Part);
                     }
                 }
+
+                UI.ModelObjectSelector modelObjectSelector = new UI.ModelObjectSelector();
+                modelObjectSelector.Select(listConnection, false);
+                //ExplodeConnection();
+                CraeteComponetnPartType("TestPart1");
             }
         }
-
-        /// <summary>
-        /// Вызов вставки плагина, пока вставка в 0ль модели.
-        /// </summary>
-        [CommandHandler]
-        public void InsertPartXML()
-        {
-            if (InModel.GetConnectionStatus())
-            {
-                if (SelectPrototype != null)
-                {
-                    var loader = new BeamLoader();
-                    loader.InsertPartXML(SelectPrototype.Name);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Создание ревизии по заполненным данным. 
-        /// </summary>
-        [CommandHandler]
-        public void RefreshList()
-        {
-            if (InModel.GetConnectionStatus())
-            {
-                PrototypeList.Clear();
-                PrototypeWorker.GetModelPrototype(InModel, PrototypeList);
-            }
-        }
-        // <summary>
-        /// Создание ревизии по заполненным данным. 
-        /// </summary>
-        [CommandHandler]
-        public void DelitedSelected()
-        {
-            if (InModel.GetConnectionStatus())
-            {
-                if (SelectPrototype != null)
-                {
-                    PrototypeWorker.DeliteFile(SelectPrototype.ToString());
-                    RefreshList();
-                }
-            }
-        }
-        
-
-        /// <summary>
-        /// Создание ревизии по заполненным данным. 
-        /// </summary>
-        [CommandHandler]
-        public void ModifySelectedPart()
-        {
-            if (InModel.GetConnectionStatus())
-            {
-                TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-                if (modelEnum.GetSize() == 1)
-                {
-                    while (modelEnum.MoveNext())
-                    {
-                        if (modelEnum.Current is TSM.Assembly assemblyModel)
-                        {
-                            assemblyModel.AssemblyNumber.Prefix = string.Empty;
-                            assemblyModel.AssemblyNumber.StartNumber = 0;
-                            assemblyModel.Modify();
-                            if (assemblyModel.GetMainPart() is TSM.Part mainPart)
-                            {
-                                mainPart.AssemblyNumber.StartNumber = 1;
-                                mainPart.AssemblyNumber.Prefix = $"{PrefixAssembly}-{NumberAssembly}";
-                                mainPart.SetUserProperty("BIM_MARK_KJI", $"{PrefixAssembly}-{NumberAssembly}");
-                                mainPart.SetUserProperty("BIM_MAIN", ConvertBoolByUDA(IsMainAssembly));
-                                mainPart.SetUserProperty("BIM_COPY", ConvertBoolByUDA(IsCopyAssembly));
-                                mainPart.Modify();
-                            }
-                        }
-                        else if (modelEnum.Current is TSM.Part partModel)
-                        {
-                            assemblyModel = partModel.GetAssembly();
-                            assemblyModel.AssemblyNumber.Prefix = string.Empty;
-                            assemblyModel.AssemblyNumber.StartNumber = 0;
-                            assemblyModel.Modify();
-                            if (assemblyModel.GetMainPart() is TSM.Part mainPart)
-                            {
-                                mainPart.AssemblyNumber.StartNumber = 1;
-                                mainPart.AssemblyNumber.Prefix = $"{PrefixAssembly}-{NumberAssembly}";
-                                mainPart.SetUserProperty("BIM_MARK_KJI", $"{PrefixAssembly}-{NumberAssembly}");
-                                mainPart.SetUserProperty("BIM_MAIN", ConvertBoolByUDA(IsMainAssembly));
-                                mainPart.SetUserProperty("BIM_COPY", ConvertBoolByUDA(IsCopyAssembly));
-                                mainPart.Modify();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Создание ревизии по заполненным данным. 
-        /// </summary>
-        [CommandHandler]
-        public void GetSelectedPartAttributes()
-        {
-            if (InModel.GetConnectionStatus())
-            {
-                TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-                if (modelEnum.GetSize() == 1)
-                {
-                    while (modelEnum.MoveNext())
-                    {
-                        if (modelEnum.Current is TSM.Assembly assemblyModel)
-                        {
-                            if (assemblyModel.GetMainPart() is TSM.Part mainPart)
-                            {
-                                var prefix = mainPart.AssemblyNumber.Prefix;
-                                string[] words = prefix.Split(new char[] {'-'});
-                                PrefixAssembly = words[0];
-                                var number = 0;
-                                if (words.Length > 1)
-                                {
-                                    int.TryParse(words[1], out number);
-                                    if (number != 0)
-                                    {
-                                        NumberAssembly = number;
-                                    }
-                                }
-
-                                var bimMain = 0;
-                                mainPart.GetUserProperty("BIM_MAIN", ref bimMain);
-                                IsMainAssembly = ConvertUDAByBool(bimMain);
-                                var bimCopy = 0;
-                                mainPart.GetUserProperty("BIM_COPY",ref bimCopy);
-                                IsCopyAssembly = ConvertUDAByBool(bimCopy);
-                            }
-                        }
-                        else if (modelEnum.Current is TSM.Part partModel)
-                        {
-                            assemblyModel = partModel.GetAssembly();
-                            if (assemblyModel.GetMainPart() is TSM.Part mainPart)
-                            {
-                                var prefix = mainPart.AssemblyNumber.Prefix;
-                                string[] words = prefix.Split(new char[] { '-' });
-                                PrefixAssembly = words[0];
-                                var number = 0;
-                                if (words.Length > 1)
-                                {
-                                    int.TryParse(words[1], out number);
-                                    if (number != 0)
-                                    {
-                                        NumberAssembly = number;
-                                    }
-                                }
-
-                                var bimMain = 0;
-                                mainPart.GetUserProperty("BIM_MAIN", ref bimMain);
-                                IsMainAssembly = ConvertUDAByBool(bimMain);
-                                var bimCopy = 0;
-                                mainPart.GetUserProperty("BIM_COPY", ref bimCopy);
-                                IsCopyAssembly = ConvertUDAByBool(bimCopy);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        #endregion
+        #endregion //ArchiveCommand`
 
         #region Приватные методы.
         private int ConvertBoolByUDA(bool propertyBool) 
