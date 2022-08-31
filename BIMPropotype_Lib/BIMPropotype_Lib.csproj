@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\BeamLoader.cs" />
+    <Compile Include="ExtentionAPI\Mirror\PartExtentions.cs" />
     <Compile Include="Model\BIMAssembly.cs" />
     <Compile Include="Model\BIMBeam.cs" />
     <Compile Include="Model\BIMBolt.cs" />

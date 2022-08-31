@@ -151,7 +151,6 @@ namespace Propotype_Manage
         }
         #region Command.
 
-
         /// <summary>
         /// Вставка деталей в модель.
         /// </summary>
@@ -162,7 +161,17 @@ namespace Propotype_Manage
             loader.InsertPartXML();
         }
 
-        
+        /// <summary>
+        /// Вставка деталей в модель.
+        /// </summary>
+        [CommandHandler]
+        public void InsertMirror()
+        {
+            var loader = new BeamLoader(InPrefixDirectory);
+            loader.InsertMirror();
+        }
+
+
         /// <summary>
         /// Назначить данные в деталь.
         /// </summary>

@@ -23,6 +23,7 @@
                 <Button Margin="2" Height="30" Command="{ui:CommandHandler ModifySelectedPart}">Назначить атрибуты</Button>
                 <Button Margin="2" Height="30" Command="{ui:CommandHandler GetSelectedPartAttributes}">Считать атирбуты</Button>
                 <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertPartXML}" Cursor="Hand">InsertPart</Button>
+                <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertMirror}" Cursor="Hand">InsertMirror</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Префикс сборки"/>

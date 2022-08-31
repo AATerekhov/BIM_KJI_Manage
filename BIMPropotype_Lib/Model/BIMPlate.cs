@@ -28,7 +28,11 @@ namespace BIMPropotype_Lib.Model
             GetBolts(ContourPlate.GetBolts());
             if (CheckMainPart(ContourPlate)) GetPutInAssembly(ContourPlate);
         }
-
+        public override void InsertMirror()
+        {
+            if (ContourPlate == null) GetCounterPlate();
+            InsertMirror(this.ContourPlate);
+        }
         public override void Insert()
         {
             if (ContourPlate == null) GetCounterPlate();

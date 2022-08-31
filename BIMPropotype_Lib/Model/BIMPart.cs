@@ -3,6 +3,7 @@ using Tekla.Structures.Model;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BIMPropotype_Lib.ExtentionAPI.Mirror;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -29,6 +30,36 @@ namespace BIMPropotype_Lib.Model
 
         //TODO: Рассмотерть возможность работы с группами через разложение и объединение в простые стержни.
 
+        public virtual void InsertMirror() => InsertMirror(this.InPart);
+        public void InsertMirror(Part part)
+        {
+            part.InsertMirror(true);//При вставке деталь получает новый GUID.
+            UDAList.GetUDAToPart(part);
+
+            //Pruning.Insert(part);
+
+            //foreach (var rebar in Rebars)//Вставка арматуры в деталь.
+            //{
+            //    rebar.Insert(part);
+            //}
+
+            //foreach (var bolt in Bolts)
+            //{
+            //    bolt.Inser(part);
+            //}
+
+            if (PutInAssembly.Count != 0)//Если есть подсборки, то вставка.
+            {
+                var mainAssembly = part.GetAssembly();
+                foreach (var item in PutInAssembly)
+                {
+                    item.InsertMirror();
+                    var hisAssembly = item.GetAssembly();
+                    mainAssembly.Add(hisAssembly);
+                }
+                mainAssembly.Modify();
+            }
+        }
         public virtual void Insert() => Insert(this.InPart);
         public void Insert(Part  part) 
         {

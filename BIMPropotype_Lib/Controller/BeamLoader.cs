@@ -73,6 +73,31 @@ namespace BIMPropotype_Lib.Controller
                     }
                 }
             }
-        }        
+        }
+
+        /// <summary>
+        /// Вставка балки из xml файла зеркально с сохранением осей главной детали.
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void InsertMirror()
+        {
+            var path = WorkDirectory.GetFile();
+            if (File.Exists(path))
+            {
+                var formatter = new XmlSerializer(typeof(BIMAssembly));
+
+                if (this.Path != string.Empty)
+                {
+                    using (var fs = new FileStream(path, FileMode.OpenOrCreate))
+                    {
+                        InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
+                        InBIMAssembly.InsertMirror();
+                        TSM.Model model = new TSM.Model();
+                        model.CommitChanges();
+                    }
+                }
+            }
+        }
+
     }
 }

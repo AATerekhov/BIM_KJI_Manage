@@ -57,6 +57,22 @@ namespace BIMPropotype_Lib.Model
             }
         }
 
+        public void InsertMirror() 
+        {
+
+            foreach (var element in Elements)
+            {
+                element.InsertMirror();
+            }
+
+            foreach (var plate in Plates)
+            {
+                plate.InsertMirror();
+            }
+
+            BuildAssembly();
+        }
+
         public void Insert()
         {
             foreach (var element in Elements)
