@@ -36,12 +36,12 @@ namespace BIMPropotype_Lib.Model
             part.InsertMirror(true);//При вставке деталь получает новый GUID.
             UDAList.GetUDAToPart(part);
 
-            //Pruning.Insert(part);
+            Pruning.InsertMirror(part);
 
-            //foreach (var rebar in Rebars)//Вставка арматуры в деталь.
-            //{
-            //    rebar.Insert(part);
-            //}
+            foreach (var rebar in Rebars)//Вставка арматуры в деталь.
+            {
+                rebar.InsertMirror(part);
+            }
 
             //foreach (var bolt in Bolts)
             //{

@@ -1,6 +1,7 @@
 ﻿using TSM = Tekla.Structures.Model;
 using System.Collections.Generic;
 using System;
+using BIMPropotype_Lib.ExtentionAPI.Mirror;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -56,6 +57,15 @@ namespace BIMPropotype_Lib.Model
             if (BooleanPlates.Count > 0) AddBooleanPlate(part, BooleanPlates);
         }
 
+        public void InsertMirror(TSM.Part part)
+        {
+            if (BooleanParts.Count > 0) AddMirrorBooleanPart(part, BooleanParts);
+            if (BooleanPlates.Count > 0) AddMirrorBooleanPlate(part, BooleanPlates);
+            if (CutPlanes.Count > 0) AddMirrorBooleanCut(part, CutPlanes);
+            if (Fittings.Count > 0) AddMirrorBooleanPlane(part, Fittings);
+
+        }
+       
         private void AddBooleanPart(TSM.Part part, List<TSM.BooleanPart> booleans)
         {
             foreach (var item in booleans)
@@ -97,5 +107,49 @@ namespace BIMPropotype_Lib.Model
                 if (boolean.Insert()) operativePart.Delete();               
             }
         }
+
+        #region Mirror
+        private void AddMirrorBooleanPart(TSM.Part part, List<TSM.BooleanPart> booleans)
+        {
+            foreach (var item in booleans)
+            {
+                var operativePart = item.OperativePart;
+                operativePart.InsertMirror(true);
+                operativePart.Class = TSM.BooleanPart.BooleanOperativeClassName;
+                TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = item.Type, Father = part };
+                boolean.SetOperativePart(operativePart);
+                if (boolean.Insert()) operativePart.Delete();
+            }
+        }
+        private void AddMirrorBooleanPlate(TSM.Part part, List<BIMBooleanPlate> fittings)
+        {
+            foreach (var item in fittings)
+            {
+                var operativePart = item.Plate.GetContourPlate();
+                operativePart.InsertMirror(true);
+                operativePart.Class = TSM.BooleanPart.BooleanOperativeClassName;
+                TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = item.BooleanType, Father = part };
+                boolean.SetOperativePart(operativePart);
+                if (boolean.Insert()) operativePart.Delete();
+            }
+        }
+        private void AddMirrorBooleanCut(TSM.Part part, List<TSM.CutPlane> fittings)
+        {
+            foreach (var item in fittings)
+            {
+                item.Father = part;
+                item.InsertMirror();
+            }
+        }
+        private void AddMirrorBooleanPlane(TSM.Part part, List<TSM.Fitting> fittings)
+        {
+            foreach (var item in fittings)
+            {
+                item.Father = part;
+                item.InsertMirror();
+            }
+        }
+
+        #endregion//Mirror
     }
 }

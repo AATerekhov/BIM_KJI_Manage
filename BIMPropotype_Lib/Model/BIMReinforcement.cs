@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tekla.Structures.Model;
+using BIMPropotype_Lib.ExtentionAPI.Mirror;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -48,6 +49,23 @@ namespace BIMPropotype_Lib.Model
                 UDAList.GetUDAToPart(rebar);
             }
         }
+        internal void InsertMirror(ModelObject modelObject)
+        {
+            if ((int)ReinforcementType == 0)
+            {
+                SingleRebar.Father = modelObject;
+                SingleRebar.InsertMirror();
+                UDAList.GetUDAToPart(SingleRebar);
+            }
+            if ((int)ReinforcementType == 1)
+            {
+                var rebar = RebarGroup.GetRebarGroup();
+                rebar.Father = modelObject;
+                rebar.InsertMirror();
+                UDAList.GetUDAToPart(rebar);
+            }
+        }
+
     }
 
     public enum BIMReinforcementType
