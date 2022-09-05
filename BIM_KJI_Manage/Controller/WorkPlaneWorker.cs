@@ -50,6 +50,7 @@ namespace Propotype_Manage.Controller
             baseCS.AxisX = new Vector(pointX - baseCS.Origin);
             baseCS.AxisY = new Vector(pointY - baseCS.Origin);
             var vecterZ = -1*baseCS.AxisX.Cross(baseCS.AxisY);
+            vecterZ.Normalize(1000);
 
             var mainPart = WorkerAssembly.GetMainPart();
             var partCS = mainPart.GetCoordinateSystem();
@@ -60,6 +61,7 @@ namespace Propotype_Manage.Controller
             if (AssemblyType == AssemblyType.beam) 
             {
                 var vectorY = partCS.AxisX.Cross(vecterZ);
+                vectorY.Normalize(1000);
                 newCS = new CoordinateSystem(GetStartedPoint(mainPart), partCS.AxisX, vectorY);
             }
             else
@@ -82,10 +84,17 @@ namespace Propotype_Manage.Controller
         private Point GetStartedPoint(TSM.ModelObject part) 
         {
             if(part is TSM.Beam beam) return beam.StartPoint;
-            if (part is TSM.ContourPlate plate)
+            else if (part is TSM.ContourPlate plate)
             {
                 TSM.Polygon polygon = null;
                 plate.Contour.CalculatePolygon(out polygon);
+
+                if (polygon.Points[0] is Point point) return point;
+            }
+            else if (part is TSM.PolyBeam polyBeam)
+            {
+                TSM.Polygon polygon = null;
+                polyBeam.Contour.CalculatePolygon(out polygon);
 
                 if (polygon.Points[0] is Point point) return point;
             }

@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\BeamLoader.cs" />
+    <Compile Include="ExtentionAPI\InserPlugin\PrefixDirectoryExtentions.cs" />
     <Compile Include="ExtentionAPI\Mirror\PartExtentions.cs" />
     <Compile Include="Model\BIMAssembly.cs" />
     <Compile Include="Model\BIMBeam.cs" />
@@ -89,8 +90,10 @@
     <Compile Include="Model\BIMBooleanPlate.cs" />
     <Compile Include="Model\BIMPart.cs" />
     <Compile Include="Model\BIMPlate.cs" />
+    <Compile Include="Model\BIMPolyBeam.cs" />
     <Compile Include="Model\BIMReinforcement.cs" />
     <Compile Include="Model\BIMUda.cs" />
+    <Compile Include="Model\CustomPolyBeam.cs" />
     <Compile Include="Model\CustomPolygon.cs" />
     <Compile Include="Model\BIMPruning.cs" />
     <Compile Include="Model\BIMRebarGroup.cs" />
@@ -104,6 +107,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -13,6 +13,7 @@ namespace BIMPropotype_Lib.Model
         public string Prefix { get; set; }
         public List<BIMBeam> Elements { get; set; }
         public List<BIMPlate> Plates { get; set; }
+        public List<BIMPolyBeam> PolyBeams { get; set; }
         public MainTypa Type { get; set; }
         public BIMAssembly() { }
 
@@ -21,6 +22,8 @@ namespace BIMPropotype_Lib.Model
             var parts = GetPartsToAssembly(assembly);
             this.Elements = new List<BIMBeam>();
             this.Plates = new List<BIMPlate>();
+            this.PolyBeams = new List<BIMPolyBeam>();
+
             for (int i = 0; i < parts.Count; i++)
             {
                 if (i == 0)
@@ -39,6 +42,7 @@ namespace BIMPropotype_Lib.Model
                         Plates.Add(new BIMPlate(plate));
                         continue;
                     }
+                    //TODO: Добавить обработку PolyBeam
                 }
                 else
                 {
@@ -195,15 +199,16 @@ namespace BIMPropotype_Lib.Model
         {
             if (part is Beam) return true;
             if (part is ContourPlate) return true;
+            if (part is PolyBeam) return true;
             return false;
         }
         #endregion//Privet
-
 
         public enum MainTypa
         {
             beam = 0,
             plate = 1,
+            polyBeam = 2,
         }
     }
     

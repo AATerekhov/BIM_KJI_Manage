@@ -18,7 +18,9 @@ namespace BIMPropotype_Lib.ViewModel
         public string PathThisModel
         {
             get { return _pathThisModel; }
-            set { _pathThisModel = value;
+            set
+            {
+                _pathThisModel = value;
                 this.OnPropertyChanged("PathThisModel");
             }
         }
@@ -39,7 +41,9 @@ namespace BIMPropotype_Lib.ViewModel
         public string FieldName
         {
             get { return _fieldName; }
-            set { _fieldName = value;
+            set
+            {
+                _fieldName = value;
                 this.OnPropertyChanged("FieldName");
             }
         }
@@ -48,7 +52,9 @@ namespace BIMPropotype_Lib.ViewModel
         public string Prefix
         {
             get { return _prefix; }
-            set { _prefix = value;
+            set
+            {
+                _prefix = value;
                 this.OnPropertyChanged("Prefix");
             }
         }
@@ -56,13 +62,13 @@ namespace BIMPropotype_Lib.ViewModel
         public TSM.ProjectInfo ProjectlInfo { get; set; }
         public TSM.ModelInfo ModelInfo { get; set; }
 
-        public PrefixDirectory() 
+        public PrefixDirectory()
         {
             //Тут может быть более подробная проверка на GetConnectionStatus
             Model = new TSM.Model();
-            if(Model.GetConnectionStatus()) GetPath(Model);
+            if (Model.GetConnectionStatus()) GetPath(Model);
         }
-        public PrefixDirectory(TSM.Model model) 
+        public PrefixDirectory(TSM.Model model)
         {
             Model = model;
             GetPath(model);
@@ -78,11 +84,11 @@ namespace BIMPropotype_Lib.ViewModel
             ModelInfo = model.GetInfo();
         }
 
-        private void SevaModelDirectory() 
+        private void SevaModelDirectory()
         {
-            ProjectlInfo.SetUserProperty("PROJECT_USERFIELD_1",_modelDirectory);
+            ProjectlInfo.SetUserProperty("PROJECT_USERFIELD_1", _modelDirectory);
         }
-        public string GetFile() 
+        public string GetFile()
         {
             if (!Directory.Exists(this.GetDirectory())) Directory.CreateDirectory(this.GetDirectory());
             return Path.Combine(ModelDirectory, addModelDirectory, FieldName, Prefix);
@@ -101,12 +107,13 @@ namespace BIMPropotype_Lib.ViewModel
             return path;
         }
 
-        public string[] GetFields(string directopy) 
+        public string[] GetFields(string directopy)
         {
-         var vs = Directory.GetDirectories(directopy);
+            if (!Directory.Exists(directopy)) Directory.CreateDirectory(directopy);
+            var vs = Directory.GetDirectories(directopy);
             return vs;
         }
-        public string[] GetFiles(string directopy) 
+        public string[] GetFiles(string directopy)
         {
             var vs = Directory.GetFiles(directopy);
             return vs;

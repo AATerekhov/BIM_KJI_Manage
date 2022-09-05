@@ -11,6 +11,7 @@ using PrototypeConductor.Controller;
 using TSM = Tekla.Structures.Model;
 using UI = Tekla.Structures.Model.UI;
 using BIMPropotype_Lib.Controller;
+using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
 
 namespace Propotype_Manage.ViewConductor
 {
@@ -138,7 +139,18 @@ namespace Propotype_Manage.ViewConductor
                     selected.Parent.Children.Remove(selected);
                 }
             }
-
+        }
+        /// <summary>
+        /// Вставка деталей в модель.
+        /// </summary>
+        [CommandHandler]
+        public void InsertPlugin()
+        {
+            var selected = Searcher(Conductor.ToList<TreeViewItemViewModel>());
+            if (selected != null)
+            {
+                Database.PrefixDirectory.InsetPlugin();
+            }
         }
 
         private bool CheckFoulder(TreeViewItemViewModel treeViewItemViewModel) 

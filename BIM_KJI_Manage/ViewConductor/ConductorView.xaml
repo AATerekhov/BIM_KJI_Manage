@@ -26,6 +26,11 @@
                         <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Extensions}"/>
                     </StackPanel>
                 </Button>
+                <Button   Command="{ui:CommandHandler InsertPlugin}" Background="LightGray" Height="25">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.ObjectSteelItem}"/>
+                    </StackPanel>
+                </Button>
                 <TextBox Height="25" Width="400"  Text="{Binding Path=Database.PrefixDirectory.ModelDirectory, Mode=TwoWay}"/>                
             </StackPanel>
             <TreeView ItemsSource="{Binding Conductor,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">

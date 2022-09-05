@@ -55,8 +55,8 @@ namespace BIMPropotype_Lib.Model
         private List<TSM.ContourPoint> Averaging(TSM.ContourPlate contourPlate) 
         {            
           var listPoint = GetPoints(contourPlate.Contour);
-            TSG.Vector vectorX = new TSG.Vector(listPoint[2]- listPoint[1]);
-            TSG.Vector vectorY = new TSG.Vector(listPoint[listPoint.Count-1] - listPoint[1]);
+            TSG.Vector vectorX = new TSG.Vector(listPoint[1]- listPoint[0]);
+            TSG.Vector vectorY = new TSG.Vector(listPoint[listPoint.Count-1] - listPoint[0]);
 
             var vectorZ = vectorX.Cross(vectorY);
 
