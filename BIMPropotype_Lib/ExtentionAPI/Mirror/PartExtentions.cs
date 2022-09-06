@@ -85,11 +85,17 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
 
                 if (swap) contourPoints.Reverse();
 
+
                 polyBeam.Contour.ContourPoints.Clear();
                 foreach (var point in contourPoints)
                 {
                     polyBeam.Contour.AddContourPoint(point);
                 }
+
+                if (polyBeam.Position.Depth == Position.DepthEnum.BEHIND) polyBeam.Position.Depth = Position.DepthEnum.FRONT;
+                if (polyBeam.Position.Depth == Position.DepthEnum.FRONT) polyBeam.Position.Depth = Position.DepthEnum.BEHIND;
+                if (polyBeam.Position.Plane == Position.PlaneEnum.LEFT) polyBeam.Position.Plane = Position.PlaneEnum.RIGHT;
+                if (polyBeam.Position.Plane == Position.PlaneEnum.RIGHT) polyBeam.Position.Plane = Position.PlaneEnum.LEFT;
                 polyBeam.Insert();
             }
         }
