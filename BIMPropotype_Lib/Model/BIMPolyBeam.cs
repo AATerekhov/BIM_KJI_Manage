@@ -4,43 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Tekla.Structures.Model;
+using TSM = Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
     public class BIMPolyBeam : BIMPart, iBIMModelObject
     {
-        [XmlIgnore]
-        public PolyBeam PolyBeam { get; set; }
-        public CustomPolyBeam Plate { get; set; }
+        public CustomPolyBeam PolyBeam { get; set; }
 
         public BIMPolyBeam() { }
 
-        public BIMPolyBeam(PolyBeam inPolybeam)
+        public BIMPolyBeam(TSM.PolyBeam inPolybeam)
         {
-            //Plate = new CustomPlate(inPlate);
+            PolyBeam = new CustomPolyBeam(inPolybeam);
 
-            //ContourPlate = inPlate;
-            //UDAList = new UDACollection(ContourPlate);
-            //GetRebar(ContourPlate.GetReinforcements());
-            //Pruning = new BIMPruning(ContourPlate.GetBooleans());
-            //GetBolts(ContourPlate.GetBolts());
-            //if (CheckMainPart(ContourPlate)) GetPutInAssembly(ContourPlate);
+            UDAList = new UDACollection(inPolybeam);
+            GetRebar(inPolybeam.GetReinforcements());
+            Pruning = new BIMPruning(inPolybeam.GetBooleans());
+            GetBolts(inPolybeam.GetBolts());
+            if (CheckMainPart(inPolybeam)) GetPutInAssembly(inPolybeam);
         }
         public override void InsertMirror()
         {
-            //    if (ContourPlate == null) GetCounterPlate();
-            //    InsertMirror(this.ContourPlate);
+            PolyBeam.GetPolyBeam();
+            InsertMirror(PolyBeam.PolyBeam);
         }
         public override void Insert()
         {
-            //if (ContourPlate == null) GetCounterPlate();
-            //Insert(this.ContourPlate);
-        }
-        public void GetCounterPlate()
-        {
-            //ContourPlate = Plate.GetContourPlate();
-        }
+            PolyBeam.GetPolyBeam();
+            Insert(PolyBeam.PolyBeam);
+        }       
     }
 }

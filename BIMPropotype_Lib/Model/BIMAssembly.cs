@@ -42,7 +42,12 @@ namespace BIMPropotype_Lib.Model
                         Plates.Add(new BIMPlate(plate));
                         continue;
                     }
-                    //TODO: Добавить обработку PolyBeam
+                    if (parts[i] is PolyBeam polyBeam)
+                    {
+                        Type = MainTypa.polyBeam;
+                        PolyBeams.Add(new BIMPolyBeam(polyBeam));
+                        continue;
+                    }
                 }
                 else
                 {
@@ -54,6 +59,11 @@ namespace BIMPropotype_Lib.Model
                     if (parts[i] is ContourPlate plate)
                     {
                         Plates.Add(new BIMPlate(plate));
+                        continue;
+                    }
+                    if (parts[i] is PolyBeam polyBeam)
+                    {
+                        PolyBeams.Add(new BIMPolyBeam(polyBeam));
                         continue;
                     }
 
@@ -74,6 +84,11 @@ namespace BIMPropotype_Lib.Model
                 plate.InsertMirror();
             }
 
+            foreach (var polyBeam in PolyBeams)
+            {
+                polyBeam.InsertMirror();
+            }
+
             BuildAssembly();
         }
 
@@ -87,6 +102,11 @@ namespace BIMPropotype_Lib.Model
             foreach (var plate in Plates)
             {
                 plate.Insert();
+            }
+
+            foreach (var polyBeams in PolyBeams)
+            {
+                polyBeams.Insert();
             }
 
             BuildAssembly();
@@ -115,8 +135,15 @@ namespace BIMPropotype_Lib.Model
                         assembly.Add(Plates[i].ContourPlate);
                     }
                 }
+                if (PolyBeams.Count > 0)
+                {
+                    for (int i = 0; i < PolyBeams.Count; i++)
+                    {
+                        assembly.Add(PolyBeams[i].PolyBeam.PolyBeam);
+                    }
+                }
             }
-            else
+            else if ((int)Type == 1)
             {
                 assembly = Plates[0].ContourPlate.GetAssembly();
                 if (Plates.Count > 1)
@@ -132,6 +159,39 @@ namespace BIMPropotype_Lib.Model
                     for (int i = 0; i < Elements.Count; i++)
                     {
                         assembly.Add(Elements[i].InPart);
+                    }
+                }
+                if (PolyBeams.Count > 0)
+                {
+                    for (int i = 0; i < PolyBeams.Count; i++)
+                    {
+                        assembly.Add(PolyBeams[i].PolyBeam.PolyBeam);
+                    }
+                }
+            }
+            else if ((int)Type == 2)
+            {
+                assembly = PolyBeams[0].PolyBeam.PolyBeam.GetAssembly();
+                if (PolyBeams.Count > 1)
+                {
+                    for (int i = 1; i < PolyBeams.Count; i++)
+                    {
+                        assembly.Add(PolyBeams[i].PolyBeam.PolyBeam);
+                    }
+                }
+
+                if (Elements.Count > 0)
+                {
+                    for (int i = 0; i < Elements.Count; i++)
+                    {
+                        assembly.Add(Elements[i].InPart);
+                    }
+                }
+                if (Plates.Count > 0)
+                {
+                    for (int i = 0; i < Plates.Count; i++)
+                    {
+                        assembly.Add(Plates[i].ContourPlate);
                     }
                 }
             }

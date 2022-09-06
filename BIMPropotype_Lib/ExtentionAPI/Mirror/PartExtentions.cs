@@ -15,13 +15,14 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
         /// </summary>
         /// <param name="part"></param>
         /// <param name="swap">Сохранить систему координат детали</param>
-        public static void InsertMirror(this Part part, bool swap) 
+        public static void InsertMirror(this Part part, bool swap)
         {
             var CS = new TSG.CoordinateSystem();
             var plane = new TSG.GeometricPlane(CS.Origin, CS.AxisX);
 
             if (part is Beam beam)
             {
+                beam.Profile.ProfileMirrod();
                 var startPoint = beam.StartPoint;
                 var endPoint = beam.EndPoint;
 
@@ -40,22 +41,11 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
                 }
                 else
                 {
-                    if (!TSG.Parallel.LineToLine(new TSG.Line(startPoint, endPoint), new TSG.Line(CS.Origin, CS.AxisX.Cross(CS.AxisY))))
-                    {
-                        if (beam.Position.Plane == Position.PlaneEnum.LEFT) beam.Position.Plane = Position.PlaneEnum.RIGHT;
-                        else if (beam.Position.Plane == Position.PlaneEnum.RIGHT) beam.Position.Plane = Position.PlaneEnum.LEFT;
-                    }
-                    else
-                    {
-                        if (beam.Position.Depth == Position.DepthEnum.FRONT) beam.Position.Depth = Position.DepthEnum.BEHIND;
-                        else if (beam.Position.Depth == Position.DepthEnum.BEHIND) beam.Position.Depth = Position.DepthEnum.FRONT;
-                    }
-                   
-                    beam.StartPoint = MirrorPoint(plane, startPoint);
-                    beam.EndPoint = MirrorPoint(plane, endPoint);
+                    beam.StartPoint = MirrorPoint(plane, endPoint);
+                    beam.EndPoint = MirrorPoint(plane, startPoint);
                 }
-                
-                
+
+
                 beam.Insert();
             }
             else if (part is ContourPlate plate)
@@ -80,6 +70,28 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
                 }
                 plate.Insert();
             }
+            else if (part is PolyBeam polyBeam)
+            {
+                var points = polyBeam.Contour.ContourPoints;
+                List<ContourPoint> contourPoints = new List<ContourPoint>();
+                foreach (var point in points)
+                {
+                    if (point is ContourPoint contourPoint)
+                    {
+                        contourPoint.SetPoint(MirrorPoint(plane, contourPoint));
+                        contourPoints.Add(contourPoint);
+                    }
+                }
+
+                if (swap) contourPoints.Reverse();
+
+                polyBeam.Contour.ContourPoints.Clear();
+                foreach (var point in contourPoints)
+                {
+                    polyBeam.Contour.AddContourPoint(point);
+                }
+                polyBeam.Insert();
+            }
         }
 
         public static void InsertMirror(this CutPlane cutPlane)
@@ -93,8 +105,8 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
             var pointX = plane.Origin + plane.AxisX;
             var pointY = plane.Origin + plane.AxisY;
 
-            cutPlane.Plane.Origin = MirrorPoint(gPlane,pointOrigin);
-            cutPlane.Plane.AxisX =-1* new TSG.Vector(MirrorPoint(gPlane, pointX) - cutPlane.Plane.Origin);
+            cutPlane.Plane.Origin = MirrorPoint(gPlane, pointOrigin);
+            cutPlane.Plane.AxisX = -1 * new TSG.Vector(MirrorPoint(gPlane, pointX) - cutPlane.Plane.Origin);
             cutPlane.Plane.AxisY = new TSG.Vector(MirrorPoint(gPlane, pointY) - cutPlane.Plane.Origin);
             cutPlane.Insert();
         }
@@ -129,7 +141,7 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
             foreach (var point in points)
             {
                 singleRebar.Polygon.Points.Add(point);
-            }    
+            }
 
             singleRebar.Insert();
         }
@@ -159,7 +171,7 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
                 }
 
             }
-            
+
 
             rebarGroup.Insert();
         }
@@ -173,5 +185,35 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
             vector.Normalize(2 * distance);
             return point + vector;
         }
+
+        private static void ProfileMirrod(this Profile profile)
+        {
+            string value = string.Empty;
+            string key = string.Empty;
+
+            foreach (var item in Enum.GetNames(typeof(ProfileMirrod)))
+            {
+                if (profile.ProfileString.StartsWith(item))
+                {
+                    key = item;
+                    value = profile.ProfileString.Substring(item.Length); 
+                    break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(key)) 
+            {
+                if (key == "PRMD")
+                {
+                    var vs = value.Split('-');
+                    profile.ProfileString = $"{key}{vs[1]}-{vs[0]}";
+                }
+            }
+        }
+
+    }
+    public enum ProfileMirrod
+    {
+        PRMD
     }
 }
