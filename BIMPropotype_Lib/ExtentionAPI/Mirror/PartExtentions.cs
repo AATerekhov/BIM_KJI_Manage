@@ -214,12 +214,18 @@ namespace BIMPropotype_Lib.ExtentionAPI.Mirror
                     var vs = value.Split('-');
                     profile.ProfileString = $"{key}{vs[1]}-{vs[0]}";
                 }
+                else if (key == "PL_V")
+                {
+                    var vs = value.Split('-');
+                    profile.ProfileString = $"{key}{vs[1]}-{vs[0]}-{vs[2]}";
+                }
             }
         }
 
     }
     public enum ProfileMirrod
     {
-        PRMD
+        PRMD,
+        PL_V
     }
 }
