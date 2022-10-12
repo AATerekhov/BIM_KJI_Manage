@@ -5,6 +5,7 @@ namespace Propotype_Manage
     using System.Windows.Input;
     using Fusion;
     using Propotype_Manage.ViewConductor;
+    using Propotype_Manage.ViewPrototype;
     using BIMPropotype_Lib.ViewModel;
 
     /// <summary>
@@ -13,6 +14,7 @@ namespace Propotype_Manage
     public class ExampleApp : Fusion.App
     {
         public ConductorViewModel InConductorViewModel { get; set; }
+        public PrototypeViewModel InPrototypeViewModel { get; set; }
         public PrefixDirectory InPrefixDirectory { get; set; }
         /// <summary>
         /// Определяет точку входа в приложение.
@@ -25,6 +27,7 @@ namespace Propotype_Manage
             {
                 InPrefixDirectory = prefixDirectory,
                 InConductorViewModel = new ConductorViewModel(prefixDirectory),
+                InPrototypeViewModel = new PrototypeViewModel()
             });
         }
 
@@ -36,7 +39,7 @@ namespace Propotype_Manage
         [PublishedView("App.MainWindow")]
         public ViewModel CreateMainWindow(object parameter)
         {
-            return new MainWindowViewModel(InPrefixDirectory);
+            return new MainWindowViewModel(InPrefixDirectory, InPrototypeViewModel);
         }
 
         /// <summary>
@@ -48,6 +51,16 @@ namespace Propotype_Manage
         public ViewModel ConductorView(object parameter)
         {
             return InConductorViewModel;
+        }
+        /// <summary>
+         /// TreeView просетов.
+         /// </summary>
+         /// <param name="parameter">The parameter.</param>
+         /// <returns>Модель просмотра главного окна.</returns>
+        [PublishedView("Example.Prototype.Prototype")]
+        public ViewModel PrototypeView(object parameter)
+        {
+            return InPrototypeViewModel;
         }
 
 

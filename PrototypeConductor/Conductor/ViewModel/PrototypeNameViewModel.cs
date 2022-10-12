@@ -27,8 +27,8 @@ namespace PrototypeConductor.ViewModel
             {
                 if ((sender as TreeViewItemViewModel).IsSelected)
                 {
-                    Database.PrefixDirectory.Prefix = Prefix;
                     Database.PrefixDirectory.FieldName = (this.Parent as FieldPrototypeViewModel).Name;
+                    Database.PrefixDirectory.Prefix = Prefix;
                 }
             }
         }

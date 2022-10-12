@@ -15,12 +15,32 @@ namespace BIMPropotype_Lib.Model
         public ContourPlate ContourPlate { get; set; }
         public CustomPlate Plate { get; set; }
 
+        [XmlIgnore]
+        public override string Class
+        {
+            get { return Plate.nameClass; }
+        }
+        [XmlIgnore]
+        public override string Name
+        {
+            get { return Plate.Name; }
+        }
+        [XmlIgnore]
+        public override string Profile
+        {
+            get { return Plate.Profile.ProfileString; }
+        }
+        [XmlIgnore]
+        public override string Material
+        {
+            get { return Plate.Material.MaterialString; }
+        }
+
         public BIMPlate() { }
 
         public BIMPlate(ContourPlate inPlate)
         {
             Plate = new CustomPlate(inPlate);
-
             ContourPlate = inPlate;
             UDAList = new UDACollection(ContourPlate);
             GetRebar(ContourPlate.GetReinforcements());

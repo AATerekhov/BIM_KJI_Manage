@@ -15,10 +15,30 @@ namespace BIMPropotype_Lib.Model
 
         public BIMPolyBeam() { }
 
+        [XmlIgnore]
+        public override string Class
+        {
+            get { return PolyBeam.PolyBeam.Class; }
+        }
+
+        [XmlIgnore]
+        public override string Name
+        {
+            get { return PolyBeam.PolyBeam.Name; }
+        }
+        [XmlIgnore]
+        public override string Profile
+        {
+            get { return PolyBeam.PolyBeam.Profile.ProfileString; }
+        }
+        [XmlIgnore]
+        public override string Material
+        {
+            get { return PolyBeam.PolyBeam.Material.MaterialString; }
+        }
         public BIMPolyBeam(TSM.PolyBeam inPolybeam)
         {
             PolyBeam = new CustomPolyBeam(inPolybeam);
-
             UDAList = new UDACollection(inPolybeam);
             GetRebar(inPolybeam.GetReinforcements());
             Pruning = new BIMPruning(inPolybeam.GetBooleans());

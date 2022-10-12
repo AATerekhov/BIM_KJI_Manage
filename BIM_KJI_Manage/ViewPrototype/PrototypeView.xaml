@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="Propotype_Manage.ViewPrototype.PrototypeView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.trimble.com/fusion"
+             xmlns:vmtree="clr-namespace:PrototypeObserver.ViewModel;assembly=PrototypeObserver"
+             xmlns:controls ="clr-namespace:Tekla.Structures.Ui.WpfKit.Controls;assembly=Tekla.Structures.Ui.WpfKit"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <DockPanel>
+        <TreeView DockPanel.Dock="Left" ItemsSource="{Binding Propotypes,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="FontWeight" Value="Normal" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.Resources>
+                <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:AssemblyViewModel}" 
+          ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\Assembly.png" />
+                        <TextBlock Margin="3" Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:PartViewModel}" 
+          ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\Part.png" />
+                        <TextBlock Margin="2" Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>                
+            </TreeView.Resources>
+        </TreeView>
+        <DataGrid DockPanel.Dock="Right"
+            Name="PropertyList"
+                  AutoGenerateColumns="False"
+                  VerticalAlignment="Stretch" 
+                  VerticalScrollBarVisibility="Auto"
+                    ItemsSource="{Binding Path = InContainerForSelected.UDAs, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"                    
+                  SelectionMode="Single"
+                  >
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Тип" Binding="{Binding Key}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="" Binding="{Binding Value}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

@@ -15,7 +15,8 @@
         <Run Text="Connected to " />
         <Run Text="{Binding ModelName, Mode=OneWay}" />
             </TextBlock>
-        </StatusBar>        
+        </StatusBar>
+        <ui:PublishedView DockPanel.Dock="Right" Margin="2" ViewName="Example.Prototype.Prototype" />
         <StackPanel  Margin="5" DockPanel.Dock="Top" VerticalAlignment="Top">
 
             <StackPanel Orientation="Horizontal">

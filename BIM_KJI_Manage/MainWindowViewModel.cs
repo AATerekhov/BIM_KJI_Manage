@@ -11,6 +11,7 @@ using Tekla.Structures.Model.Operations;
 using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.Model;
 using BIMPropotype_Lib.ViewModel;
+using Propotype_Manage.ViewPrototype;
 
 
 
@@ -36,11 +37,23 @@ namespace Propotype_Manage
             private set { this.SetValue(ref this._inPrefixDirectory, value); }
         }
 
-        public MainWindowViewModel(PrefixDirectory inPrefixDirectory)
+        public PrototypeViewModel InPrototypeViewModel { get; set; }
+
+
+        public MainWindowViewModel(PrefixDirectory inPrefixDirectory, PrototypeViewModel prototypeViewModel)
         {
             InPrefixDirectory = inPrefixDirectory;
+            InPrototypeViewModel = prototypeViewModel;
+            InPrefixDirectory.SelectedPrototype += InPrefixDirectory_SelectedPrototype;
             this.Initialize();
         }
+
+        private void InPrefixDirectory_SelectedPrototype()
+        {
+            var loader = new BeamLoader(InPrefixDirectory);            
+            InPrototypeViewModel.BIMAssemblySelect = loader.GetAssemblyXML();
+        }
+
         /// <summary>
         /// Указывает, подключено ли приложение к Tekla Structures.
         /// </summary>

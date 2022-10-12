@@ -28,8 +28,23 @@ namespace BIMPropotype_Lib.Model
         public List<BIMBolt> Bolts { get; set; }
         public BIMPruning Pruning { get; set; }
 
-        //TODO: Рассмотерть возможность работы с группами через разложение и объединение в простые стержни.
+        public virtual string  Name
+        {
+            get { return InPart.Name; }
+        }
 
+        public virtual string Class
+        {
+            get { return InPart.Class; }
+        }
+        public virtual string Profile
+        {
+            get { return InPart.Profile.ProfileString; }
+        }
+        public virtual string Material
+        {
+            get { return InPart.Material.MaterialString; }
+        }
         public virtual void InsertMirror() => InsertMirror(this.InPart);
         public void InsertMirror(Part part)
         {
