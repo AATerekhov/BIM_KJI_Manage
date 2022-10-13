@@ -10,8 +10,10 @@ namespace PrototypeObserver.ViewModel
 {
     public class UDALineViewModel : INotifyPropertyChanged
     {
-        private BIMUda _bIMUdaView;
+        public event Action ModifyAndSaveEvent;
+        public iBIMModelObject InBIMModelObject { get; set; }
 
+        private BIMUda _bIMUdaView;
         public BIMUda BIMUdaView
         {
             get { return _bIMUdaView; }
@@ -37,11 +39,35 @@ namespace PrototypeObserver.ViewModel
                 if (BIMUdaView.DoubleValue != 0) return BIMUdaView.DoubleValue.ToString();
                 return string.Empty;
             }
+            set 
+            {
+                if (Key == PropertyKey.Имя.ToString())
+                {
+                    (InBIMModelObject as BIMPart).Name = value;
+                }
+                else if (Key == PropertyKey.Профиль.ToString())
+                {
+                    (InBIMModelObject as BIMPart).Profile = value;
+                }
+                else if(Key == PropertyKey.Класс.ToString())
+                {
+                    (InBIMModelObject as BIMPart).Class = value;;
+                }
+                else if(Key == PropertyKey.Материал.ToString())
+                {
+                    (InBIMModelObject as BIMPart).Material = value;                  
+                }
+
+                BIMUdaView.SetValue(value);
+                ModifyAndSaveEvent?.Invoke();
+                this.OnPropertyChanged("Value");
+            }
         }
 
-        public UDALineViewModel(BIMUda bIMUda)
+        public UDALineViewModel(BIMUda bIMUda, iBIMModelObject BIMModelObject)
         {
             BIMUdaView = bIMUda;
+            InBIMModelObject = BIMModelObject;
         }
 
         #region INotifyPropertyChanged Members

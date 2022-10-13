@@ -11,6 +11,8 @@ namespace PrototypeObserver.ViewModel
 {
     public class ContainerForSelected : INotifyPropertyChanged
     {
+        public event Action<TreeViewItemViewModel> ModifyAndSaveEvent;
+
         private TreeViewItemViewModel _selectedElement;
 
         public TreeViewItemViewModel SelectedElement
@@ -21,23 +23,31 @@ namespace PrototypeObserver.ViewModel
                 if (value != _selectedElement)
                 {
                     _selectedElement = value;
-                    this.OnPropertyChanged("SelectedElement");
                     GetUDAs(_selectedElement);
                 }
             }
         }
 
-        private ObservableCollection<UDALineViewModel> _uDAs;
+        private UDALineViewModel _selectedUDA;
 
-        public ObservableCollection<UDALineViewModel> UDAs
+        public UDALineViewModel SelectedUDA
         {
-            get { return _uDAs; }
+            get { return _selectedUDA; }
             set
             {
-                _uDAs = value;
-                this.OnPropertyChanged("UDAs");
+                if (_selectedUDA != null)
+                {
+                    _selectedUDA.ModifyAndSaveEvent -= Item_ModifyAndSaveEvent;
+                }
+                _selectedUDA = value;
+                if (_selectedUDA != null)
+                {
+                    _selectedUDA.ModifyAndSaveEvent += Item_ModifyAndSaveEvent;
+                }
+                this.OnPropertyChanged("SelectedUDA");
             }
         }
+        public ObservableCollection<UDALineViewModel> UDAs { get; set; }        
 
         public ContainerForSelected()
         {
@@ -49,18 +59,23 @@ namespace PrototypeObserver.ViewModel
             if (treeViewItemViewModel is PartViewModel partObserver)
             {
                 UDAs.Clear();
-
-                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Имя.ToString(), partObserver._bIMPart.Name)));
-                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Класс.ToString(), partObserver._bIMPart.Class)));
-                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Профиль.ToString(), partObserver._bIMPart.Profile)));
-                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Материал.ToString(), partObserver._bIMPart.Material)));
+                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Имя.ToString(), partObserver._bIMPart.Name), partObserver._bIMPart));
+                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Класс.ToString(), partObserver._bIMPart.Class), partObserver._bIMPart));
+                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Профиль.ToString(), partObserver._bIMPart.Profile), partObserver._bIMPart));
+                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Материал.ToString(), partObserver._bIMPart.Material), partObserver._bIMPart));
                 foreach (BIMUda item in partObserver._bIMPart.UDAList.UDAList)
                 {
-                    UDAs.Add(new UDALineViewModel(item));
-                }               
+                    UDAs.Add(new UDALineViewModel(item, null));
+                }
             }
         }
+      
+        private void Item_ModifyAndSaveEvent()
+        {
+            ModifyAndSaveEvent?.Invoke(SelectedElement);
+        }
 
+        
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -31,7 +31,6 @@
                         <TextBlock Margin="3" Text="{Binding Name}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
-
                 <HierarchicalDataTemplate 
           DataType="{x:Type vmtree:PartViewModel}" 
           ItemsSource="{Binding Children}">
@@ -43,16 +42,16 @@
             </TreeView.Resources>
         </TreeView>
         <DataGrid DockPanel.Dock="Right"
-            Name="PropertyList"
                   AutoGenerateColumns="False"
                   VerticalAlignment="Stretch" 
                   VerticalScrollBarVisibility="Auto"
-                    ItemsSource="{Binding Path = InContainerForSelected.UDAs, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"                    
+                  ItemsSource="{Binding Path = InContainerForSelected.UDAs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                    
+                  SelectedItem="{Binding Path= InContainerForSelected.SelectedUDA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectionMode="Single"
                   >
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly="True" Header="Тип" Binding="{Binding Key}"/>
-                <DataGridTextColumn IsReadOnly="True" Header="" Binding="{Binding Value}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Свойство" Binding="{Binding Key}"/>
+                <DataGridTextColumn Header="Значение" Binding="{Binding Value, Mode=TwoWay}"/>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

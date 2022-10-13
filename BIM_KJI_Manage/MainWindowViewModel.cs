@@ -29,29 +29,29 @@ namespace Propotype_Manage
 
     class MainWindowViewModel : WindowViewModel
     {
-        private PrefixDirectory _inPrefixDirectory;
-
-        public PrefixDirectory InPrefixDirectory
-        {
-            get { return this._inPrefixDirectory; }
-            private set { this.SetValue(ref this._inPrefixDirectory, value); }
-        }
-
+        public PrefixDirectory InPrefixDirectory { get; set; }      
         public PrototypeViewModel InPrototypeViewModel { get; set; }
-
-
         public MainWindowViewModel(PrefixDirectory inPrefixDirectory, PrototypeViewModel prototypeViewModel)
         {
             InPrefixDirectory = inPrefixDirectory;
             InPrototypeViewModel = prototypeViewModel;
-            InPrefixDirectory.SelectedPrototype += InPrefixDirectory_SelectedPrototype;
+            InPrototypeViewModel.ModifyBIMAssemblySelect += InPrototypeViewModel_ModifyBIMAssemblySelect;
             this.Initialize();
+        }
+
+        private void InPrototypeViewModel_ModifyBIMAssemblySelect(BIMAssembly obj)
+        {
+            //TODO Сейчас сохраняется только одна сборка, которая была выбрана.
+            var loader = new BeamLoader(InPrefixDirectory);
+            //TODO Конфликт функциональных задачь, требуется рефакторинг PrefixDirectory.
+            loader.InBIMAssembly = obj;
+            loader.SerializeXML();
         }
 
         private void InPrefixDirectory_SelectedPrototype()
         {
             var loader = new BeamLoader(InPrefixDirectory);            
-            InPrototypeViewModel.BIMAssemblySelect = loader.GetAssemblyXML();
+            InPrototypeViewModel.GetPropotypes(loader.GetAssemblyXML());
         }
 
         /// <summary>

@@ -11,7 +11,6 @@ namespace BIMPropotype_Lib.ViewModel
 {
     public class PrefixDirectory : INotifyPropertyChanged
     {
-        public event Action SelectedPrototype;
         const string addModelDirectory = "RCP_Data\\Prototype";
 
         private string _pathThisModel;
@@ -57,7 +56,6 @@ namespace BIMPropotype_Lib.ViewModel
             {
                 _prefix = value;
                 this.OnPropertyChanged("Prefix");
-                SelectedPrototype?.Invoke();
             }
         }
         public TSM.Model Model { get; set; }

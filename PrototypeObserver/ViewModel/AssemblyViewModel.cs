@@ -9,7 +9,7 @@ namespace PrototypeObserver.ViewModel
 {
     public class AssemblyViewModel : TreeViewItemViewModel
     {
-        private BIMAssembly _bIMAssembly;
+        public BIMAssembly _bIMAssembly;
         public ContainerForSelected InContainerForSelected { get; set; }
 
         public AssemblyViewModel(BIMAssembly assembly, TreeViewItemViewModel parentField, ContainerForSelected containerForSelected)
@@ -57,7 +57,6 @@ namespace PrototypeObserver.ViewModel
             {
                 base.Children.Add(new PartViewModel(part, this, InContainerForSelected));
             }
-
         }
     }
 }

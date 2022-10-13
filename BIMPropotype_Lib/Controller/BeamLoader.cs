@@ -31,7 +31,7 @@ namespace BIMPropotype_Lib.Controller
            InBIMAssembly = new BIMAssembly(InAssembly);
            SerializeXML();
         }
-       
+
         public void SerializeXML()
         {
             if (Path != string.Empty)
@@ -39,7 +39,7 @@ namespace BIMPropotype_Lib.Controller
                 WorkDirectory.FieldName = InBIMAssembly.Name;
                 WorkDirectory.Prefix = InBIMAssembly.Prefix;
                 string path = WorkDirectory.GetFile();
-               if (File.Exists(path)) File.Delete(path);
+                if (File.Exists(path)) File.Delete(path);
 
                 XmlSerializer formatter = new XmlSerializer(typeof(BIMAssembly));
 

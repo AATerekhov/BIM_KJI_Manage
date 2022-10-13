@@ -17,43 +17,37 @@ namespace Propotype_Manage.ViewPrototype
 {
     public class PrototypeViewModel : Fusion.ViewModel
     {
-        private ObservableCollection<AssemblyViewModel> _propotypes;
-        public ObservableCollection<AssemblyViewModel> Propotypes
+        public event Action<BIMAssembly> ModifyBIMAssemblySelect;
+        public ObservableCollection<AssemblyViewModel> Propotypes { get; set; }
+        public ContainerForSelected InContainerForSelected { get; set; }
+
+
+        public void GetPropotypes(BIMAssembly bIMAssemblySelect) 
         {
-            get { return this._propotypes; }
-            private set { this.SetValue(ref this._propotypes, value); }
-        }
-
-        private ContainerForSelected _inContainerForSelected;
-
-        public ContainerForSelected InContainerForSelected
-        {
-            get { return this._inContainerForSelected; }
-            private set { this.SetValue(ref this._inContainerForSelected, value); }
-        }
-
-
-        private BIMAssembly _bIMAssemblySelect;
-
-        public BIMAssembly BIMAssemblySelect
-        {
-            get { return this._bIMAssemblySelect; }
-            set 
+            if (bIMAssemblySelect != null)
             {
-                this.SetValue(ref this._bIMAssemblySelect, value); 
-                if (this._bIMAssemblySelect != null)
-                {
-                    Propotypes.Clear();
-                    InContainerForSelected.UDAs.Clear();
-                    Propotypes.Add(new AssemblyViewModel(_bIMAssemblySelect, InContainerForSelected));
-                }
+                Propotypes.Clear();
+                InContainerForSelected.UDAs.Clear();
+                Propotypes.Add(new AssemblyViewModel(bIMAssemblySelect, InContainerForSelected));
             }
         }
 
         public PrototypeViewModel()
         {
-            _propotypes = new ObservableCollection<AssemblyViewModel>();
+            Propotypes = new ObservableCollection<AssemblyViewModel>();
             InContainerForSelected = new ContainerForSelected();
+            InContainerForSelected.ModifyAndSaveEvent += InContainerForSelected_ModifyAndSaveEvent1;
+        }
+
+        private void InContainerForSelected_ModifyAndSaveEvent1(PrototypeObserver.ViewModel.TreeViewItemViewModel obj)
+        {
+            if (obj != null)
+            {
+                if (obj.GetOldFather() is AssemblyViewModel assemblyViewModel)
+                {
+                    ModifyBIMAssemblySelect?.Invoke(assemblyViewModel._bIMAssembly);
+                }
+            }
         }
     }
 }

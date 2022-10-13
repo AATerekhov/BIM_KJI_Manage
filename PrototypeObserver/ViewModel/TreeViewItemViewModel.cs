@@ -150,6 +150,24 @@ namespace PrototypeObserver.ViewModel
 
         #endregion // Parent
 
+        #region GetFather
+        public TreeViewItemViewModel GetOldFather()
+        {
+            if (!CheckParent()) return this;
+            else
+            {
+                return Parent.GetOldFather();
+            }
+        }
+
+        private bool CheckParent() 
+        {
+            if (Parent == null) return false;
+            else return true;            
+        } 
+
+        #endregion
+
         #endregion // Presentation Members
 
         #region INotifyPropertyChanged Members

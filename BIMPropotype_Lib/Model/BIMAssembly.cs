@@ -11,6 +11,7 @@ namespace BIMPropotype_Lib.Model
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
+        public UDACollection UDAList { get; set; }
         public List<BIMBeam> Elements { get; set; }
         public List<BIMPlate> Plates { get; set; }
         public List<BIMPolyBeam> PolyBeams { get; set; }

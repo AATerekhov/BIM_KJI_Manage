@@ -19,24 +19,30 @@ namespace BIMPropotype_Lib.Model
         public override string Class
         {
             get { return Plate.nameClass; }
+            set { Plate.nameClass = value; }
         }
         [XmlIgnore]
         public override string Name
         {
             get { return Plate.Name; }
+            set { Plate.Name = value; }
         }
         [XmlIgnore]
         public override string Profile
         {
             get { return Plate.Profile.ProfileString; }
+            set { Plate.Profile.ProfileString = value; }
         }
         [XmlIgnore]
         public override string Material
         {
             get { return Plate.Material.MaterialString; }
+            set { Plate.Material.MaterialString = value; }
         }
 
-        public BIMPlate() { }
+        public BIMPlate()
+        {
+        }
 
         public BIMPlate(ContourPlate inPlate)
         {

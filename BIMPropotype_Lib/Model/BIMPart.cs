@@ -21,7 +21,6 @@ namespace BIMPropotype_Lib.Model
         }
         public Beam InPart { get; set; }
         public UDACollection UDAList { get; set; }
-        //public List<SingleRebar> Rebars { get; set; }
         public List<BIMReinforcement> Rebars { get; set; }
         public List<BIMAssembly> PutInAssembly { get; set; }
         public List<BooleanPart> Antidetails { get; set; }
@@ -31,19 +30,23 @@ namespace BIMPropotype_Lib.Model
         public virtual string  Name
         {
             get { return InPart.Name; }
+            set { InPart.Name = value; }
         }
 
         public virtual string Class
         {
             get { return InPart.Class; }
+            set { InPart.Class = value; }
         }
         public virtual string Profile
         {
             get { return InPart.Profile.ProfileString; }
+            set { InPart.Profile.ProfileString = value; }
         }
         public virtual string Material
         {
             get { return InPart.Material.MaterialString; }
+            set { InPart.Material.MaterialString = value; }
         }
         public virtual void InsertMirror() => InsertMirror(this.InPart);
         public void InsertMirror(Part part)

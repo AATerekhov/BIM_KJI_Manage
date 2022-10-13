@@ -182,15 +182,6 @@
       <Name>PrototypeObserver</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ViewConductor\Images\Block.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ViewConductor\Images\Preset.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ViewConductor\Images\Space.png" />
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <Resource Include="ViewConductor\Images\Foulder.png" />

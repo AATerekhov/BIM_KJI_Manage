@@ -8,6 +8,7 @@ namespace BIMPropotype_Lib.Model
 {
     public interface iBIMModelObject
     {
+        UDACollection UDAList { get; set; }
         void Insert();
     }
 }
