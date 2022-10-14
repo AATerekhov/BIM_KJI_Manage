@@ -19,26 +19,26 @@ namespace BIMPropotype_Lib.Model
         public override string Class
         {
             get { return PolyBeam.PolyBeam.Class; }
-            set { PolyBeam.PolyBeam.Class = value; }
+            set { if (PolyBeam != null) PolyBeam.PolyBeam.Class = value; }
         }
 
         [XmlIgnore]
         public override string Name
         {
             get { return PolyBeam.PolyBeam.Name; }
-            set { PolyBeam.PolyBeam.Name = value; }
+            set { if (PolyBeam != null) PolyBeam.PolyBeam.Name = value; }
         }
         [XmlIgnore]
         public override string Profile
         {
             get { return PolyBeam.PolyBeam.Profile.ProfileString; }
-            set { PolyBeam.PolyBeam.Profile.ProfileString = value; }
+            set { if (PolyBeam != null) PolyBeam.PolyBeam.Profile.ProfileString = value; }
         }
         [XmlIgnore]
         public override string Material
         {
             get { return PolyBeam.PolyBeam.Material.MaterialString; }
-            set { PolyBeam.PolyBeam.Material.MaterialString = value; }
+            set { if (PolyBeam != null) PolyBeam.PolyBeam.Material.MaterialString = value; }
         }
         public BIMPolyBeam(TSM.PolyBeam inPolybeam)
         {

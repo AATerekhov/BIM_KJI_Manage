@@ -12,6 +12,7 @@ using TSM = Tekla.Structures.Model;
 using UI = Tekla.Structures.Model.UI;
 using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
+using PrototypeObserver;
 
 namespace Propotype_Manage.ViewConductor
 {
@@ -39,10 +40,9 @@ namespace Propotype_Manage.ViewConductor
             private set { this.SetValue(ref this._database, value); }
         }
 
-
-        public ConductorViewModel(PrefixDirectory InPrefixDirectory)
+        public ConductorViewModel(PrefixDirectory InPrefixDirectory, SelectObserver selectObserver)
         {
-            Database = new Database(InPrefixDirectory);
+            Database = new Database(InPrefixDirectory, selectObserver);
             _conductor = new ObservableCollection<ModelDirectoryViewModel>(
                   (from directory in Database.GetModelDirectories()
                    select new ModelDirectoryViewModel(directory, Database))

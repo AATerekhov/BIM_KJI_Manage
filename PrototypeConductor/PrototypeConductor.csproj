@@ -72,6 +72,10 @@
       <Project>{c3d95443-f82c-4470-9011-e838dd774721}</Project>
       <Name>BIMPropotype_Lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrototypeObserver\PrototypeObserver.csproj">
+      <Project>{30E908C1-FC3E-4B09-8F76-1A810AAD2C64}</Project>
+      <Name>PrototypeObserver</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

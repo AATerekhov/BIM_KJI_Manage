@@ -51,35 +51,7 @@ namespace BIMPropotype_Lib.Controller
             }
         }
 
-        /// <summary>
-        /// Вставка балки из xml файла.
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void InsertPartXML()
-        {
-           var path = WorkDirectory.GetFile();
-            if (File.Exists(path))
-            {
-                var formatter = new XmlSerializer(typeof(BIMAssembly));
-
-                if (this.Path != string.Empty)
-                {
-                    using (var fs = new FileStream(path, FileMode.OpenOrCreate))
-                    {
-                        InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
-                        InBIMAssembly.Insert();
-                        TSM.Model model = new TSM.Model();
-                        model.CommitChanges();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Вставка балки из xml файла.
-        /// </summary>
-        /// <param name="fileName"></param>
-        public BIMAssembly GetAssemblyXML()
+        public void DeserializeXML() 
         {
             var path = WorkDirectory.GetFile();
             if (File.Exists(path))
@@ -91,11 +63,24 @@ namespace BIMPropotype_Lib.Controller
                     using (var fs = new FileStream(path, FileMode.OpenOrCreate))
                     {
                         InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
-                       return InBIMAssembly;
                     }
                 }
             }
-            return null;
+        }
+
+        /// <summary>
+        /// Вставка балки из xml файла.
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void InsertPartXML()
+        {
+            DeserializeXML();
+            if (InBIMAssembly != null)
+            {
+                InBIMAssembly.Insert();
+                TSM.Model model = new TSM.Model();
+                model.CommitChanges();
+            }
         }
 
         /// <summary>
@@ -104,23 +89,13 @@ namespace BIMPropotype_Lib.Controller
         /// <param name="fileName"></param>
         public void InsertMirror()
         {
-            var path = WorkDirectory.GetFile();
-            if (File.Exists(path))
+            DeserializeXML();
+            if (InBIMAssembly != null)
             {
-                var formatter = new XmlSerializer(typeof(BIMAssembly));
-
-                if (this.Path != string.Empty)
-                {
-                    using (var fs = new FileStream(path, FileMode.OpenOrCreate))
-                    {
-                        InBIMAssembly = (BIMAssembly)formatter.Deserialize(fs);
-                        InBIMAssembly.InsertMirror();
-                        TSM.Model model = new TSM.Model();
-                        model.CommitChanges();
-                    }
-                }
+                InBIMAssembly.InsertMirror();
+                TSM.Model model = new TSM.Model();
+                model.CommitChanges();
             }
         }
-
     }
 }

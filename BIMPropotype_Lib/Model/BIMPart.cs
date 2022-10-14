@@ -30,23 +30,23 @@ namespace BIMPropotype_Lib.Model
         public virtual string  Name
         {
             get { return InPart.Name; }
-            set { InPart.Name = value; }
+            set { if (InPart != null) InPart.Name = value; }
         }
 
         public virtual string Class
         {
             get { return InPart.Class; }
-            set { InPart.Class = value; }
+            set { if (InPart != null) InPart.Class = value; }
         }
         public virtual string Profile
         {
             get { return InPart.Profile.ProfileString; }
-            set { InPart.Profile.ProfileString = value; }
+            set { if (InPart != null) InPart.Profile.ProfileString = value; }
         }
         public virtual string Material
         {
             get { return InPart.Material.MaterialString; }
-            set { InPart.Material.MaterialString = value; }
+            set { if (InPart != null) InPart.Material.MaterialString = value; }
         }
         public virtual void InsertMirror() => InsertMirror(this.InPart);
         public void InsertMirror(Part part)

@@ -29,6 +29,7 @@ namespace PrototypeConductor.ViewModel
                 {
                     Database.PrefixDirectory.FieldName = (this.Parent as FieldPrototypeViewModel).Name;
                     Database.PrefixDirectory.Prefix = Prefix;
+                    Database.LoadingPrototype();
                 }
             }
         }

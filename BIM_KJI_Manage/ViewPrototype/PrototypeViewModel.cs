@@ -12,6 +12,7 @@ using TSM = Tekla.Structures.Model;
 using UI = Tekla.Structures.Model.UI;
 using BIMPropotype_Lib.Model;
 using PrototypeObserver.ViewModel;
+using PrototypeObserver;
 
 namespace Propotype_Manage.ViewPrototype
 {
@@ -20,7 +21,7 @@ namespace Propotype_Manage.ViewPrototype
         public event Action<BIMAssembly> ModifyBIMAssemblySelect;
         public ObservableCollection<AssemblyViewModel> Propotypes { get; set; }
         public ContainerForSelected InContainerForSelected { get; set; }
-
+        public SelectObserver InSelectObserver { get; set; }
 
         public void GetPropotypes(BIMAssembly bIMAssemblySelect) 
         {
@@ -32,11 +33,18 @@ namespace Propotype_Manage.ViewPrototype
             }
         }
 
-        public PrototypeViewModel()
+        public PrototypeViewModel(SelectObserver selectObserver)
         {
+            InSelectObserver = selectObserver;
+            InSelectObserver.NewSelectPrototype += InSelectObserver_NewSelectPrototype;
             Propotypes = new ObservableCollection<AssemblyViewModel>();
             InContainerForSelected = new ContainerForSelected();
             InContainerForSelected.ModifyAndSaveEvent += InContainerForSelected_ModifyAndSaveEvent1;
+        }
+
+        private void InSelectObserver_NewSelectPrototype(BIMAssembly obj)
+        {
+            GetPropotypes(obj);
         }
 
         private void InContainerForSelected_ModifyAndSaveEvent1(PrototypeObserver.ViewModel.TreeViewItemViewModel obj)

@@ -7,6 +7,7 @@ namespace Propotype_Manage
     using Propotype_Manage.ViewConductor;
     using Propotype_Manage.ViewPrototype;
     using BIMPropotype_Lib.ViewModel;
+    using PrototypeObserver;
 
     /// <summary>
     /// Example application.
@@ -23,11 +24,12 @@ namespace Propotype_Manage
         public static void Main()
         {
             var prefixDirectory = new PrefixDirectory();
+            SelectObserver selectObserver = new SelectObserver();
             Fusion.App.Start(new ExampleApp()
             {
                 InPrefixDirectory = prefixDirectory,
-                InConductorViewModel = new ConductorViewModel(prefixDirectory),
-                InPrototypeViewModel = new PrototypeViewModel()
+                InConductorViewModel = new ConductorViewModel(prefixDirectory, selectObserver),
+                InPrototypeViewModel = new PrototypeViewModel(selectObserver)
             });
         }
 

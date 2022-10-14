@@ -41,17 +41,9 @@ namespace Propotype_Manage
 
         private void InPrototypeViewModel_ModifyBIMAssemblySelect(BIMAssembly obj)
         {
-            //TODO Сейчас сохраняется только одна сборка, которая была выбрана.
             var loader = new BeamLoader(InPrefixDirectory);
-            //TODO Конфликт функциональных задачь, требуется рефакторинг PrefixDirectory.
             loader.InBIMAssembly = obj;
             loader.SerializeXML();
-        }
-
-        private void InPrefixDirectory_SelectedPrototype()
-        {
-            var loader = new BeamLoader(InPrefixDirectory);            
-            InPrototypeViewModel.GetPropotypes(loader.GetAssemblyXML());
         }
 
         /// <summary>
@@ -139,9 +131,6 @@ namespace Propotype_Manage
         }
 
         #endregion //Property
-
-        //TODO: удалить после применения UserControl
-
 
         /// <summary>
         /// Инициализирует модель представления.
@@ -284,7 +273,6 @@ namespace Propotype_Manage
         [CommandHandler]
         public void Exploding()
         {
-            //TODO: пока не развиваем эту идею, прототипы перспективнее.
             TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
             if (modelEnum.GetSize() == 1)
             {
@@ -421,7 +409,6 @@ namespace Propotype_Manage
         [CommandHandler]
         public void CreatePart()
         {
-            //TODO: пока не развиваем эту идею, прототипы перспективнее.
             TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
             if (modelEnum.GetSize() == 1)
             {

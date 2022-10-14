@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectObserver.cs" />
     <Compile Include="ViewModel\AssemblyViewModel.cs" />
     <Compile Include="ViewModel\ContainerForSelected.cs" />
     <Compile Include="ViewModel\PartViewModel.cs" />
