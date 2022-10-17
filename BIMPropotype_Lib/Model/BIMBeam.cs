@@ -4,7 +4,7 @@ using Tekla.Structures.Model;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMBeam:BIMPart, iBIMModelObject
+    public class BIMBeam:BIMPart, IUDAContainer
     {
         public BIMBeam()
             :base()

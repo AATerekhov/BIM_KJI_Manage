@@ -9,7 +9,7 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMReinforcement
+    public class BIMReinforcement:IUDAContainer
     {
         public UDACollection UDAList { get; set; }
         public SingleRebar SingleRebar { get; set; }

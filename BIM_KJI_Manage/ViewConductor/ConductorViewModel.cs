@@ -69,7 +69,6 @@ namespace Propotype_Manage.ViewConductor
         [CommandHandler]
         public void AddAssemblys()
         {
-
             TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
             while (modelEnum.MoveNext())
             {

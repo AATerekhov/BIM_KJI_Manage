@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BIMPropotype_Lib.Model
 {
-    public interface iBIMModelObject
+    public interface IUDAContainer
     {
         UDACollection UDAList { get; set; }
-        void Insert();
     }
 }

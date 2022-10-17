@@ -11,7 +11,7 @@ namespace PrototypeObserver.ViewModel
     public class UDALineViewModel : INotifyPropertyChanged
     {
         public event Action ModifyAndSaveEvent;
-        public iBIMModelObject InBIMModelObject { get; set; }
+        public IUDAContainer InBIMModelObject { get; set; }
 
         private BIMUda _bIMUdaView;
         public BIMUda BIMUdaView
@@ -64,7 +64,7 @@ namespace PrototypeObserver.ViewModel
             }
         }
 
-        public UDALineViewModel(BIMUda bIMUda, iBIMModelObject BIMModelObject)
+        public UDALineViewModel(BIMUda bIMUda, IUDAContainer BIMModelObject)
         {
             BIMUdaView = bIMUda;
             InBIMModelObject = BIMModelObject;

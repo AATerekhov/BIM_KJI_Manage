@@ -2,28 +2,22 @@
 using System.Collections.Generic;
 using Tekla.Structures.Model;
 using System.Linq;
-
+using Tekla.Structures.Geometry3d;
 
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : iBIMModelObject
+    public class BIMAssembly : IUDAContainer, IModelOperations
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
         public UDACollection UDAList { get; set; }
-        public List<BIMBeam> Elements { get; set; }
-        public List<BIMPlate> Plates { get; set; }
-        public List<BIMPolyBeam> PolyBeams { get; set; }
-        public MainTypa Type { get; set; }
+        public List<BIMBoxPart> Box { get; set; }
         public BIMAssembly() { }
-
         public BIMAssembly(Assembly assembly)
         {
             var parts = GetPartsToAssembly(assembly);
-            this.Elements = new List<BIMBeam>();
-            this.Plates = new List<BIMPlate>();
-            this.PolyBeams = new List<BIMPolyBeam>();
+            this.Box = new List<BIMBoxPart>();
 
             for (int i = 0; i < parts.Count; i++)
             {
@@ -31,43 +25,11 @@ namespace BIMPropotype_Lib.Model
                 {
                     Name = parts[i].Name;
                     Prefix = parts[i].AssemblyNumber.Prefix;
-                    if (parts[i] is Beam beam)
-                    {
-                        Type = MainTypa.beam;
-                        Elements.Add(new BIMBeam(beam));
-                        continue;
-                    }
-                    if (parts[i] is ContourPlate plate)
-                    {
-                        Type = MainTypa.plate;
-                        Plates.Add(new BIMPlate(plate));
-                        continue;
-                    }
-                    if (parts[i] is PolyBeam polyBeam)
-                    {
-                        Type = MainTypa.polyBeam;
-                        PolyBeams.Add(new BIMPolyBeam(polyBeam));
-                        continue;
-                    }
+                    Box.Add(new BIMBoxPart(parts[i]));                    
                 }
                 else
                 {
-                    if (parts[i] is Beam beam)
-                    {
-                        Elements.Add(new BIMBeam(beam));
-                        continue;
-                    }
-                    if (parts[i] is ContourPlate plate)
-                    {
-                        Plates.Add(new BIMPlate(plate));
-                        continue;
-                    }
-                    if (parts[i] is PolyBeam polyBeam)
-                    {
-                        PolyBeams.Add(new BIMPolyBeam(polyBeam));
-                        continue;
-                    }
-
+                    Box.Add(new BIMBoxPart(parts[i]));
                 }
             }
         }
@@ -75,40 +37,20 @@ namespace BIMPropotype_Lib.Model
         public void InsertMirror() 
         {
 
-            foreach (var element in Elements)
+            foreach (var boxpart in Box)
             {
-                element.InsertMirror();
-            }
-
-            foreach (var plate in Plates)
-            {
-                plate.InsertMirror();
-            }
-
-            foreach (var polyBeam in PolyBeams)
-            {
-                polyBeam.InsertMirror();
-            }
+                boxpart.InsertMirror();
+            }           
 
             BuildAssembly();
         }
 
         public void Insert()
         {
-            foreach (var element in Elements)
+            foreach (var boxpart in Box)
             {
-                element.Insert();
-            }
-
-            foreach (var plate in Plates)
-            {
-                plate.Insert();
-            }
-
-            foreach (var polyBeams in PolyBeams)
-            {
-                polyBeams.Insert();
-            }
+                boxpart.Insert();
+            } 
 
             BuildAssembly();
         }
@@ -119,7 +61,7 @@ namespace BIMPropotype_Lib.Model
         {
             Assembly assembly = null;
 
-            if ((int)Type == 0)
+            if ((int)Type == 1)
             {
                 assembly = Elements[0].InPart.GetAssembly();
                 if (Elements.Count > 1)
@@ -144,7 +86,7 @@ namespace BIMPropotype_Lib.Model
                     }
                 }
             }
-            else if ((int)Type == 1)
+            else if ((int)Type == 2)
             {
                 assembly = Plates[0].ContourPlate.GetAssembly();
                 if (Plates.Count > 1)
@@ -170,7 +112,7 @@ namespace BIMPropotype_Lib.Model
                     }
                 }
             }
-            else if ((int)Type == 2)
+            else if ((int)Type == 3)
             {
                 assembly = PolyBeams[0].PolyBeam.PolyBeam.GetAssembly();
                 if (PolyBeams.Count > 1)
@@ -265,12 +207,7 @@ namespace BIMPropotype_Lib.Model
         }
         #endregion//Privet
 
-        public enum MainTypa
-        {
-            beam = 0,
-            plate = 1,
-            polyBeam = 2,
-        }
+       
     }
     
 }

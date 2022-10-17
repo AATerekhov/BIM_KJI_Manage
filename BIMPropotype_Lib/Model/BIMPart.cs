@@ -7,7 +7,7 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 
 namespace BIMPropotype_Lib.Model
 {
-    public class BIMPart : iBIMModelObject
+    public class BIMPart : IUDAContainer
     {
         public BIMPart() { }
         public BIMPart(Beam inPart)

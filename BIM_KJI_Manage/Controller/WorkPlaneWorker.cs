@@ -37,6 +37,10 @@ namespace Propotype_Manage.Controller
             Model.CommitChanges();
         }
 
+        /// <summary>
+        /// Метод установки рабочей плоскости в начальную точку детали.
+        /// </summary>
+        /// <returns></returns>
         private CoordinateSystem GetCoordinateSystem() 
         {
             var baseCS = new CoordinateSystem();
@@ -81,6 +85,11 @@ namespace Propotype_Manage.Controller
             }
         }
 
+        /// <summary>
+        /// Получение стартовой точки.
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
         private Point GetStartedPoint(TSM.ModelObject part) 
         {
             if(part is TSM.Beam beam) return beam.StartPoint;
