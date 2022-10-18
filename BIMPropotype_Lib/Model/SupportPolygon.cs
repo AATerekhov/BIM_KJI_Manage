@@ -10,24 +10,28 @@ using Tekla.Structures.Model;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class CustomPolygon
+    public class SupportPolygon : SupportElement
     {
-        public List<Point> PolygonPoints { get; set; }
-
-        public CustomPolygon() { }
-        public CustomPolygon(ArrayList arrayList)
+        public SupportPolygon() { }
+        public SupportPolygon(ArrayList arrayList)
         {
-            PolygonPoints = new List<Point>();
             foreach (var item in arrayList)
             {
-                if (item is Point point) PolygonPoints.Add(point);
+                if (item is Point point) base.Add(point);
+            }
+        }
+        public SupportPolygon(List<Point> splash)
+        {
+            foreach (var item in splash)
+            {
+                if (item is Point point) base.Add(point);
             }
         }
 
         private ArrayList GetArrayList() 
         {
             ArrayList arrayList = new ArrayList();
-            foreach (var point in PolygonPoints) 
+            foreach (var point in Points) 
             {
                 arrayList.Add(point);
             }           

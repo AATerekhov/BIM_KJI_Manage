@@ -9,9 +9,8 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMReinforcement:IUDAContainer
+    public class BIMReinforcement: PartChildren
     {
-        public UDACollection UDAList { get; set; }
         public SingleRebar SingleRebar { get; set; }
         public BIMRebarGroup RebarGroup { get; set; }
         public BIMReinforcementType ReinforcementType { get; set; }
@@ -35,32 +34,43 @@ namespace BIMPropotype_Lib.Model
 
         internal void Insert(ModelObject modelObject)
         {
-            if ((int)ReinforcementType ==0)
+            Father = modelObject;
+            this.Insert();
+        }
+        internal void InsertMirror(ModelObject modelObject)
+        {
+            Father = modelObject;
+            this.InsertMirror();
+        }
+
+        public override void Insert()
+        {
+            if ((int)ReinforcementType == 0)
             {
-                SingleRebar.Father = modelObject;
+                SingleRebar.Father = Father;
                 SingleRebar.Insert();
                 UDAList.GetUDAToPart(SingleRebar);
             }
             if ((int)ReinforcementType == 1)
             {
                 var rebar = RebarGroup.GetRebarGroup();
-                rebar.Father = modelObject;
+                rebar.Father = Father;
                 rebar.Insert();
                 UDAList.GetUDAToPart(rebar);
             }
         }
-        internal void InsertMirror(ModelObject modelObject)
+        public override void InsertMirror()
         {
             if ((int)ReinforcementType == 0)
             {
-                SingleRebar.Father = modelObject;
+                SingleRebar.Father = Father;
                 SingleRebar.InsertMirror();
                 UDAList.GetUDAToPart(SingleRebar);
             }
             if ((int)ReinforcementType == 1)
             {
                 var rebar = RebarGroup.GetRebarGroup();
-                rebar.Father = modelObject;
+                rebar.Father = Father;
                 rebar.InsertMirror();
                 UDAList.GetUDAToPart(rebar);
             }

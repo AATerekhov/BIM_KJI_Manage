@@ -14,16 +14,14 @@ namespace BIMPropotype_Lib.Model
     {
 
         public TSM.RebarGroup InRebarGroup { get; set; }
-        public List<CustomPolygon> CustomPolygon { get; set; }
+        public List<SupportPolygon> CustomPolygon { get; set; }
         public double[] OnPlaneOffsets { get; set; }
         public double[] RadiusValues { get; set; }
         public double[] Spacings { get; set; }
-        public Point StarPoint { get; set; }
-        public Point EndPoint { get; set; }
         public BIMRebarGroup() { }
         public BIMRebarGroup(TSM.RebarGroup rebarGroup)
         {
-            CustomPolygon = new List<CustomPolygon>(from item in GetPolygons(rebarGroup.Polygons) select new CustomPolygon(item.Points));
+            CustomPolygon = new List<SupportPolygon>(from item in GetPolygons(rebarGroup.Polygons) select new SupportPolygon(item.Points));
             rebarGroup.Polygons = null;
             OnPlaneOffsets = ContertArreyListToDouble(rebarGroup.OnPlaneOffsets);
             rebarGroup.OnPlaneOffsets = null;
@@ -31,7 +29,6 @@ namespace BIMPropotype_Lib.Model
             rebarGroup.RadiusValues = null;
             Spacings = ContertArreyListToDouble(rebarGroup.Spacings);
             rebarGroup.Spacings = null;
-
             InRebarGroup = rebarGroup;
         }
 

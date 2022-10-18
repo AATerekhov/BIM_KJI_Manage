@@ -7,12 +7,17 @@ using Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model
 {
+    [Serializable]
     public class BIMBoxPart:IModelOperations
     {
         public BIMBeam Beam { get; set; }
         public BIMPlate Plate { get; set; }
         public BIMPolyBeam PolyBeam { get; set; }
         public PartType Type { get; set; }
+        public BIMBoxPart()
+        {
+
+        }
         public BIMBoxPart(Part part)
         {
             if (part is Beam beam)
@@ -62,6 +67,39 @@ namespace BIMPropotype_Lib.Model
             {
                 PolyBeam.InsertMirror();
             }
+        }
+
+        public Part GetPart() 
+        {
+            if ((int)Type == 1)
+            {
+                return Beam.InBeam;
+            }
+            if ((int)Type == 2)
+            {
+               return Plate.ContourPlate;
+            }
+            if ((int)Type == 3)
+            {
+                return PolyBeam.PolyBeam.PolyBeam;
+            }
+            return null;
+        }
+        public BIMPart GetBIMPart()
+        {
+            if ((int)Type == 1)
+            {
+                return Beam;
+            }
+            if ((int)Type == 2)
+            {
+                return Plate;
+            }
+            if ((int)Type == 3)
+            {
+                return PolyBeam;
+            }
+            return null;
         }
     }
     public enum PartType

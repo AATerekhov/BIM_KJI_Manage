@@ -14,12 +14,9 @@ namespace BIMPropotype_Lib.Model
     public class BIMBolt
     {
         public UDACollection UDAList { get; set; }
-        public List<TSG.Point> Positions { get; set; }
-        public TSG.Point FirstPosition { get; set; }
-        public TSG.Point SecondPosition { get; set; }
+        public SupportPolygon Splash { get; set; }
+        public SupportDistanse SupportPoints { get; set; }
         public TSM.Position Position { get; set; }
-        //public TSM.Offset EndPointOffset { get; set; }
-        //public TSM.Offset StartPointOffset { get; set; }
         public string BoltStandard { get; set; }
         public double BoltSize { get; set; }
         public TSG.CoordinateSystem CS { get; set; }
@@ -33,15 +30,14 @@ namespace BIMPropotype_Lib.Model
             CS = boltGroup.GetCoordinateSystem();
             UDAList = new UDACollection(boltGroup);            
             Position = boltGroup.Position;
-            FirstPosition = boltGroup.FirstPosition;
-            SecondPosition = boltGroup.SecondPosition;
+            SupportPoints = new SupportDistanse(boltGroup.FirstPosition, boltGroup.SecondPosition);
             //EndPointOffset = boltGroup.EndPointOffset;
             //StartPointOffset = boltGroup.StartPointOffset;
             BoltSize = boltGroup.BoltSize;
             BoltStandard = boltGroup.BoltStandard;
             //CreateBolt = CheckBoltCreate(boltGroup);
             //BoltSet = new BIMBoltSet(boltGroup);
-            Positions = GetPositions(boltGroup);
+            Splash = new SupportPolygon(GetPositions(boltGroup));
             //TODO: доработать работу с отрисовкой болтов, если они нужны! 
             //Position нужно улучшить алгоритм передачи смещения.
             //if (CreateBolt && BoltSet.Length > 0)
@@ -71,8 +67,8 @@ namespace BIMPropotype_Lib.Model
             TSM.BoltXYList boltXYList = new TSM.BoltXYList();
             boltXYList.PartToBoltTo = part;
             boltXYList.PartToBeBolted = part;
-            boltXYList.FirstPosition = FirstPosition;
-            boltXYList.SecondPosition = SecondPosition;
+            boltXYList.FirstPosition = SupportPoints.Start;
+            boltXYList.SecondPosition = SupportPoints.End;
             boltXYList.Position = Position;
             //boltXYList.StartPointOffset = StartPointOffset;
             //boltXYList.EndPointOffset = EndPointOffset;
@@ -90,7 +86,7 @@ namespace BIMPropotype_Lib.Model
             var CSbolt = new TSG.CoordinateSystem(boltXYList.FirstPosition, CS.AxisX, CS.AxisY);
             var localMatrix = TSG.MatrixFactory.ToCoordinateSystem(CSbolt);         
 
-            foreach (var point in Positions)
+            foreach (var point in Splash.Points)
             {
                 var localPont = localMatrix.Transform(point);
 

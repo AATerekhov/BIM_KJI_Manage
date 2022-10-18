@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMPlate : BIMPart, IUDAContainer
+    public class BIMPlate : BIMPart
     {
         [XmlIgnore]
         public ContourPlate ContourPlate { get; set; }

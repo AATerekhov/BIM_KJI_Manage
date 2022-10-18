@@ -43,19 +43,9 @@ namespace PrototypeObserver.ViewModel
 
         protected override void LoadChildren()
         {
-            foreach (BIMPart part in _bIMAssembly.Elements)
+            foreach (BIMBoxPart partBox in _bIMAssembly.Box)
             {
-                base.Children.Add(new PartViewModel(part, this, InContainerForSelected)); 
-            }
-
-            foreach (BIMPart part in _bIMAssembly.Plates)
-            {
-                base.Children.Add(new PartViewModel(part, this, InContainerForSelected));
-            }
-
-            foreach (BIMPart part in _bIMAssembly.PolyBeams)
-            {
-                base.Children.Add(new PartViewModel(part, this, InContainerForSelected));
+                base.Children.Add(new PartViewModel(partBox.GetBIMPart(), this, InContainerForSelected)); 
             }
         }
     }

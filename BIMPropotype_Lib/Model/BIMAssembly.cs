@@ -7,11 +7,10 @@ using Tekla.Structures.Geometry3d;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : IUDAContainer, IModelOperations
+    public class BIMAssembly : PartChildren
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
-        public UDACollection UDAList { get; set; }
         public List<BIMBoxPart> Box { get; set; }
         public BIMAssembly() { }
         public BIMAssembly(Assembly assembly)
@@ -34,7 +33,7 @@ namespace BIMPropotype_Lib.Model
             }
         }
 
-        public void InsertMirror() 
+        public override void InsertMirror() 
         {
 
             foreach (var boxpart in Box)
@@ -43,114 +42,50 @@ namespace BIMPropotype_Lib.Model
             }           
 
             BuildAssembly();
+
+            if (Father != null)
+            {
+                var mainAssembly = (Father as Part).GetAssembly();
+                var hisAssembly = this.GetAssembly();
+                mainAssembly.Add(hisAssembly);
+                mainAssembly.Modify();
+            }
         }
 
-        public void Insert()
+        public override void Insert()
         {
             foreach (var boxpart in Box)
             {
                 boxpart.Insert();
-            } 
+            }
 
             BuildAssembly();
+
+            if (Father != null)
+            {
+                var mainAssembly = (Father as Part).GetAssembly();
+                var hisAssembly = this.GetAssembly();
+                mainAssembly.Add(hisAssembly);
+                mainAssembly.Modify();
+            }           
         }
         /// <summary>
         /// Сборка отдельных деталей в сборку.
         /// </summary>
         private void BuildAssembly()
         {
-            Assembly assembly = null;
+            Assembly assembly = GetAssembly();
 
-            if ((int)Type == 1)
+            for (int i = 1; i < Box.Count; i++)
             {
-                assembly = Elements[0].InPart.GetAssembly();
-                if (Elements.Count > 1)
-                {
-                    for (int i = 1; i < Elements.Count; i++)
-                    {
-                        assembly.Add(Elements[i].InPart);
-                    }
-                }
-                if (Plates.Count > 0)
-                {
-                    for (int i = 0; i < Plates.Count; i++)
-                    {
-                        assembly.Add(Plates[i].ContourPlate);
-                    }
-                }
-                if (PolyBeams.Count > 0)
-                {
-                    for (int i = 0; i < PolyBeams.Count; i++)
-                    {
-                        assembly.Add(PolyBeams[i].PolyBeam.PolyBeam);
-                    }
-                }
-            }
-            else if ((int)Type == 2)
-            {
-                assembly = Plates[0].ContourPlate.GetAssembly();
-                if (Plates.Count > 1)
-                {
-                    for (int i = 1; i < Plates.Count; i++)
-                    {
-                        assembly.Add(Plates[i].ContourPlate);
-                    }
-                }
-
-                if (Elements.Count > 0)
-                {
-                    for (int i = 0; i < Elements.Count; i++)
-                    {
-                        assembly.Add(Elements[i].InPart);
-                    }
-                }
-                if (PolyBeams.Count > 0)
-                {
-                    for (int i = 0; i < PolyBeams.Count; i++)
-                    {
-                        assembly.Add(PolyBeams[i].PolyBeam.PolyBeam);
-                    }
-                }
-            }
-            else if ((int)Type == 3)
-            {
-                assembly = PolyBeams[0].PolyBeam.PolyBeam.GetAssembly();
-                if (PolyBeams.Count > 1)
-                {
-                    for (int i = 1; i < PolyBeams.Count; i++)
-                    {
-                        assembly.Add(PolyBeams[i].PolyBeam.PolyBeam);
-                    }
-                }
-
-                if (Elements.Count > 0)
-                {
-                    for (int i = 0; i < Elements.Count; i++)
-                    {
-                        assembly.Add(Elements[i].InPart);
-                    }
-                }
-                if (Plates.Count > 0)
-                {
-                    for (int i = 0; i < Plates.Count; i++)
-                    {
-                        assembly.Add(Plates[i].ContourPlate);
-                    }
-                }
+                assembly.Add(Box[i].GetPart());
             }
             assembly.Modify();
         }
 
         internal Assembly GetAssembly()
         {
-            if ((int)Type == 0)
-            {
-                return Elements[0].InPart.GetAssembly();              
-            }
-            else
-            {
-                return Plates[0].ContourPlate.GetAssembly();               
-            }
+           return Box[0].GetPart().GetAssembly();
         }
 
         #region Privet

@@ -95,12 +95,16 @@
     <Compile Include="Model\BIMReinforcement.cs" />
     <Compile Include="Model\BIMUda.cs" />
     <Compile Include="Model\CustomPolyBeam.cs" />
-    <Compile Include="Model\CustomPolygon.cs" />
+    <Compile Include="Model\SupportChamferElement.cs" />
+    <Compile Include="Model\SupportPolygon.cs" />
     <Compile Include="Model\BIMPruning.cs" />
     <Compile Include="Model\BIMRebarGroup.cs" />
     <Compile Include="Model\CustomPlate.cs" />
     <Compile Include="Model\IUDAContainer.cs" />
     <Compile Include="Model\IModelOperations.cs" />
+    <Compile Include="Model\PartChildren.cs" />
+    <Compile Include="Model\SupportDistanse.cs" />
+    <Compile Include="Model\SupportElement.cs" />
     <Compile Include="ViewModel\PrefixDirectory.cs" />
     <Compile Include="Model\PrototypeFile.cs" />
     <Compile Include="Model\UDACollection.cs" />
