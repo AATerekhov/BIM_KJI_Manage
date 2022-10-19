@@ -94,8 +94,9 @@
     <Compile Include="Model\BIMPolyBeam.cs" />
     <Compile Include="Model\BIMReinforcement.cs" />
     <Compile Include="Model\BIMUda.cs" />
+    <Compile Include="Model\CustomBeam.cs" />
     <Compile Include="Model\CustomPolyBeam.cs" />
-    <Compile Include="Model\SupportChamferElement.cs" />
+    <Compile Include="Model\SupportCountor.cs" />
     <Compile Include="Model\SupportPolygon.cs" />
     <Compile Include="Model\BIMPruning.cs" />
     <Compile Include="Model\BIMRebarGroup.cs" />

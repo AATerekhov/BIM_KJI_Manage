@@ -9,15 +9,19 @@ namespace BIMPropotype_Lib.Model
 {
     public abstract class BIMPart : IUDAContainer, IModelOperations
     {
-        public UDACollection UDAList { get; set; }
         public List<BIMReinforcement> Rebars { get; set; }
         public List<BIMAssembly> PutInAssembly { get; set; }
         public List<BIMBolt> Bolts { get; set; }
         public BIMPruning Pruning { get; set; }
-        public virtual string Name { get; set; }       
+
+        public UDACollection UDAList { get; set; }
+
+        #region Interface //Интрефейс нужно перенести во ViewModel!!!
+        public virtual string Name { get; set; }
         public virtual string Class { get; set; }
         public virtual string Profile { get; set; }
         public virtual string Material { get; set; }
+        #endregion //Интрефейс нужно перенести во ViewModel!!!
 
         public virtual void Insert() { }
         public void Insert(Part  part) 

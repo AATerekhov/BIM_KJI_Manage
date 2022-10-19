@@ -99,7 +99,7 @@ namespace BIMPropotype_Lib.Model
         {
             foreach (var item in fittings)
             {
-                var operativePart = item.Plate.GetContourPlate();
+                var operativePart = item.Plate.ContourPlate;
                 operativePart.Insert();
                 operativePart.Class = TSM.BooleanPart.BooleanOperativeClassName;
                 TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = item.BooleanType, Father = part };
@@ -125,7 +125,7 @@ namespace BIMPropotype_Lib.Model
         {
             foreach (var item in fittings)
             {
-                var operativePart = item.Plate.GetContourPlate();
+                var operativePart = item.Plate.ContourPlate;
                 operativePart.InsertMirror(true);
                 operativePart.Class = TSM.BooleanPart.BooleanOperativeClassName;
                 TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = item.BooleanType, Father = part };

@@ -9,36 +9,22 @@ namespace BIMPropotype_Lib.Model
     [Serializable]
     public class CustomPlate
     {
-        public TSM.Profile Profile { get; set; }
-        public TSM.Material Material { get; set; }
-        //Деформация пропущена
-        public TSM.NumberingSeries PartNumber { get; set; }
-        public TSM.NumberingSeries AssemblyNumber { get; set; }
-
-        public string Name { get; set; }
-        public string nameClass { get; set; }
-        //public TSM.Position Position { get; set; }
-        public List<TSM.ContourPoint> Contour { get; set; }
+        public ContourPlate ContourPlate { get; set; }
+        public SupportCountor SupportCountor { get; set; }
         public CustomPlate() { }
         public CustomPlate(TSM.ContourPlate contourPlate)
         {
-            Profile = contourPlate.Profile;
-            Material = contourPlate.Material;
-            PartNumber = contourPlate.PartNumber;
-            AssemblyNumber = contourPlate.AssemblyNumber;
-            Name = contourPlate.Name;
-            nameClass = contourPlate.Class;
-            Contour = Averaging(contourPlate);
+            ContourPlate = contourPlate;
+            SupportCountor = new SupportCountor(Averaging(contourPlate));
+            ContourPlate.Contour.ContourPoints.Clear();
         }
 
-        public TSM.ContourPlate GetContourPlate() 
-        {
-            var plate = new TSM.ContourPlate() { Name = Name, Profile = Profile, Material = Material, Class = nameClass, Position = new Position() { Depth = Position.DepthEnum.MIDDLE, DepthOffset = 0}, PartNumber = PartNumber, AssemblyNumber = AssemblyNumber };
-            foreach (var item in Contour)
+        public void GetContourPlate() 
+        {           
+            foreach (var item in SupportCountor.GetContourPoints())
             {
-                plate.AddContourPoint(item);
+                ContourPlate.AddContourPoint(item);
             }
-            return plate;
         }
 
         private List<ContourPoint> GetPoints(TSM.Contour contour) 
@@ -52,6 +38,7 @@ namespace BIMPropotype_Lib.Model
             return list;
         }
 
+        //Процесс приведения возможно вынести в Интрефейс как функцию.
         private List<TSM.ContourPoint> Averaging(TSM.ContourPlate contourPlate) 
         {            
           var listPoint = GetPoints(contourPlate.Contour);

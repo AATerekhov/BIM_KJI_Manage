@@ -12,9 +12,9 @@ namespace BIMPropotype_Lib.Model
     public class BIMPolyBeam : BIMPart
     {
         public CustomPolyBeam PolyBeam { get; set; }
-
         public BIMPolyBeam() { }
 
+        #region Interface //Интрефейс нужно перенести во ViewModel!!!
         [XmlIgnore]
         public override string Class
         {
@@ -40,6 +40,10 @@ namespace BIMPropotype_Lib.Model
             get { return PolyBeam.PolyBeam.Material.MaterialString; }
             set { if (PolyBeam != null) PolyBeam.PolyBeam.Material.MaterialString = value; }
         }
+
+        #endregion //Интрефейс нужно перенести во ViewModel!!!
+
+
         public BIMPolyBeam(TSM.PolyBeam inPolybeam)
         {
             PolyBeam = new CustomPolyBeam(inPolybeam);

@@ -11,62 +11,56 @@ namespace BIMPropotype_Lib.Model
     [Serializable]
     public class BIMPlate : BIMPart
     {
-        [XmlIgnore]
-        public ContourPlate ContourPlate { get; set; }
         public CustomPlate Plate { get; set; }
+        public BIMPlate() { }
 
+        #region Interface //Интрефейс нужно перенести во ViewModel!!!
         [XmlIgnore]
         public override string Class
         {
-            get { return Plate.nameClass; }
-            set { if (Plate != null) Plate.nameClass = value; }
+            get { return Plate.ContourPlate.Class; }
+            set { if (Plate != null) Plate.ContourPlate.Class = value; }
         }
         [XmlIgnore]
         public override string Name
         {
-            get { return Plate.Name; }
-            set { if (Plate != null) Plate.Name = value; }
+            get { return Plate.ContourPlate.Name; }
+            set { if (Plate != null) Plate.ContourPlate.Name = value; }
         }
         [XmlIgnore]
         public override string Profile
         {
-            get { return Plate.Profile.ProfileString; }
-            set { if (Plate != null) Plate.Profile.ProfileString = value; }
+            get { return Plate.ContourPlate.Profile.ProfileString; }
+            set { if (Plate != null) Plate.ContourPlate.Profile.ProfileString = value; }
         }
         [XmlIgnore]
         public override string Material
         {
-            get { return Plate.Material.MaterialString; }
-            set { if (Plate != null) Plate.Material.MaterialString = value; }
+            get { return Plate.ContourPlate.Material.MaterialString; }
+            set { if (Plate != null) Plate.ContourPlate.Material.MaterialString = value; }
         }
+        #endregion //Интрефейс нужно перенести во ViewModel!!!
 
-        public BIMPlate()
-        {
-        }
+
 
         public BIMPlate(ContourPlate inPlate)
         {
             Plate = new CustomPlate(inPlate);
-            ContourPlate = inPlate;
-            UDAList = new UDACollection(ContourPlate);
-            GetRebar(ContourPlate.GetReinforcements());
-            Pruning = new BIMPruning(ContourPlate.GetBooleans());
-            GetBolts(ContourPlate.GetBolts());
-            if (CheckMainPart(ContourPlate)) GetPutInAssembly(ContourPlate);
+            UDAList = new UDACollection(Plate.ContourPlate);
+            GetRebar(Plate.ContourPlate.GetReinforcements());
+            Pruning = new BIMPruning(Plate.ContourPlate.GetBooleans());
+            GetBolts(Plate.ContourPlate.GetBolts());
+            if (CheckMainPart(Plate.ContourPlate)) GetPutInAssembly(Plate.ContourPlate);
         }
         public override void InsertMirror()
         {
-            if (ContourPlate == null) GetCounterPlate();
-            InsertMirror(this.ContourPlate);
+            Plate.GetContourPlate();
+            InsertMirror(Plate.ContourPlate);
         }
         public override void Insert()
         {
-            if (ContourPlate == null) GetCounterPlate();
-            Insert(this.ContourPlate);
-        }
-        public void GetCounterPlate() 
-        {
-            ContourPlate = Plate.GetContourPlate();
+            Plate.GetContourPlate();
+            Insert(Plate.ContourPlate);
         }
     }
 }

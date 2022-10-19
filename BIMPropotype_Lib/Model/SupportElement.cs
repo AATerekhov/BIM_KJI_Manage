@@ -11,10 +11,8 @@ namespace BIMPropotype_Lib.Model
     public abstract class SupportElement
     {
         public List<Point> Points { get; set; }
-        public SupportElement()
-        {
-
-        }
+        public CoordinateSystem Base { get; set; }
+        public SupportElement() { }
 
         protected void Add(Point point) 
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model
@@ -14,10 +15,7 @@ namespace BIMPropotype_Lib.Model
         public BIMPlate Plate { get; set; }
         public BIMPolyBeam PolyBeam { get; set; }
         public PartType Type { get; set; }
-        public BIMBoxPart()
-        {
-
-        }
+        public BIMBoxPart() { }
         public BIMBoxPart(Part part)
         {
             if (part is Beam beam)
@@ -73,11 +71,11 @@ namespace BIMPropotype_Lib.Model
         {
             if ((int)Type == 1)
             {
-                return Beam.InBeam;
+                return Beam.Beam.Beam;
             }
             if ((int)Type == 2)
             {
-               return Plate.ContourPlate;
+               return Plate.Plate.ContourPlate;
             }
             if ((int)Type == 3)
             {
