@@ -7,14 +7,12 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 
 namespace BIMPropotype_Lib.Model
 {
-    public abstract class BIMPart : IUDAContainer, IModelOperations
+    public abstract class BIMPart :IModelOperations
     {
         public List<BIMReinforcement> Rebars { get; set; }
         public List<BIMAssembly> PutInAssembly { get; set; }
         public List<BIMBolt> Bolts { get; set; }
         public BIMPruning Pruning { get; set; }
-
-        public UDACollection UDAList { get; set; }
 
         #region Interface //Интрефейс нужно перенести во ViewModel!!!
         public virtual string Name { get; set; }
@@ -24,10 +22,11 @@ namespace BIMPropotype_Lib.Model
         #endregion //Интрефейс нужно перенести во ViewModel!!!
 
         public virtual void Insert() { }
-        public void Insert(Part  part) 
+        public virtual void FormPart() { }
+        public void Insert(BIMBoxPart boxPart) 
         {
+            var part = boxPart.GetPart();
             part.Insert();//При вставке деталь получает новый GUID.
-            UDAList.GetUDAToPart(part);
 
             Pruning.Insert(part);
 
@@ -43,15 +42,15 @@ namespace BIMPropotype_Lib.Model
 
             foreach (var item in PutInAssembly)
             {
-                item.Father = part;
+                item.Father = boxPart;
                 item.Insert();
             }
         }
         public virtual void InsertMirror() { }
-        public void InsertMirror(Part part)
+        public void InsertMirror(BIMBoxPart boxPart)
         {
+            var part = boxPart.GetPart();
             part.InsertMirror(true);//При вставке деталь получает новый GUID.
-            UDAList.GetUDAToPart(part);
 
             Pruning.InsertMirror(part);
 
@@ -62,7 +61,7 @@ namespace BIMPropotype_Lib.Model
 
             foreach (var item in PutInAssembly)
             {
-                item.Father = part;
+                item.Father = boxPart;
                 item.InsertMirror();
             }
 
@@ -106,26 +105,12 @@ namespace BIMPropotype_Lib.Model
             {
                 if (assembly is Assembly assemlyChild)
                 {
-                    PutInAssembly.Add(new BIMAssembly(assemlyChild));
+                    PutInAssembly.Add(new BIMAssembly(assemlyChild, PartChildrenType));
                 }
             }
         }
         #endregion//internal method
 
-        #region private method
-        /// <summary>
-        /// Проверка детали на гравность.
-        /// </summary>
-        /// <param name="part"></param>
-        /// <returns></returns>
-        protected bool CheckMainPart(Part part)
-        {
-            int main = 0;
-            part.GetReportProperty("MAIN_PART", ref main);
-            if (main != 0) return true;
-            else return false;
-        }
-        #endregion//private method
 
     }
 }

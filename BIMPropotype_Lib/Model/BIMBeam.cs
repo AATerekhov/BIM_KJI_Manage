@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.Model.Custom;
+using System;
 using System.Xml.Serialization;
 using Tekla.Structures.Model;
 
@@ -42,22 +44,14 @@ namespace BIMPropotype_Lib.Model
         {
             Beam = new CustomBeam(beam);
 
-            UDAList = new UDACollection(Beam.Beam);
             GetRebar(Beam.Beam.GetReinforcements());
             Pruning = new BIMPruning(Beam.Beam.GetBooleans());
             GetBolts(Beam.Beam.GetBolts());
-            if (CheckMainPart(Beam.Beam)) GetPutInAssembly(Beam.Beam);
+            if (Beam.Beam.CheckMainPart()) GetPutInAssembly(Beam.Beam);
         }
-
-        public override void InsertMirror()
+        public override void FormPart()
         {
             Beam.GetBeam();
-            base.InsertMirror(Beam.Beam);
-        }
-        public override void Insert()
-        {
-            Beam.GetBeam();
-            base.Insert(Beam.Beam);
         }
     }
 }

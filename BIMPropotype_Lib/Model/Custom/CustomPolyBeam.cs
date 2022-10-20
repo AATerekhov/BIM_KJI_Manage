@@ -5,26 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 using TSG = Tekla.Structures.Geometry3d;
+using BIMPropotype_Lib.Model.Support;
 
-
-namespace BIMPropotype_Lib.Model
+namespace BIMPropotype_Lib.Model.Custom
 {
     [Serializable]
-    public class CustomPolyBeam
+    public class CustomPolyBeam: IFormObject
     {
         public TSM.PolyBeam PolyBeam { get; set; }
-        public SupportCountor SupportCountor { get; set; }
+        public SupportCountor Support { get; set; }
 
         public CustomPolyBeam() { }
         public CustomPolyBeam(TSM.PolyBeam polyBeam)
         {
-            SupportCountor =new SupportCountor(Averaging(polyBeam));
+            Support = new SupportCountor(Averaging(polyBeam));
             polyBeam.Contour.ContourPoints.Clear();
             PolyBeam = polyBeam;
         }
-        public void GetPolyBeam()
+        public void FormObject()
         {            
-            foreach (var item in SupportCountor.GetContourPoints())
+            foreach (var item in Support.GetContourPoints())
             {
                 PolyBeam.AddContourPoint(item);
             }

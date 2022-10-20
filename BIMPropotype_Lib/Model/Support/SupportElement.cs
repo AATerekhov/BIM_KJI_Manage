@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tekla.Structures.Geometry3d;
 
-namespace BIMPropotype_Lib.Model
+namespace BIMPropotype_Lib.Model.Support
 {
     [Serializable]
     public abstract class SupportElement

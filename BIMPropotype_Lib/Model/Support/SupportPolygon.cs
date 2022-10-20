@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Tekla.Structures.Geometry3d;
 using Tekla.Structures.Model;
 
-namespace BIMPropotype_Lib.Model
+namespace BIMPropotype_Lib.Model.Support
 {
     [Serializable]
     public class SupportPolygon : SupportElement

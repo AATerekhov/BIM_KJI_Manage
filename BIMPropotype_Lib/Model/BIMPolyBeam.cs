@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TSM = Tekla.Structures.Model;
+using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.Model.Custom;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -47,21 +49,14 @@ namespace BIMPropotype_Lib.Model
         public BIMPolyBeam(TSM.PolyBeam inPolybeam)
         {
             PolyBeam = new CustomPolyBeam(inPolybeam);
-            UDAList = new UDACollection(inPolybeam);
             GetRebar(inPolybeam.GetReinforcements());
             Pruning = new BIMPruning(inPolybeam.GetBooleans());
             GetBolts(inPolybeam.GetBolts());
-            if (CheckMainPart(inPolybeam)) GetPutInAssembly(inPolybeam);
+            if (inPolybeam.CheckMainPart()) GetPutInAssembly(inPolybeam);
         }
-        public override void InsertMirror()
+        public override void FormPart()
         {
             PolyBeam.GetPolyBeam();
-            InsertMirror(PolyBeam.PolyBeam);
         }
-        public override void Insert()
-        {
-            PolyBeam.GetPolyBeam();
-            Insert(PolyBeam.PolyBeam);
-        }       
     }
 }

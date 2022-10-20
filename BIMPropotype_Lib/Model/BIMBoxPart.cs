@@ -9,65 +9,15 @@ using Tekla.Structures.Model;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMBoxPart:IModelOperations
+    //Класс контейнер для обобщенного хранения BIMPart.
+    public class BIMBoxPart: ChildrenAssembly
     {
+        #region BoxObject
         public BIMBeam Beam { get; set; }
         public BIMPlate Plate { get; set; }
         public BIMPolyBeam PolyBeam { get; set; }
         public PartType Type { get; set; }
-        public BIMBoxPart() { }
-        public BIMBoxPart(Part part)
-        {
-            if (part is Beam beam)
-            {
-                Type = PartType.beam;
-                Beam = new BIMBeam(beam);
-            }
-            if (part is ContourPlate plate)
-            {
-                Type = PartType.plate;
-                Plate = new BIMPlate(plate);
-            }
-            if (part is PolyBeam polyBeam)
-            {
-                Type = PartType.polyBeam;
-                PolyBeam =new BIMPolyBeam(polyBeam);
-            }
-        }
-
-        public void Insert()
-        {
-            if ((int)Type == 1)
-            {
-                Beam.Insert();
-            }
-            if ((int)Type == 2)
-            {
-                Plate.Insert();
-            }
-            if ((int)Type == 3)
-            {
-                PolyBeam.Insert();
-            }
-        }
-
-        public void InsertMirror()
-        {
-            if ((int)Type == 1)
-            {
-                Beam.InsertMirror();
-            }
-            if ((int)Type == 2)
-            {
-                Plate.InsertMirror();
-            }
-            if ((int)Type == 3)
-            {
-                PolyBeam.InsertMirror();
-            }
-        }
-
-        public Part GetPart() 
+        public Part GetPart()
         {
             if ((int)Type == 1)
             {
@@ -75,7 +25,7 @@ namespace BIMPropotype_Lib.Model
             }
             if ((int)Type == 2)
             {
-               return Plate.Plate.ContourPlate;
+                return Plate.Plate.ContourPlate;
             }
             if ((int)Type == 3)
             {
@@ -99,6 +49,50 @@ namespace BIMPropotype_Lib.Model
             }
             return null;
         }
+        #endregion
+
+        public BIMBoxPart() { }
+        public BIMBoxPart(Part part)
+        {
+            UDAList = new UDACollection(part);
+            if (part is Beam beam)
+            {
+                Type = PartType.beam;
+                Beam = new BIMBeam(beam);
+            }
+            if (part is ContourPlate plate)
+            {
+                Type = PartType.plate;
+                Plate = new BIMPlate(plate);
+            }
+            if (part is PolyBeam polyBeam)
+            {
+                Type = PartType.polyBeam;
+                PolyBeam =new BIMPolyBeam(polyBeam);
+            }
+        }
+
+        public override void Insert()
+        {
+            var bIMPart = GetBIMPart();
+            if (bIMPart != null)
+            {
+                bIMPart.FormPart();
+                bIMPart.Insert(this);
+                UDAList.GetUDAToPart(GetPart());
+            }
+        }
+
+        public override void InsertMirror()
+        {
+            var bIMPart = GetBIMPart();
+            if (bIMPart != null)
+            {
+                bIMPart.FormPart();
+                bIMPart.InsertMirror(this);
+                UDAList.GetUDAToPart(GetPart());
+            }            
+        }       
     }
     public enum PartType
     {

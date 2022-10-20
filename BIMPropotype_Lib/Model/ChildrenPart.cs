@@ -9,10 +9,10 @@ using Tekla.Structures.Model;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public abstract class PartChildren : IUDAContainer, IModelOperations
+    public abstract class ChildrenPart : IUDAContainer, IModelOperations
     {
         [XmlIgnore]
-        public ModelObject Father { get; set; }
+        public BIMBoxPart Father { get; set; }
         public UDACollection UDAList { get; set; }
 
         public virtual void Insert()

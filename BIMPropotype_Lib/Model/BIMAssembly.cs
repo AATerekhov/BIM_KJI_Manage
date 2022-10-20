@@ -7,16 +7,16 @@ using Tekla.Structures.Geometry3d;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : PartChildren
+    public class BIMAssembly 
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
-        public List<BIMBoxPart> Box { get; set; }
+        public List<BIMBoxPart> Children { get; set; }
         public BIMAssembly() { }
         public BIMAssembly(Assembly assembly)
         {
             var parts = GetPartsToAssembly(assembly);
-            this.Box = new List<BIMBoxPart>();
+            this.Children = new List<BIMBoxPart>();
 
             for (int i = 0; i < parts.Count; i++)
             {
@@ -24,50 +24,50 @@ namespace BIMPropotype_Lib.Model
                 {
                     Name = parts[i].Name;
                     Prefix = parts[i].AssemblyNumber.Prefix;
-                    Box.Add(new BIMBoxPart(parts[i]));                    
+                    Children.Add(new BIMBoxPart(parts[i]));                    
                 }
                 else
                 {
-                    Box.Add(new BIMBoxPart(parts[i]));
+                    Children.Add(new BIMBoxPart(parts[i]));
                 }
             }
         }
 
-        public override void InsertMirror() 
+        public void InsertMirror() 
         {
 
-            foreach (var boxpart in Box)
+            foreach (var boxpart in Children)
             {
                 boxpart.InsertMirror();
             }           
 
             BuildAssembly();
 
-            if (Father != null)
-            {
-                var mainAssembly = (Father as Part).GetAssembly();
-                var hisAssembly = this.GetAssembly();
-                mainAssembly.Add(hisAssembly);
-                mainAssembly.Modify();
-            }
+            //if (Father != null)
+            //{
+            //    var mainAssembly = Father.GetPart().GetAssembly();
+            //    var hisAssembly = this.GetAssembly();
+            //    mainAssembly.Add(hisAssembly);
+            //    mainAssembly.Modify();
+            //}
         }
 
-        public override void Insert()
+        public void Insert()
         {
-            foreach (var boxpart in Box)
+            foreach (var boxpart in Children)
             {
                 boxpart.Insert();
             }
 
             BuildAssembly();
 
-            if (Father != null)
-            {
-                var mainAssembly = (Father as Part).GetAssembly();
-                var hisAssembly = this.GetAssembly();
-                mainAssembly.Add(hisAssembly);
-                mainAssembly.Modify();
-            }           
+            //if (Father != null)
+            //{
+            //    var mainAssembly = Father.GetPart().GetAssembly();
+            //    var hisAssembly = this.GetAssembly();
+            //    mainAssembly.Add(hisAssembly);
+            //    mainAssembly.Modify();
+            //}           
         }
         /// <summary>
         /// Сборка отдельных деталей в сборку.
@@ -76,16 +76,16 @@ namespace BIMPropotype_Lib.Model
         {
             Assembly assembly = GetAssembly();
 
-            for (int i = 1; i < Box.Count; i++)
+            for (int i = 1; i < Children.Count; i++)
             {
-                assembly.Add(Box[i].GetPart());
+                assembly.Add(Children[i].GetPart());
             }
             assembly.Modify();
         }
 
         internal Assembly GetAssembly()
         {
-           return Box[0].GetPart().GetAssembly();
+           return Children[0].GetPart().GetAssembly();
         }
 
         #region Privet

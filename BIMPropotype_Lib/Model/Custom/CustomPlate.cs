@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using Tekla.Structures.Model;
 using TSM = Tekla.Structures.Model;
 using TSG = Tekla.Structures.Geometry3d;
+using BIMPropotype_Lib.Model.Support;
 
-namespace BIMPropotype_Lib.Model
+namespace BIMPropotype_Lib.Model.Custom
 {
     [Serializable]
-    public class CustomPlate
+    public class CustomPlate : IFormObject
     {
         public ContourPlate ContourPlate { get; set; }
-        public SupportCountor SupportCountor { get; set; }
+        public SupportCountor Support { get; set; }
         public CustomPlate() { }
         public CustomPlate(TSM.ContourPlate contourPlate)
         {
             ContourPlate = contourPlate;
-            SupportCountor = new SupportCountor(Averaging(contourPlate));
+            Support = new SupportCountor(Averaging(contourPlate));
             ContourPlate.Contour.ContourPoints.Clear();
         }
 
-        public void GetContourPlate() 
+        public void FormObject() 
         {           
-            foreach (var item in SupportCountor.GetContourPoints())
+            foreach (var item in Support.GetContourPoints())
             {
                 ContourPlate.AddContourPoint(item);
             }

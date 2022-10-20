@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Tekla.Structures.Model;
 using System.Xml.Serialization;
+using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.Model.Custom;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -46,21 +48,14 @@ namespace BIMPropotype_Lib.Model
         public BIMPlate(ContourPlate inPlate)
         {
             Plate = new CustomPlate(inPlate);
-            UDAList = new UDACollection(Plate.ContourPlate);
             GetRebar(Plate.ContourPlate.GetReinforcements());
             Pruning = new BIMPruning(Plate.ContourPlate.GetBooleans());
             GetBolts(Plate.ContourPlate.GetBolts());
-            if (CheckMainPart(Plate.ContourPlate)) GetPutInAssembly(Plate.ContourPlate);
+            if (Plate.ContourPlate.CheckMainPart()) GetPutInAssembly(Plate.ContourPlate);
         }
-        public override void InsertMirror()
+        public override void FormPart()
         {
             Plate.GetContourPlate();
-            InsertMirror(Plate.ContourPlate);
-        }
-        public override void Insert()
-        {
-            Plate.GetContourPlate();
-            Insert(Plate.ContourPlate);
         }
     }
 }

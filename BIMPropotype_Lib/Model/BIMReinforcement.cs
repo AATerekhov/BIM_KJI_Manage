@@ -9,7 +9,7 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMReinforcement: PartChildren
+    public class BIMReinforcement: ChildrenPart
     {
         public SingleRebar SingleRebar { get; set; }
         public BIMRebarGroup RebarGroup { get; set; }
