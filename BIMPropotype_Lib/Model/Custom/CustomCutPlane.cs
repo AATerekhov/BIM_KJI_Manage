@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 using BIMPropotype_Lib.Model.Support;
+using Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model.Custom
 {
@@ -25,6 +26,12 @@ namespace BIMPropotype_Lib.Model.Custom
         public void FormObject()
         {
             CutPlane.Plane = Support.GetPlane();
+        }
+
+        public ModelObject GetModelObject()
+        {
+            FormObject();
+            return CutPlane;
         }
     }
 }

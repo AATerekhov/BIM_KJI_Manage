@@ -1,116 +1,129 @@
 ﻿using System;
-using Tekla.Structures.Model;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Tekla.Structures.Model;
+using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 using BIMPropotype_Lib.ExtentionAPI.Mirror;
+using BIMPropotype_Lib.Model.Custom;
 
 namespace BIMPropotype_Lib.Model
 {
-    public abstract class BIMPart :IModelOperations
+    [Serializable]
+    //Класс контейнер для обобщенного хранения BIMPart.
+    public class BIMPart: ChildrenAssembly
     {
-        public List<BIMReinforcement> Rebars { get; set; }
-        public List<BIMAssembly> PutInAssembly { get; set; }
-        public List<BIMBolt> Bolts { get; set; }
-        public BIMPruning Pruning { get; set; }
-
-        #region Interface //Интрефейс нужно перенести во ViewModel!!!
-        public virtual string Name { get; set; }
-        public virtual string Class { get; set; }
-        public virtual string Profile { get; set; }
-        public virtual string Material { get; set; }
-        #endregion //Интрефейс нужно перенести во ViewModel!!!
-
-        public virtual void Insert() { }
-        public virtual void FormPart() { }
-        public void Insert(BIMBoxPart boxPart) 
+        public List<BIMPartChildren> Children { get; set; }
+        #region BoxObject
+        public CustomBeam Beam { get; set; }
+        public CustomPlate Plate { get; set; }
+        public CustomPolyBeam PolyBeam { get; set; }
+        public PartType Type { get; set; }
+        public Part GetPart()
         {
-            var part = boxPart.GetPart();
-            part.Insert();//При вставке деталь получает новый GUID.
-
-            Pruning.Insert(part);
-
-            foreach (var rebar in Rebars)//Вставка арматуры в деталь.
+            if ((int)Type == 1)
             {
-                rebar.Insert(part);
+                return Beam.Beam;
             }
-
-            foreach (var bolt in Bolts)
+            if ((int)Type == 2)
             {
-                bolt.Inser(part);
+                return Plate.ContourPlate;
             }
-
-            foreach (var item in PutInAssembly)
+            if ((int)Type == 3)
             {
-                item.Father = boxPart;
-                item.Insert();
+                return PolyBeam.PolyBeam;
             }
+            return null;
         }
-        public virtual void InsertMirror() { }
-        public void InsertMirror(BIMBoxPart boxPart)
+        public IFormObject GetCustomPart()
         {
-            var part = boxPart.GetPart();
-            part.InsertMirror(true);//При вставке деталь получает новый GUID.
-
-            Pruning.InsertMirror(part);
-
-            foreach (var rebar in Rebars)//Вставка арматуры в деталь.
+            if ((int)Type == 1)
             {
-                rebar.InsertMirror(part);
+                return Beam;
             }
-
-            foreach (var item in PutInAssembly)
+            if ((int)Type == 2)
             {
-                item.Father = boxPart;
-                item.InsertMirror();
+                return Plate;
             }
-
-            //foreach (var bolt in Bolts)
-            //{
-            //    bolt.Inser(part);
-            //}
+            if ((int)Type == 3)
+            {
+                return PolyBeam;
+            }
+            return null;
         }
-        #region internal method
-        internal virtual void GetBolts(ModelObjectEnumerator modelObjectEnumerator)
+        #endregion
+
+        public BIMPart() { }
+        public BIMPart(Part part)
         {
-            Bolts = new List<BIMBolt>();
-            while (modelObjectEnumerator.MoveNext())
+            UDAList = new UDACollection(part);
+            if (part is Beam beam)
             {
-                if (modelObjectEnumerator.Current is BoltGroup bolt)
-                {
-                    Bolts.Add(new BIMBolt(bolt));
-                }
+                Type = PartType.beam;
+                Beam = new CustomBeam(beam);
             }
+            if (part is ContourPlate plate)
+            {
+                Type = PartType.plate;
+                Plate = new CustomPlate(plate);
+            }
+            if (part is PolyBeam polyBeam)
+            {
+                Type = PartType.polyBeam;
+                PolyBeam =new CustomPolyBeam(polyBeam);
+            }
+
+            Children = this.GetChildren();
         }
 
-        internal virtual void GetRebar(ModelObjectEnumerator modelObjectEnumerator)
+
+
+        public override void Insert()
         {
-            Rebars = new List<BIMReinforcement>();
-            foreach (var item in modelObjectEnumerator)
+            var customPart = GetCustomPart();
+            if (customPart != null)
             {
-                if (item is Reinforcement reinforcement)
-                {
-                    Rebars.Add(new BIMReinforcement(reinforcement));
-                }
+                var modeelPart = customPart.GetModelObject() as Part;
+                modeelPart.Insert();
+                UDAList.GetUDAToPart(modeelPart);
+                ChildrenInsert();
             }
         }
 
-        internal virtual void GetPutInAssembly(Part part)
+        public override void InsertMirror()
         {
-            var partEnumChildren = part.GetAssembly().GetSubAssemblies();
-
-            PutInAssembly = new List<BIMAssembly>();
-
-            foreach (var assembly in partEnumChildren)
+            var customPart = GetCustomPart();
+            if (customPart != null)
             {
-                if (assembly is Assembly assemlyChild)
-                {
-                    PutInAssembly.Add(new BIMAssembly(assemlyChild, PartChildrenType));
-                }
+                var modeelPart = customPart.GetModelObject() as Part;
+                modeelPart.InsertMirror(true);
+                UDAList.GetUDAToPart(modeelPart);
+                ChildrenInsertMirror();
             }
         }
-        #endregion//internal method
 
-
+        private void ChildrenInsert() 
+        {
+            foreach (var child in Children)
+            {
+                child.Insert();
+            }
+        }
+        private void ChildrenInsertMirror()
+        {
+            foreach (var child in Children)
+            {
+                child.InsertMirror();
+            }
+        }
+    }
+    public enum PartType
+    {
+        no = 0,
+        beam = 1,
+        plate = 2,
+        polyBeam = 3,
     }
 }

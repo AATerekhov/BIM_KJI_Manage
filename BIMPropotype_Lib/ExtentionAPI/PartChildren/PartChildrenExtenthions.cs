@@ -22,23 +22,59 @@ namespace BIMPropotype_Lib.ExtentionAPI.PartChildren
             if (main != 0) return true;
             else return false;
         }
-        public static List<BIMPartChildren> GetPutInAssembly(this BIMBoxPart part) 
+        public static List<BIMPartChildren> GetChildren(this BIMPart part) 
         {
-            var partEnumChildren = part.GetPart().GetAssembly().GetSubAssemblies();
+            var children = new List<BIMPartChildren>();
+            var modelPart = part.GetPart();
 
-            var putInAssembly = new List<BIMPartChildren>();
-
-            foreach (var assembly in partEnumChildren)
+            if (modelPart.CheckMainPart())
             {
-                if (assembly is Assembly assemlyChild)
+               var partEnumChildren = modelPart.GetAssembly().GetSubAssemblies();
+                foreach (var assembly in partEnumChildren)
                 {
-                    var child = new BIMPartChildren(assemlyChild, PartChildrenType.BIMAssembly);
-                    child.Father = part;
-                    putInAssembly.Add(child);
+                    if (assembly is Assembly assemlyChild)
+                    {
+                        var child = new BIMPartChildren(assemlyChild);
+                        child.Father = part;
+                        children.Add(child);
+                    }
                 }
             }
+           
+            foreach (ModelObject item in modelPart.GetReinforcements())
+            {
+                var child = new BIMPartChildren(item);
+                child.Father = part;
+                children.Add(child);                
+            }
 
-            return putInAssembly;
+            foreach (ModelObject item in modelPart.GetBolts())
+            {
+                var child = new BIMPartChildren(item);
+                child.Father = part;
+                children.Add(child);
+            }
+
+            foreach (ModelObject item in modelPart.GetBooleans())
+            {
+                var child = new BIMPartChildren(item);
+                child.Father = part;
+                children.Add(child);
+            }
+            return children;
+        }
+
+        public static List<BIMPartChildren> GetAssembly(this List<BIMPartChildren> children) 
+        {
+            List<BIMPartChildren> assembly = new List<BIMPartChildren>();
+            foreach (var child in children) 
+            {
+                if (child.ChildrenType == PartChildrenType.Assembly) 
+                {
+                    assembly.Add(child);
+                }
+            }
+            return assembly;
         }
     }
 }

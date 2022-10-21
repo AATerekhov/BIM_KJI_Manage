@@ -106,6 +106,11 @@ namespace BIMPropotype_Lib.Model.Custom
            
         }
 
+        public ModelObject GetModelObject()
+        {
+            FormObject();
+            return ContourPlate;
+        }
     }
     enum PlateProfileType 
     {

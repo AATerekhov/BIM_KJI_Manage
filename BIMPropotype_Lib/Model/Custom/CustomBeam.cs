@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tekla.Structures.Model;
 using TSM = Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model.Custom
@@ -25,5 +26,10 @@ namespace BIMPropotype_Lib.Model.Custom
             Beam.EndPoint = Support.End;            
         }
 
+        public ModelObject GetModelObject()
+        {
+            FormObject();
+            return Beam;
+        }
     }
 }

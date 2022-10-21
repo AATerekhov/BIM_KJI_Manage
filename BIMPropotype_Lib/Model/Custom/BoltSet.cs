@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 
-namespace BIMPropotype_Lib.Model
+namespace BIMPropotype_Lib.Model.Custom
 {
     [Serializable]
-    public class BIMBoltSet
+    public class BoltSet
     {
         public bool Bolt { get; set; }
         public bool Washer1 { get; set; }
@@ -18,11 +18,8 @@ namespace BIMPropotype_Lib.Model
         public bool Nut2 { get; set; }
         public double Length { get; set; }
 
-        public BIMBoltSet()
-        {
-
-        }
-        public BIMBoltSet(TSM.BoltGroup boltXYList)
+        public BoltSet() { }
+        public BoltSet(TSM.BoltGroup boltXYList)
         {
             Length = boltXYList.Length;
             Bolt = boltXYList.Bolt;
@@ -33,7 +30,7 @@ namespace BIMPropotype_Lib.Model
             Nut2 = boltXYList.Nut2;
         }
 
-        public void GetBoltSet(TSM.BoltGroup boltXYList) 
+        public void GetBoltSet(TSM.BoltGroup boltXYList)
         {
             boltXYList.Bolt = Bolt;
             boltXYList.Washer1 = Washer1;

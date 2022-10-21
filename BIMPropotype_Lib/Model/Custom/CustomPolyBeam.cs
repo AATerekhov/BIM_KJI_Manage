@@ -47,5 +47,11 @@ namespace BIMPropotype_Lib.Model.Custom
             }
             return list;
         }
+
+        public TSM.ModelObject GetModelObject()
+        {
+            FormObject();
+            return PolyBeam;
+        }
     }
 }

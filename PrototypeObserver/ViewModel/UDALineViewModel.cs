@@ -43,19 +43,19 @@ namespace PrototypeObserver.ViewModel
             {
                 if (Key == PropertyKey.Имя.ToString())
                 {
-                    (InBIMModelObject as BIMPart).Name = value;
+                    //(InBIMModelObject as BIMPart).Name = value;
                 }
                 else if (Key == PropertyKey.Профиль.ToString())
                 {
-                    (InBIMModelObject as BIMPart).Profile = value;
+                    //(InBIMModelObject as BIMPart).Profile = value;
                 }
                 else if(Key == PropertyKey.Класс.ToString())
                 {
-                    (InBIMModelObject as BIMPart).Class = value;;
+                    //(InBIMModelObject as BIMPart).Class = value;
                 }
                 else if(Key == PropertyKey.Материал.ToString())
                 {
-                    (InBIMModelObject as BIMPart).Material = value;                  
+                    //(InBIMModelObject as BIMPart).Material = value;                  
                 }
 
                 BIMUdaView.SetValue(value);

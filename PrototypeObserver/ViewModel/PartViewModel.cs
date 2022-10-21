@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BIMPropotype_Lib.Model;
+using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -31,13 +32,13 @@ namespace PrototypeObserver.ViewModel
         }
         public string Name
         {
-            get { return _bIMPart.Name; }
+            get { return _bIMPart.GetPart().Name; }
         }
 
         protected override void LoadChildren()
         {
-            foreach (BIMAssembly assembly in _bIMPart.PutInAssembly)
-                base.Children.Add(new AssemblyViewModel(assembly, this, InContainerForSelected));
+            foreach (BIMPartChildren assembly in _bIMPart.Children.GetAssembly())
+                base.Children.Add(new AssemblyViewModel(assembly.Assembly, this, InContainerForSelected));
         }
 
     }

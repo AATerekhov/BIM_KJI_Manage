@@ -1,27 +1,26 @@
-﻿using System;
+﻿using BIMPropotype_Lib.Model.Support;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
-using Tekla.Structures.Geometry3d;
 
-namespace BIMPropotype_Lib.Model
+namespace BIMPropotype_Lib.Model.Custom
 {
-    [Serializable]
-    public class BIMRebarGroup
+    public class CustomGroupRebar : IFormObject
     {
-
-        public TSM.RebarGroup InRebarGroup { get; set; }
-        public List<SupportPolygon> CustomPolygon { get; set; }
+        public TSM.RebarGroup RebarGroup { get; set; }
+        public List<SupportPolygon> Support { get; set; }
         public double[] OnPlaneOffsets { get; set; }
         public double[] RadiusValues { get; set; }
         public double[] Spacings { get; set; }
-        public BIMRebarGroup() { }
-        public BIMRebarGroup(TSM.RebarGroup rebarGroup)
+        public CustomGroupRebar() { }
+
+        public CustomGroupRebar(TSM.RebarGroup rebarGroup)
         {
-            CustomPolygon = new List<SupportPolygon>(from item in GetPolygons(rebarGroup.Polygons) select new SupportPolygon(item.Points));
+            Support = new List<SupportPolygon>(from item in GetPolygons(rebarGroup.Polygons) select new SupportPolygon(item.Points));
             rebarGroup.Polygons = null;
             OnPlaneOffsets = ContertArreyListToDouble(rebarGroup.OnPlaneOffsets);
             rebarGroup.OnPlaneOffsets = null;
@@ -29,9 +28,16 @@ namespace BIMPropotype_Lib.Model
             rebarGroup.RadiusValues = null;
             Spacings = ContertArreyListToDouble(rebarGroup.Spacings);
             rebarGroup.Spacings = null;
-            InRebarGroup = rebarGroup;
+            RebarGroup = rebarGroup;
         }
 
+        public void FormObject()
+        {
+            RebarGroup.OnPlaneOffsets = ContertDoubleToArreyList(OnPlaneOffsets);
+            RebarGroup.RadiusValues = ContertDoubleToArreyList(RadiusValues);
+            RebarGroup.Spacings = ContertDoubleToArreyList(Spacings);
+            RebarGroup.Polygons = GetPolygons();
+        }
         private List<TSM.Polygon> GetPolygons(ArrayList arrayList)
         {
             var polygons = new List<TSM.Polygon>();
@@ -41,7 +47,7 @@ namespace BIMPropotype_Lib.Model
             }
             return polygons;
         }
-        private double[] ContertArreyListToDouble(ArrayList arrayList) 
+        private double[] ContertArreyListToDouble(ArrayList arrayList)
         {
             double[] vs = new double[arrayList.Count];
             for (int i = 0; i < vs.Length; i++)
@@ -52,7 +58,7 @@ namespace BIMPropotype_Lib.Model
         }
         private ArrayList ContertDoubleToArreyList(double[] vs)
         {
-          ArrayList arrayList = new ArrayList();
+            ArrayList arrayList = new ArrayList();
             for (int i = 0; i < vs.Length; i++)
             {
                 arrayList.Add(vs[i]);
@@ -60,24 +66,20 @@ namespace BIMPropotype_Lib.Model
             return arrayList;
         }
 
-        private ArrayList GetPolygons() 
+        private ArrayList GetPolygons()
         {
             ArrayList arrayList = new ArrayList();
-            foreach (var item in CustomPolygon)
+            foreach (var item in Support)
             {
                 arrayList.Add(item.GetPolygon());
             }
             return arrayList;
         }
 
-        public TSM.RebarGroup GetRebarGroup()
+        public TSM.ModelObject GetModelObject()
         {
-            InRebarGroup.OnPlaneOffsets = ContertDoubleToArreyList(OnPlaneOffsets);
-            InRebarGroup.RadiusValues = ContertDoubleToArreyList(RadiusValues);
-            InRebarGroup.Spacings = ContertDoubleToArreyList(Spacings);
-            InRebarGroup.Polygons = GetPolygons();
-            return InRebarGroup;
+            FormObject();
+            return RebarGroup;
         }
-
     }
 }
