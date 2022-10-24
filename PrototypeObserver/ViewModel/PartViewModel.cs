@@ -13,11 +13,12 @@ namespace PrototypeObserver.ViewModel
         public BIMPart _bIMPart;
         public ContainerForSelected InContainerForSelected { get; set; }
         public PartViewModel(BIMPart part, TreeViewItemViewModel parentDirectory, ContainerForSelected containerForSelected)
-            : base(parentDirectory, true)
+            : base(parentDirectory, false)
         {
             _bIMPart = part;
             InContainerForSelected = containerForSelected;
             this.PropertyChanged += PrototypeNameViewModel_PropertyChanged;
+            LoadChildren();
         }
 
         private void PrototypeNameViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -39,7 +40,34 @@ namespace PrototypeObserver.ViewModel
         {
             foreach (BIMPartChildren assembly in _bIMPart.Children.GetAssembly())
                 base.Children.Add(new AssemblyViewModel(assembly.Assembly, this, InContainerForSelected));
+            foreach (BIMPartChildren boolean in _bIMPart.Children.GetBoolean())
+                base.Children.Add(new ChildrenPartViewModel(boolean, this, InContainerForSelected));
+            foreach (BIMPartChildren reinforcement in _bIMPart.Children.GetReinforcement())
+                base.Children.Add(new ChildrenPartViewModel(reinforcement, this, InContainerForSelected));
+            foreach (BIMPartChildren bolts in _bIMPart.Children.GetBolts())
+                base.Children.Add(new ChildrenPartViewModel(bolts, this, InContainerForSelected));
         }
+
+        public override void Insert()
+        {
+            _bIMPart.Insert((Parent as AssemblyViewModel)._bIMAssembly);
+            foreach (var item in Children)
+            {
+                if (item is AssemblyViewModel assemblyVM) assemblyVM.Insert();
+                else if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.Insert();
+            }
+        }
+        public override void InsertMirror()
+        {
+            _bIMPart.InsertMirror((Parent as AssemblyViewModel)._bIMAssembly);
+            foreach (var item in Children)
+            {
+                if (item is AssemblyViewModel assemblyVM) assemblyVM.InsertMirror();
+                else if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.InsertMirror();
+
+            }
+        }
+
 
     }
 }

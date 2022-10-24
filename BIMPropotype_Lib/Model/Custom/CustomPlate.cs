@@ -17,11 +17,12 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             ContourPlate = contourPlate;
             Support = new SupportCountor(Averaging(contourPlate));
-            ContourPlate.Contour.ContourPoints.Clear();
+            ContourPlate.Contour = null;
         }
 
         public void FormObject() 
-        {           
+        {
+            ContourPlate.Contour = new Contour();
             foreach (var item in Support.GetContourPoints())
             {
                 ContourPlate.AddContourPoint(item);

@@ -7,11 +7,12 @@ using Tekla.Structures.Geometry3d;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly :ChildrenPart
+    public class BIMAssembly : IUDAContainer
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
         public List<BIMPart> Children { get; set; }
+        public UDACollection UDAList { get; set; }
         public BIMAssembly() { }
         public BIMAssembly(Assembly assembly)
         {
@@ -27,49 +28,41 @@ namespace BIMPropotype_Lib.Model
                 }
 
                 var bimPart = new BIMPart(parts[i]);
-                bimPart.Father = this;
                 Children.Add(bimPart);
             }
         }
 
-        public override void InsertMirror() 
-        {
-            foreach (var boxpart in Children)
-            {
-                boxpart.InsertMirror();
-            }           
+        public  void InsertMirror(BIMPart father)
+        {           
 
             BuildAssembly();
 
-            if (Father != null)
+            if (father != null)
             {
-                var mainAssembly = Father.GetPart().GetAssembly();
+                var mainAssembly = father.GetPart().GetAssembly();
                 var hisAssembly = this.GetAssembly();
                 mainAssembly.Add(hisAssembly);
                 mainAssembly.Modify();
             }
         }
 
-        public override void Insert()
-        {
-            foreach (var boxpart in Children)
-            {
-                boxpart.Insert();
-            }
+        public  void Insert(BIMPart father)
+        {         
 
             BuildAssembly();
 
-            if (Father != null)
+            if (father != null)
             {
-                var mainAssembly = Father.GetPart().GetAssembly();
+                var mainAssembly = father.GetPart().GetAssembly();
                 var hisAssembly = this.GetAssembly();
                 mainAssembly.Add(hisAssembly);
                 mainAssembly.Modify();
             }
         }
-        /// <summary>
-        /// Сборка отдельных деталей в сборку.
-        /// </summary>
+
+        //<summary>
+        //Сборка отдельных деталей в сборку.
+        //</summary>
         private void BuildAssembly()
         {
             Assembly assembly = GetAssembly();
@@ -83,7 +76,7 @@ namespace BIMPropotype_Lib.Model
 
         internal Assembly GetAssembly()
         {
-           return Children[0].GetPart().GetAssembly();
+            return Children[0].GetPart().GetAssembly();
         }
 
         #region Privet

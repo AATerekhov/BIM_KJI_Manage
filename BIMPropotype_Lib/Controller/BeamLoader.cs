@@ -72,30 +72,30 @@ namespace BIMPropotype_Lib.Controller
         /// Вставка балки из xml файла.
         /// </summary>
         /// <param name="fileName"></param>
-        public void InsertPartXML()
-        {
-            DeserializeXML();
-            if (InBIMAssembly != null)
-            {
-                InBIMAssembly.Insert();
-                TSM.Model model = new TSM.Model();
-                model.CommitChanges();
-            }
-        }
+        //public void InsertPartXML()
+        //{
+        //    DeserializeXML();
+        //    if (InBIMAssembly != null)
+        //    {
+        //        InBIMAssembly.Insert();
+        //        TSM.Model model = new TSM.Model();
+        //        model.CommitChanges();
+        //    }
+        //}
 
         /// <summary>
         /// Вставка балки из xml файла зеркально с сохранением осей главной детали.
         /// </summary>
         /// <param name="fileName"></param>
-        public void InsertMirror()
-        {
-            DeserializeXML();
-            if (InBIMAssembly != null)
-            {
-                InBIMAssembly.InsertMirror();
-                TSM.Model model = new TSM.Model();
-                model.CommitChanges();
-            }
-        }
+        //    public void InsertMirror()
+        //    {
+        //        DeserializeXML();
+        //        if (InBIMAssembly != null)
+        //        {
+        //            InBIMAssembly.InsertMirror();
+        //            TSM.Model model = new TSM.Model();
+        //            model.CommitChanges();
+        //        }
+        //    }
     }
 }

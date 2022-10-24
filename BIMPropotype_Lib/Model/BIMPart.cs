@@ -13,7 +13,7 @@ namespace BIMPropotype_Lib.Model
 {
     [Serializable]
     //Класс контейнер для обобщенного хранения BIMPart.
-    public class BIMPart: ChildrenAssembly
+    public class BIMPart: IUDAContainer
     {
         public List<BIMPartChildren> Children { get; set; }
         #region BoxObject
@@ -21,6 +21,8 @@ namespace BIMPropotype_Lib.Model
         public CustomPlate Plate { get; set; }
         public CustomPolyBeam PolyBeam { get; set; }
         public PartType Type { get; set; }
+        public UDACollection UDAList { get; set; }
+
         public Part GetPart()
         {
             if ((int)Type == 1)
@@ -77,10 +79,7 @@ namespace BIMPropotype_Lib.Model
 
             Children = this.GetChildren();
         }
-
-
-
-        public override void Insert()
+        public  void Insert(BIMAssembly father)
         {
             var customPart = GetCustomPart();
             if (customPart != null)
@@ -88,11 +87,10 @@ namespace BIMPropotype_Lib.Model
                 var modeelPart = customPart.GetModelObject() as Part;
                 modeelPart.Insert();
                 UDAList.GetUDAToPart(modeelPart);
-                ChildrenInsert();
             }
         }
 
-        public override void InsertMirror()
+        public  void InsertMirror(BIMAssembly father)
         {
             var customPart = GetCustomPart();
             if (customPart != null)
@@ -100,22 +98,6 @@ namespace BIMPropotype_Lib.Model
                 var modeelPart = customPart.GetModelObject() as Part;
                 modeelPart.InsertMirror(true);
                 UDAList.GetUDAToPart(modeelPart);
-                ChildrenInsertMirror();
-            }
-        }
-
-        private void ChildrenInsert() 
-        {
-            foreach (var child in Children)
-            {
-                child.Insert();
-            }
-        }
-        private void ChildrenInsertMirror()
-        {
-            foreach (var child in Children)
-            {
-                child.InsertMirror();
             }
         }
     }

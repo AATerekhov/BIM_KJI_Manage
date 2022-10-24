@@ -61,8 +61,8 @@ namespace PrototypeObserver.ViewModel
                 UDAs.Clear();
                 UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Имя.ToString(), partObserver._bIMPart.GetPart().Name), partObserver._bIMPart));
                 UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Класс.ToString(), partObserver._bIMPart.GetPart().Class), partObserver._bIMPart));
-                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Профиль.ToString(), partObserver._bIMPart.GetPart().Profile), partObserver._bIMPart));
-                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Материал.ToString(), partObserver._bIMPart.GetPart().Material), partObserver._bIMPart));
+                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Профиль.ToString(), partObserver._bIMPart.GetPart().Profile.ProfileString), partObserver._bIMPart));
+                UDAs.Add(new UDALineViewModel(new BIMUda(PropertyKey.Материал.ToString(), partObserver._bIMPart.GetPart().Material.MaterialString), partObserver._bIMPart));
                 foreach (BIMUda item in partObserver._bIMPart.UDAList.UDAList)
                 {
                     UDAs.Add(new UDALineViewModel(item, null));

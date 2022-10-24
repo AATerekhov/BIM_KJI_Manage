@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BIMPropotype_Lib.Model
 {
-    internal interface IModelOperations
+    public interface IModelOperations
     {
         void Insert();
         void InsertMirror();

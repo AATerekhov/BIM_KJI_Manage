@@ -5,10 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BIMPropotype_Lib.Model;
 
 namespace PrototypeObserver.ViewModel
 {
-    public class TreeViewItemViewModel : INotifyPropertyChanged
+    public class TreeViewItemViewModel : INotifyPropertyChanged, IModelOperations
     {
 
         #region Data
@@ -164,8 +165,17 @@ namespace PrototypeObserver.ViewModel
         {
             if (Parent == null) return false;
             else return true;            
-        } 
+        }
 
+        public virtual void Insert()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void InsertMirror()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #endregion // Presentation Members
@@ -179,6 +189,7 @@ namespace PrototypeObserver.ViewModel
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
 
         #endregion // INotifyPropertyChanged Members
     }

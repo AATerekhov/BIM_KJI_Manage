@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BIMPropotype_Lib.Model;
+using Tekla.Structures.Model;
+using BIMPropotype_Lib.ExtentionAPI.Mirror;
+using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
+using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -13,11 +17,12 @@ namespace PrototypeObserver.ViewModel
         public ContainerForSelected InContainerForSelected { get; set; }
 
         public AssemblyViewModel(BIMAssembly assembly, TreeViewItemViewModel parentField, ContainerForSelected containerForSelected)
-           : base(parentField, true)
+           : base(parentField, false)
         {
             _bIMAssembly = assembly;
             InContainerForSelected = containerForSelected;
             this.PropertyChanged += PrototypeNameViewModel_PropertyChanged;
+            LoadChildren();
         }
 
         public AssemblyViewModel(BIMAssembly assembly, ContainerForSelected containerForSelected) 
@@ -48,5 +53,49 @@ namespace PrototypeObserver.ViewModel
                 base.Children.Add(new PartViewModel(partBox, this, InContainerForSelected)); 
             }
         }
+
+        public override void Insert()
+        {
+            foreach (var item in Children)
+            {
+                if (item is PartViewModel assemblyVM) assemblyVM.Insert();
+            }   
+
+            if (Parent == null)
+            {
+                _bIMAssembly.Insert(null);
+            }
+            else
+            {
+                _bIMAssembly.Insert((Parent as PartViewModel)._bIMPart);
+            }
+        }
+
+        public void InsertNotFather() 
+        {
+            foreach (var item in Children)
+            {
+                if (item is PartViewModel assemblyVM) assemblyVM.Insert();
+            }
+            _bIMAssembly.Insert(null);
+        }
+
+        public override void InsertMirror()
+        {
+            foreach (var item in Children)
+            {
+                if (item is PartViewModel assemblyVM) assemblyVM.InsertMirror();
+            }
+
+            if (Parent == null)
+            {
+                _bIMAssembly.InsertMirror(null);
+            }
+            else
+            {
+                _bIMAssembly.InsertMirror((Parent as PartViewModel)._bIMPart);
+            }
+        }
+
     }
 }

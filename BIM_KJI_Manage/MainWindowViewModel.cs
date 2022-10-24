@@ -25,6 +25,7 @@ namespace Propotype_Manage
     using System.Threading.Tasks;
     using System.Windows;
     using Fusion;
+    using PrototypeObserver.ViewModel;
     using TeklaStructures = Tekla.Structures.TeklaStructures;
 
     class MainWindowViewModel : WindowViewModel
@@ -159,8 +160,17 @@ namespace Propotype_Manage
         [CommandHandler]
         public void InsertPartXML()
         {
-            var loader = new BeamLoader(InPrefixDirectory);
-            loader.InsertPartXML();
+
+            if (InPrototypeViewModel.InContainerForSelected.SelectedElement is AssemblyViewModel assembly) assembly.InsertNotFather();
+            else 
+            {
+                InPrototypeViewModel.InContainerForSelected.SelectedElement.Insert();
+            }
+            //var loader = new BeamLoader(InPrefixDirectory);
+            //loader.InsertPartXML();
+
+            TSM.Model model = new TSM.Model();
+            model.CommitChanges();
         }
 
         /// <summary>
@@ -169,8 +179,12 @@ namespace Propotype_Manage
         [CommandHandler]
         public void InsertMirror()
         {
-            var loader = new BeamLoader(InPrefixDirectory);
-            loader.InsertMirror();
+
+            InPrototypeViewModel.InContainerForSelected.SelectedElement.InsertMirror();
+            //var loader = new BeamLoader(InPrefixDirectory);
+            //loader.InsertMirror();
+            TSM.Model model = new TSM.Model();
+            model.CommitChanges();
         }
 
 
