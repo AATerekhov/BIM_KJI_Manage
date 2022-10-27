@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 using TSG = Tekla.Structures.Geometry3d;
 using System.Xml.Serialization;
+using Tekla.Structures.Geometry3d;
 
 namespace BIMPropotype_Lib.Model.Custom
 {
@@ -106,7 +107,7 @@ namespace BIMPropotype_Lib.Model.Custom
             if (CreateBolt) BoltSet.GetBoltSet(boltXYList);
         }
 
-        public TSM.ModelObject GetModelObject()
+        public TSM.ModelObject GetModelObject( )
         {
             FormObject();
             return BoltGroup;

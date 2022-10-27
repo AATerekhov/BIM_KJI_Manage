@@ -8,6 +8,7 @@ using Tekla.Structures.Model;
 using BIMPropotype_Lib.ExtentionAPI.Mirror;
 using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.Controller;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -16,7 +17,7 @@ namespace PrototypeObserver.ViewModel
         public BIMAssembly _bIMAssembly;
         public ContainerForSelected InContainerForSelected { get; set; }
 
-        public AssemblyViewModel(BIMAssembly assembly, TreeViewItemViewModel parentField, ContainerForSelected containerForSelected)
+        public AssemblyViewModel(BIMAssembly assembly, TreeViewItemViewModel parentField, ContainerForSelected containerForSelected )
            : base(parentField, false)
         {
             _bIMAssembly = assembly;
@@ -54,11 +55,13 @@ namespace PrototypeObserver.ViewModel
             }
         }
 
-        public override void Insert()
+        public override void Insert(Model model)
         {
+            WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
+            workPlaneWorker.GetWorkPlace(_bIMAssembly.BaseStructure);
             foreach (var item in Children)
             {
-                if (item is PartViewModel assemblyVM) assemblyVM.Insert();
+                if (item is PartViewModel assemblyVM) assemblyVM.Insert(model);
             }   
 
             if (Parent == null)
@@ -69,13 +72,15 @@ namespace PrototypeObserver.ViewModel
             {
                 _bIMAssembly.Insert((Parent as PartViewModel)._bIMPart);
             }
+            workPlaneWorker.ReturnWorkPlace();
         }
 
-        public void InsertNotFather() 
+        public void InsertNotFather(Model model)
         {
+            //WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
             foreach (var item in Children)
             {
-                if (item is PartViewModel assemblyVM) assemblyVM.Insert();
+                if (item is PartViewModel assemblyVM) assemblyVM.Insert(model);
             }
             _bIMAssembly.Insert(null);
         }

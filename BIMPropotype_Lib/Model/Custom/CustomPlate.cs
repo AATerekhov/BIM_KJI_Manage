@@ -4,6 +4,7 @@ using Tekla.Structures.Model;
 using TSM = Tekla.Structures.Model;
 using TSG = Tekla.Structures.Geometry3d;
 using BIMPropotype_Lib.Model.Support;
+using Tekla.Structures.Geometry3d;
 
 namespace BIMPropotype_Lib.Model.Custom
 {

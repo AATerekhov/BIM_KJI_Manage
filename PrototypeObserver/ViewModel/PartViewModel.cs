@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tekla.Structures.Model;
 using BIMPropotype_Lib.Model;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.Controller;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -48,15 +50,19 @@ namespace PrototypeObserver.ViewModel
                 base.Children.Add(new ChildrenPartViewModel(bolts, this, InContainerForSelected));
         }
 
-        public override void Insert()
+        public override void Insert(Model model)
         {
+            WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
+            workPlaneWorker.GetWorkPlace(_bIMPart.BaseStructure);
             _bIMPart.Insert((Parent as AssemblyViewModel)._bIMAssembly);
             foreach (var item in Children)
             {
-                if (item is AssemblyViewModel assemblyVM) assemblyVM.Insert();
-                else if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.Insert();
+                if (item is AssemblyViewModel assemblyVM) assemblyVM.Insert(model);
+                else if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.Insert(model);
             }
+            workPlaneWorker.ReturnWorkPlace();
         }
+
         public override void InsertMirror()
         {
             _bIMPart.InsertMirror((Parent as AssemblyViewModel)._bIMAssembly);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
 using BIMPropotype_Lib.Model.Support;
 using Tekla.Structures.Model;
+using Tekla.Structures.Geometry3d;
 
 namespace BIMPropotype_Lib.Model.Custom
 {

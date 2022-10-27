@@ -74,10 +74,10 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (modelEnum.Current is TSM.Assembly assemblyModel)
                 {
-                    Controller.WorkPlaneWorker workPlaneWorker = new Controller.WorkPlaneWorker(Database.PrefixDirectory.Model, assemblyModel);
-                    workPlaneWorker.GetWorkPlace();
+                    //Controller.WorkPlaneWorker workPlaneWorker = new Controller.WorkPlaneWorker(Database.PrefixDirectory.Model, assemblyModel);
+                    //workPlaneWorker.GetWorkPlace();
                     new BeamLoader(assemblyModel, Database.PrefixDirectory);
-                    workPlaneWorker.RerutnWorkPlace();
+                    //workPlaneWorker.RerutnWorkPlace();
                     AddDirect();
                 }
             }

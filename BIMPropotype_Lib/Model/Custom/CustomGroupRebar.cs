@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tekla.Structures.Geometry3d;
 using TSM = Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model.Custom
@@ -76,7 +77,7 @@ namespace BIMPropotype_Lib.Model.Custom
             return arrayList;
         }
 
-        public TSM.ModelObject GetModelObject()
+        public TSM.ModelObject GetModelObject( )
         {
             FormObject();
             return RebarGroup;

@@ -12,7 +12,6 @@ namespace BIMPropotype_Lib.Model.Support
     {
         public SupportPlace(TSM.Plane plane)
         {
-            Base = new CoordinateSystem(plane.Origin, plane.AxisX, plane.AxisY);
             base.Add(plane.Origin);
             base.Add(plane.Origin + plane.AxisX);
             base.Add(plane.Origin + plane.AxisY);
@@ -22,10 +21,15 @@ namespace BIMPropotype_Lib.Model.Support
         public TSM.Plane GetPlane()
         {
             var plane = new TSM.Plane();
-            plane.Origin = Base.Origin;
-            plane.AxisX = Base.AxisX;
-            plane.AxisY = Base.AxisY;
+            plane.Origin = Points[0];
+            plane.AxisX = new Vector(Points[1] - Points[0]); 
+            plane.AxisY = new Vector(Points[2] - Points[0]);
             return plane;        
+        }
+
+        public CoordinateSystem GetCS()
+        {
+            return new CoordinateSystem(GetFirst(), new Vector(GetSecond() - GetFirst()), new Vector(Points[2] - GetFirst()));
         }
     }
 }

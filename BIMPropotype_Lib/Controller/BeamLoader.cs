@@ -28,7 +28,7 @@ namespace BIMPropotype_Lib.Controller
         public BeamLoader(TSM.Assembly InAssembly, PrefixDirectory prefixDirectory)
         {
            WorkDirectory = prefixDirectory;
-           InBIMAssembly = new BIMAssembly(InAssembly);
+           InBIMAssembly = new BIMAssembly(InAssembly, WorkDirectory.Model);
            SerializeXML();
         }
 

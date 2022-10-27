@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TSM = Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model
 {
-    public interface IModelOperations
+    public interface ILink
     {
-        void Insert(TSM.Model model);
-        void InsertMirror();
+
     }
 }

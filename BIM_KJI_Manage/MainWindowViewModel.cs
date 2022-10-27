@@ -161,10 +161,10 @@ namespace Propotype_Manage
         public void InsertPartXML()
         {
 
-            if (InPrototypeViewModel.InContainerForSelected.SelectedElement is AssemblyViewModel assembly) assembly.InsertNotFather();
+            if (InPrototypeViewModel.InContainerForSelected.SelectedElement is AssemblyViewModel assembly) assembly.InsertNotFather(InPrefixDirectory.Model);
             else 
             {
-                InPrototypeViewModel.InContainerForSelected.SelectedElement.Insert();
+                InPrototypeViewModel.InContainerForSelected.SelectedElement.Insert(InPrefixDirectory.Model);
             }
             //var loader = new BeamLoader(InPrefixDirectory);
             //loader.InsertPartXML();

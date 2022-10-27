@@ -2,58 +2,67 @@
 using System.Collections.Generic;
 using Tekla.Structures.Model;
 using System.Linq;
+using TSM = Tekla.Structures.Model;
 using Tekla.Structures.Geometry3d;
+using BIMPropotype_Lib.Controller;
+using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : IUDAContainer
+    public class BIMAssembly : IUDAContainer, IStructure, ILink
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
         public List<BIMPart> Children { get; set; }
         public UDACollection UDAList { get; set; }
+        public CoordinateSystem BaseStructure { get; set; }
+
         public BIMAssembly() { }
-        public BIMAssembly(Assembly assembly)
+        public BIMAssembly(Assembly assembly, TSM.Model model)
         {
-            var parts = GetPartsToAssembly(assembly);
-            this.Children = new List<BIMPart>();
+            WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
+            BaseStructure = assembly.GetBaseStructure();
 
-            for (int i = 0; i < parts.Count; i++)
+            if (BaseStructure != null)
             {
-                if (i == 0)
+                workPlaneWorker.GetWorkPlace(BaseStructure);
+                assembly.Select();
+                var parts = GetPartsToAssembly(assembly);
+                this.Children = new List<BIMPart>();
+                for (int i = 0; i < parts.Count; i++)
                 {
-                    Name = parts[0].Name;
-                    Prefix = parts[0].AssemblyNumber.Prefix;                                      
-                }
+                    if (i == 0)
+                    {
+                        Name = parts[0].Name;
+                        Prefix = parts[0].AssemblyNumber.Prefix;
+                    }
 
-                var bimPart = new BIMPart(parts[i]);
-                Children.Add(bimPart);
+                    var bimPart = new BIMPart(parts[i], workPlaneWorker.Model);
+                    Children.Add(bimPart);
+                }
+                workPlaneWorker.ReturnWorkPlace();
             }
         }
 
-        public  void InsertMirror(BIMPart father)
-        {           
-
+        public  void InsertMirror(IStructure father)
+        {          
             BuildAssembly();
-
             if (father != null)
             {
-                var mainAssembly = father.GetPart().GetAssembly();
+                var mainAssembly = (father as BIMPart).GetPart().GetAssembly();
                 var hisAssembly = this.GetAssembly();
                 mainAssembly.Add(hisAssembly);
                 mainAssembly.Modify();
             }
         }
 
-        public  void Insert(BIMPart father)
-        {         
-
+        public  void Insert(IStructure father)
+        {   
             BuildAssembly();
-
             if (father != null)
             {
-                var mainAssembly = father.GetPart().GetAssembly();
+                var mainAssembly = (father as BIMPart).GetPart().GetAssembly();
                 var hisAssembly = this.GetAssembly();
                 mainAssembly.Add(hisAssembly);
                 mainAssembly.Modify();

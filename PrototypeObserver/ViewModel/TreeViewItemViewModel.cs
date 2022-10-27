@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BIMPropotype_Lib.Model;
+using Tekla.Structures.Model;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -167,7 +168,7 @@ namespace PrototypeObserver.ViewModel
             else return true;            
         }
 
-        public virtual void Insert()
+        public virtual void Insert(Model model)
         {
             throw new NotImplementedException();
         }

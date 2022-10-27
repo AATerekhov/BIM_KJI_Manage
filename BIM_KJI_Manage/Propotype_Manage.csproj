@@ -111,7 +111,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\WorkPlaneWorker.cs" />
     <Compile Include="Model\ModelPartInfo.cs" />
     <Compile Include="ViewConductor\ConductorView.xaml.cs">
       <DependentUpon>ConductorView.xaml</DependentUpon>
@@ -182,7 +181,9 @@
       <Name>PrototypeObserver</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controller\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="ViewConductor\Images\Foulder.png" />
     <Resource Include="ViewConductor\Images\NameSet.png" />

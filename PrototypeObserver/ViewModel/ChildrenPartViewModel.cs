@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tekla.Structures.Model;
 using BIMPropotype_Lib.Model;
 using BIMPropotype_Lib.Model.Custom;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.Controller;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -20,9 +22,14 @@ namespace PrototypeObserver.ViewModel
             InContainerForSelected = containerForSelected;
         }
 
-        public override void Insert()
+        public override void Insert(Model model)
         {
+            WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
+            workPlaneWorker.GetWorkPlace(_bIMPartChildren.BaseStructure);
+
             _bIMPartChildren.Insert((Parent as PartViewModel)._bIMPart);
+
+            workPlaneWorker.ReturnWorkPlace();
         }
 
         public override void InsertMirror()

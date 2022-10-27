@@ -99,6 +99,8 @@
     <Compile Include="Model\Custom\CustomPolyBeam.cs" />
     <Compile Include="Model\Custom\CustomSingleRebar.cs" />
     <Compile Include="Model\Custom\IFormObject.cs" />
+    <Compile Include="Model\ILink.cs" />
+    <Compile Include="Model\IStructure.cs" />
     <Compile Include="Model\Support\SupportCountor.cs" />
     <Compile Include="Model\Support\SupportPlace.cs" />
     <Compile Include="Model\Support\SupportPolygon.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Model\IModelOperations.cs" />
     <Compile Include="Model\Support\SupportDistanse.cs" />
     <Compile Include="Model\Support\SupportElement.cs" />
+    <Compile Include="Controller\WorkPlaneWorker.cs" />
     <Compile Include="ViewModel\PrefixDirectory.cs" />
     <Compile Include="Model\PrototypeFile.cs" />
     <Compile Include="Model\UDACollection.cs" />

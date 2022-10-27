@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tekla.Structures.Model;
+using Tekla.Structures.Geometry3d;
+using BIMPropotype_Lib.Controller;
 
 namespace BIMPropotype_Lib.ExtentionAPI.PartChildren
 {
@@ -21,47 +23,6 @@ namespace BIMPropotype_Lib.ExtentionAPI.PartChildren
             part.GetReportProperty("MAIN_PART", ref main);
             if (main != 0) return true;
             else return false;
-        }
-        public static List<BIMPartChildren> GetChildren(this BIMPart part) 
-        {
-            var children = new List<BIMPartChildren>();
-            var modelPart = part.GetPart();
-
-            if (modelPart.CheckMainPart())
-            {
-               var partEnumChildren = modelPart.GetAssembly().GetSubAssemblies();
-                foreach (var assembly in partEnumChildren)
-                {
-                    if (assembly is Assembly assemlyChild)
-                    {
-                        var child = new BIMPartChildren(assemlyChild);
-                        //child.Father = part;
-                        children.Add(child);
-                    }
-                }
-            }
-           
-            foreach (ModelObject item in modelPart.GetReinforcements())
-            {
-                var child = new BIMPartChildren(item);
-                //child.Father = part;
-                children.Add(child);                
-            }
-
-            foreach (ModelObject item in modelPart.GetBolts())
-            {
-                var child = new BIMPartChildren(item);
-                //child.Father = part;
-                children.Add(child);
-            }
-
-            foreach (ModelObject item in modelPart.GetBooleans())
-            {
-                var child = new BIMPartChildren(item);
-                //child.Father = part;
-                children.Add(child);
-            }
-            return children;
         }
 
         public static List<BIMPartChildren> GetAssembly(this List<BIMPartChildren> children) 
@@ -128,5 +89,64 @@ namespace BIMPropotype_Lib.ExtentionAPI.PartChildren
             }
             return bolts;
         }
+
+        public static CoordinateSystem GetBaseStructure(this Beam beam) 
+        {
+            CoordinateSystem cs = beam.GetCoordinateSystem();
+            cs.Origin = beam.StartPoint;
+            return cs;
+        }
+        public static CoordinateSystem GetBaseStructure(this PolyBeam polyBeam)
+        {
+            CoordinateSystem cs = polyBeam.GetCoordinateSystem();
+            cs.Origin = polyBeam.Contour.ContourPoints[0] as Point;
+            return cs;
+        }
+        public static CoordinateSystem GetBaseStructure(this ContourPlate contourPlate)
+        {
+            CoordinateSystem cs = contourPlate.GetCoordinateSystem();
+            cs.Origin = contourPlate.Contour.ContourPoints[0] as Point;
+            return cs;
+        }
+        public static CoordinateSystem GetBaseStructure(this SingleRebar singleRebar)
+        {
+            CoordinateSystem cs = singleRebar.GetCoordinateSystem();
+            cs.Origin = singleRebar.Polygon.Points[0] as Point;
+            return cs;
+        }
+        public static CoordinateSystem GetBaseStructure(this RebarGroup rebarGroup)
+        {
+            CoordinateSystem cs = rebarGroup.GetCoordinateSystem();
+            cs.Origin = (rebarGroup.Polygons[0] as Polygon).Points[0] as Point;
+            return cs;
+        }
+        public static CoordinateSystem GetBaseStructure(this Assembly assembly)
+        {
+            CoordinateSystem cs = null;
+            ModelObject mainPart = assembly.GetMainPart();
+            if (mainPart is Beam beam)
+            {
+                cs = beam.GetBaseStructure().Cloned();
+            }
+            else if (mainPart is PolyBeam polyBeam)
+            {
+                cs = polyBeam.GetBaseStructure().Cloned();
+            }
+            else if (mainPart is ContourPlate contourPlate)
+            {
+                cs = contourPlate.GetBaseStructure().Cloned();
+            }
+            return cs;
+        }
+        public static CoordinateSystem Cloned(this CoordinateSystem cs)
+        {
+            CoordinateSystem cloneCS = new CoordinateSystem();
+            cloneCS.Origin = new Point(cs.Origin);
+            cloneCS.AxisX = cs.AxisX;
+            cloneCS.AxisY = cs.AxisY;
+            return cloneCS;
+        }
+
+
     }
 }

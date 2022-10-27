@@ -26,7 +26,7 @@ namespace BIMPropotype_Lib.Model.Support
             }
         }
 
-        protected Point GetFirst() 
+        public Point GetFirst() 
         {
             if (Points != null)
             {
@@ -37,7 +37,7 @@ namespace BIMPropotype_Lib.Model.Support
             }
             return null;
         }
-        protected Point GetSecond()
+        public Point GetSecond()
         {
             if (Points != null)
             {
@@ -49,5 +49,14 @@ namespace BIMPropotype_Lib.Model.Support
             return null;
         }
 
+        public void Transform(Matrix matrix) 
+        {
+            List<Point> points = new List<Point>();
+            foreach (var point in Points)
+            {
+                points.Add(matrix.Transform(point));
+            }
+            Points = points;
+        }
     }
 }

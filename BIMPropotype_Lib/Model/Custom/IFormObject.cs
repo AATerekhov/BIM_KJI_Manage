@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TSM = Tekla.Structures.Model;
+using Tekla.Structures.Geometry3d;
 
 namespace BIMPropotype_Lib.Model.Custom
 {
