@@ -37,7 +37,15 @@ namespace Propotype_Manage
             InPrefixDirectory = inPrefixDirectory;
             InPrototypeViewModel = prototypeViewModel;
             InPrototypeViewModel.ModifyBIMAssemblySelect += InPrototypeViewModel_ModifyBIMAssemblySelect;
+            InPrototypeViewModel.CreatePrototypeSelect += InPrototypeViewModel_CreatePrototypeSelect;
             this.Initialize();
+        }
+
+        private void InPrototypeViewModel_CreatePrototypeSelect(BIMAssembly obj)
+        {
+            var loader = new BeamLoader(InPrefixDirectory);
+            loader.InBIMAssembly = obj;
+            loader.SerializeXML();
         }
 
         private void InPrototypeViewModel_ModifyBIMAssemblySelect(BIMAssembly obj)

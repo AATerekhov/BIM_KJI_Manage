@@ -10,7 +10,7 @@ using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : IUDAContainer, IStructure, ILink
+    public class BIMAssembly : IUDAContainer, IStructure
     {
         public string Name { get; set; }
         public string Prefix { get; set; }

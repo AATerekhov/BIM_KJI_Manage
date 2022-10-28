@@ -12,6 +12,7 @@ namespace PrototypeObserver.ViewModel
     public class ContainerForSelected : INotifyPropertyChanged
     {
         public event Action<TreeViewItemViewModel> ModifyAndSaveEvent;
+        public event Action<TreeViewItemViewModel> CreatePrototype;
 
         private TreeViewItemViewModel _selectedElement;
 
@@ -75,7 +76,12 @@ namespace PrototypeObserver.ViewModel
             ModifyAndSaveEvent?.Invoke(SelectedElement);
         }
 
-        
+        public void CreatePrototypeSelected() 
+        {
+            CreatePrototype?.Invoke(SelectedElement);
+        }
+
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;

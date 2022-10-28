@@ -19,6 +19,7 @@ namespace Propotype_Manage.ViewPrototype
     public class PrototypeViewModel : Fusion.ViewModel
     {
         public event Action<BIMAssembly> ModifyBIMAssemblySelect;
+        public event Action<BIMAssembly> CreatePrototypeSelect;
         public ObservableCollection<AssemblyViewModel> Propotypes { get; set; }
         public ContainerForSelected InContainerForSelected { get; set; }
         public SelectObserver InSelectObserver { get; set; }
@@ -40,6 +41,19 @@ namespace Propotype_Manage.ViewPrototype
             Propotypes = new ObservableCollection<AssemblyViewModel>();
             InContainerForSelected = new ContainerForSelected();
             InContainerForSelected.ModifyAndSaveEvent += InContainerForSelected_ModifyAndSaveEvent1;
+            InContainerForSelected.CreatePrototype += InContainerForSelected_CreatePrototype;
+
+        }
+
+        private void InContainerForSelected_CreatePrototype(PrototypeObserver.ViewModel.TreeViewItemViewModel obj)
+        {
+            if (obj != null)
+            {
+                if (obj is AssemblyViewModel assemblyViewModel)
+                {
+                    CreatePrototypeSelect?.Invoke(assemblyViewModel._bIMAssembly);
+                }
+            }
         }
 
         private void InSelectObserver_NewSelectPrototype(BIMAssembly obj)

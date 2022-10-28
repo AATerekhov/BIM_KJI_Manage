@@ -99,7 +99,6 @@
     <Compile Include="Model\Custom\CustomPolyBeam.cs" />
     <Compile Include="Model\Custom\CustomSingleRebar.cs" />
     <Compile Include="Model\Custom\IFormObject.cs" />
-    <Compile Include="Model\ILink.cs" />
     <Compile Include="Model\IStructure.cs" />
     <Compile Include="Model\Support\SupportCountor.cs" />
     <Compile Include="Model\Support\SupportPlace.cs" />
