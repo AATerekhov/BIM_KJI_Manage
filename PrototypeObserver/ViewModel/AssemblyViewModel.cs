@@ -9,6 +9,7 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 using BIMPropotype_Lib.Controller;
+using Tekla.Structures.Geometry3d;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -55,6 +56,14 @@ namespace PrototypeObserver.ViewModel
             }
         }
 
+        public override CoordinateSystem GetBase()
+        {
+            return _bIMAssembly.BaseStructure;
+        }
+        public override void SetBase(CoordinateSystem coordinateSystem)
+        {
+            _bIMAssembly.BaseStructure = coordinateSystem;
+        }
         public override void Insert(Model model)
         {
             WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BIMPropotype_Lib.Model;
 using Tekla.Structures.Model;
+using TSG = Tekla.Structures.Geometry3d;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -73,6 +74,14 @@ namespace PrototypeObserver.ViewModel
         #endregion // HasLoadedChildren
 
         #region IsExpanded
+
+        public virtual TSG.CoordinateSystem GetBase() 
+        {
+            return null;
+        }
+        public virtual void SetBase(TSG.CoordinateSystem coordinateSystem )
+        {
+        }
 
         /// <summary>
         /// Gets/sets whether the TreeViewItem 

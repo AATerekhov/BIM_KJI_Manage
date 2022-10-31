@@ -193,6 +193,9 @@
     <Resource Include="ViewPrototype\Images\Assembly.png" />
     <Resource Include="ViewPrototype\Images\Part.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\Load.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

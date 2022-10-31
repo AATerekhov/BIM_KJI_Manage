@@ -34,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DrawingCopierLib">
+      <HintPath>..\..\..\DrawingsWorker\DrawingCopier\DrawingCopierLib\bin\Debug\DrawingCopierLib.dll</HintPath>
+    </Reference>
+    <Reference Include="GridConvert">
+      <HintPath>..\..\..\DrawingsWorker\DrawingCopier\DrawingCopierLib\bin\Debug\GridConvert.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -77,6 +83,9 @@
     <Reference Include="Tekla.Structures.Plugins, Version=2021.0.0.0, Culture=neutral, PublicKeyToken=2f04dbe497b71114, processorArchitecture=MSIL">
       <HintPath>..\packages\TeklaOpenAPI.2021.0.1\lib\Tekla.Structures.Plugins.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="TeklaGridConverting">
+      <HintPath>..\..\RevitTekla-nverting\TeklaGridConverting\bin\Debug\TeklaGridConverting.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

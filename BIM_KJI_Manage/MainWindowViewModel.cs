@@ -38,7 +38,17 @@ namespace Propotype_Manage
             InPrototypeViewModel = prototypeViewModel;
             InPrototypeViewModel.ModifyBIMAssemblySelect += InPrototypeViewModel_ModifyBIMAssemblySelect;
             InPrototypeViewModel.CreatePrototypeSelect += InPrototypeViewModel_CreatePrototypeSelect;
+            InPrototypeViewModel.UploadPrototypeSelect += InPrototypeViewModel_UploadPrototypeSelect;
             this.Initialize();
+        }
+
+        private void InPrototypeViewModel_UploadPrototypeSelect(BIMAssembly obj)
+        {
+            InPrefixDirectory.FieldName = obj.Name;
+            InPrefixDirectory.Prefix = obj.Prefix;
+            var loader = new BeamLoader(InPrefixDirectory);
+            loader.DeserializeXML();
+            obj.Children = loader.InBIMAssembly.Children;
         }
 
         private void InPrototypeViewModel_CreatePrototypeSelect(BIMAssembly obj)

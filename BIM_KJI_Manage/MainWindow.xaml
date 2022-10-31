@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:Propotype_Manage" 
              xmlns:controls ="clr-namespace:Tekla.Structures.Ui.WpfKit.Controls;assembly=Tekla.Structures.Ui.WpfKit"   
         Title="BIM Prototype Manage 0.1"
-        Width="1000" Height="440"
+        Width="1000" Height="600"
         WindowStartupLocation="CenterScreen"
         Icon="ts-ext.ico" Topmost="True">
     <DockPanel>

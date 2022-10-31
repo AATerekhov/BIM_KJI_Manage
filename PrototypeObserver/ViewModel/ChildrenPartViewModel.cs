@@ -8,6 +8,7 @@ using BIMPropotype_Lib.Model;
 using BIMPropotype_Lib.Model.Custom;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 using BIMPropotype_Lib.Controller;
+using Tekla.Structures.Geometry3d;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -20,6 +21,17 @@ namespace PrototypeObserver.ViewModel
         {
             _bIMPartChildren = bIMPartChildren;
             InContainerForSelected = containerForSelected;
+            this.PropertyChanged += PrototypeNameViewModel_PropertyChanged;
+        }
+        private void PrototypeNameViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsSelected")
+            {
+                if ((sender as TreeViewItemViewModel).IsSelected)
+                {
+                    InContainerForSelected.SelectedElement = sender as TreeViewItemViewModel;
+                }
+            }
         }
 
         public override void Insert(Model model)
@@ -30,6 +42,16 @@ namespace PrototypeObserver.ViewModel
             _bIMPartChildren.Insert((Parent as PartViewModel)._bIMPart);
 
             workPlaneWorker.ReturnWorkPlace();
+        }
+
+        public override CoordinateSystem GetBase()
+        {
+            return _bIMPartChildren.BaseStructure;
+        }
+
+        public override void SetBase(CoordinateSystem coordinateSystem)
+        {
+            _bIMPartChildren.BaseStructure = coordinateSystem;
         }
 
         public override void InsertMirror()

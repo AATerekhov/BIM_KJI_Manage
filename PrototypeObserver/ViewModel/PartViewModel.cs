@@ -7,6 +7,7 @@ using Tekla.Structures.Model;
 using BIMPropotype_Lib.Model;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 using BIMPropotype_Lib.Controller;
+using Tekla.Structures.Geometry3d;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -61,6 +62,15 @@ namespace PrototypeObserver.ViewModel
                 else if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.Insert(model);
             }
             workPlaneWorker.ReturnWorkPlace();
+        }
+
+        public override CoordinateSystem GetBase()
+        {
+            return _bIMPart.BaseStructure;
+        }
+        public override void SetBase(CoordinateSystem coordinateSystem)
+        {
+            _bIMPart.BaseStructure = coordinateSystem;
         }
 
         public override void InsertMirror()

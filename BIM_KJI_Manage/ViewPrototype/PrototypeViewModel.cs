@@ -20,6 +20,7 @@ namespace Propotype_Manage.ViewPrototype
     {
         public event Action<BIMAssembly> ModifyBIMAssemblySelect;
         public event Action<BIMAssembly> CreatePrototypeSelect;
+        public event Action<BIMAssembly> UploadPrototypeSelect;
         public ObservableCollection<AssemblyViewModel> Propotypes { get; set; }
         public ContainerForSelected InContainerForSelected { get; set; }
         public SelectObserver InSelectObserver { get; set; }
@@ -41,19 +42,6 @@ namespace Propotype_Manage.ViewPrototype
             Propotypes = new ObservableCollection<AssemblyViewModel>();
             InContainerForSelected = new ContainerForSelected();
             InContainerForSelected.ModifyAndSaveEvent += InContainerForSelected_ModifyAndSaveEvent1;
-            InContainerForSelected.CreatePrototype += InContainerForSelected_CreatePrototype;
-
-        }
-
-        private void InContainerForSelected_CreatePrototype(PrototypeObserver.ViewModel.TreeViewItemViewModel obj)
-        {
-            if (obj != null)
-            {
-                if (obj is AssemblyViewModel assemblyViewModel)
-                {
-                    CreatePrototypeSelect?.Invoke(assemblyViewModel._bIMAssembly);
-                }
-            }
         }
 
         private void InSelectObserver_NewSelectPrototype(BIMAssembly obj)
@@ -68,6 +56,36 @@ namespace Propotype_Manage.ViewPrototype
                 if (obj.GetOldFather() is AssemblyViewModel assemblyViewModel)
                 {
                     ModifyBIMAssemblySelect?.Invoke(assemblyViewModel._bIMAssembly);
+                }
+            }
+        }
+
+        [CommandHandler]
+        public void CreatePrototype()
+        {
+            if (InContainerForSelected.SelectedElement != null)
+            {
+                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+                {
+                    CreatePrototypeSelect?.Invoke(assemblyViewModel._bIMAssembly);
+                }
+            }
+        }
+
+        [CommandHandler]
+        public void UpdatePrototype()
+        {
+
+            if (InContainerForSelected.SelectedElement != null)
+            {
+                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+                {
+                    UploadPrototypeSelect?.Invoke(assemblyViewModel._bIMAssembly); 
+                   
+                }
+                if (InContainerForSelected.SelectedElement.GetOldFather() is AssemblyViewModel assemblyFatherViewModel)
+                {
+                    ModifyBIMAssemblySelect?.Invoke(assemblyFatherViewModel._bIMAssembly);
                 }
             }
         }

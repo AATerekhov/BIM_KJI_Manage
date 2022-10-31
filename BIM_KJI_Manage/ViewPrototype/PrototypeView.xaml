@@ -9,38 +9,84 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <DockPanel>
-        <TreeView DockPanel.Dock="Left" ItemsSource="{Binding Propotypes,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                    <Setter Property="FontWeight" Value="Normal" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TreeView.ItemContainerStyle>
-            <TreeView.Resources>
-                <HierarchicalDataTemplate 
-          DataType="{x:Type vmtree:AssemblyViewModel}" 
-          ItemsSource="{Binding Children}">
+        <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Button   Command="{ui:CommandHandler CreatePrototype}" Background="LightGray" Height="25">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="12" Height="12" Margin="1" Source="Images\Assembly.png" />
-                        <TextBlock Margin="3" Text="{Binding Name}" />
                     </StackPanel>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate 
+                </Button>
+                <Button   Command="{ui:CommandHandler UpdatePrototype}" Background="LightGray" Height="25">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\Load.png" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <TreeView  ItemsSource="{Binding Propotypes,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:AssemblyViewModel}" 
+          ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="12" Height="12" Margin="1" Source="Images\Assembly.png" />
+                            <TextBlock Margin="3" Text="{Binding Name}">
+                            </TextBlock>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate 
           DataType="{x:Type vmtree:PartViewModel}" 
           ItemsSource="{Binding Children}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="12" Height="12" Margin="1" Source="Images\Part.png" />
-                        <TextBlock Margin="2" Text="{Binding Name}" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>                
-            </TreeView.Resources>
-        </TreeView>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="12" Height="12" Margin="1" Source="Images\Part.png" />
+                            <TextBlock Margin="2" Text="{Binding Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+            <StackPanel Orientation="Horizontal" >
+                <StackPanel Orientation="Vertical">
+                    <TextBlock  HorizontalAlignment="Center" Text="Путь Х" />
+                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.DistanceX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock  HorizontalAlignment="Center" Text="Путь Y" />
+                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.DistanceY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock  HorizontalAlignment="Center" Text="Путь Z" />
+                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.DistanceZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" >
+                <StackPanel Orientation="Vertical">
+                    <TextBlock  HorizontalAlignment="Center" Text="Вокруг X" />
+                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.AngleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock  HorizontalAlignment="Center" Text="Вокруг Y" />
+                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.AngleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock  HorizontalAlignment="Center" Text="Вокруг Z" />
+                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.AngleZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
+
+            </StackPanel>
+        
+       
         <DataGrid DockPanel.Dock="Right"
                   AutoGenerateColumns="False"
                   VerticalAlignment="Stretch" 

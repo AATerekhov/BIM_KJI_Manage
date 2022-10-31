@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BIMPropotype_Lib.Model;
+using DrawingCopierLib.Transfer.Model;
+using TeklaGridConverting.Model;
 
 namespace PrototypeObserver.ViewModel
 {
     public class ContainerForSelected : INotifyPropertyChanged
     {
         public event Action<TreeViewItemViewModel> ModifyAndSaveEvent;
-        public event Action<TreeViewItemViewModel> CreatePrototype;
 
         private TreeViewItemViewModel _selectedElement;
 
@@ -25,6 +26,14 @@ namespace PrototypeObserver.ViewModel
                 {
                     _selectedElement = value;
                     GetUDAs(_selectedElement);
+                    TransferBase.UCSFinish = _selectedElement.GetBase().CreateUniversalCoordinatSystem();
+
+                    this.OnPropertyChanged("DistanceX");
+                    this.OnPropertyChanged("DistanceY");
+                    this.OnPropertyChanged("DistanceZ");
+                    this.OnPropertyChanged("AngleY");
+                    this.OnPropertyChanged("AngleX");
+                    this.OnPropertyChanged("AngleZ");
                 }
             }
         }
@@ -48,11 +57,100 @@ namespace PrototypeObserver.ViewModel
                 this.OnPropertyChanged("SelectedUDA");
             }
         }
-        public ObservableCollection<UDALineViewModel> UDAs { get; set; }        
+        public ObservableCollection<UDALineViewModel> UDAs { get; set; }
+        public TransferBasis TransferBase { get; set; }
+        public double DistanceX
+        {
+            get { return TransferBase.GetDistanceX(); }
+            set
+            {
+                TransferBase.SetDistanceX(value);
+                SelectedElement.SetBase(TransferBase.UCSFinish.GetTeklaCoordinatSystem());
+                this.OnPropertyChanged("DistanceX");
+                //this.OnPropertyChanged("DistanceTransfer");
+                //this.OnPropertyChanged("ViewFinish");
+                ModifyAndSaveEvent?.Invoke(SelectedElement);
+            }
+        }
+        public double DistanceY
+        {
+            get { return TransferBase.GetDistanceY(); }
+            set
+            {
+                TransferBase.SetDistanceY(value);
+                SelectedElement.SetBase(TransferBase.UCSFinish.GetTeklaCoordinatSystem());
+                this.OnPropertyChanged("DistanceY");
+                //this.OnPropertyChanged("DistanceTransfer");
+                //this.OnPropertyChanged("ViewFinish");
+                ModifyAndSaveEvent?.Invoke(SelectedElement);
+            }
+        }
+        public double DistanceZ
+        {
+            get { return TransferBase.GetDistanceZ(); }
+            set
+            {
+                TransferBase.SetDistanceZ(value);
+                SelectedElement.SetBase(TransferBase.UCSFinish.GetTeklaCoordinatSystem());
+                this.OnPropertyChanged("DistanceZ");
+                //this.OnPropertyChanged("DistanceTransfer");
+                //this.OnPropertyChanged("ViewFinish");
+                ModifyAndSaveEvent?.Invoke(SelectedElement);
+            }
+        }
+        public double AngleX
+        {
+            get { return TransferBase.GetAngleX(); }
+            set
+            {
+                TransferBase.SetAngleX(value);
+                SelectedElement.SetBase(TransferBase.UCSFinish.GetTeklaCoordinatSystem());
+                this.OnPropertyChanged("AngleX");
+                this.OnPropertyChanged("AngleY");
+                this.OnPropertyChanged("AngleZ");
+                //this.OnPropertyChanged("Angle");
+                //this.OnPropertyChanged("DistanceTransfer");
+                //this.OnPropertyChanged("ViewFinish");
+                ModifyAndSaveEvent?.Invoke(SelectedElement);
+            }
+        }
+        public double AngleY
+        {
+            get { return TransferBase.GetAngleY(); }
+            set
+            {
+                TransferBase.SetAngleY(value);
+                SelectedElement.SetBase(TransferBase.UCSFinish.GetTeklaCoordinatSystem());
+                this.OnPropertyChanged("AngleY");
+                this.OnPropertyChanged("AngleX");
+                this.OnPropertyChanged("AngleZ");
+                //this.OnPropertyChanged("Angle");
+                //this.OnPropertyChanged("DistanceTransfer");
+                //this.OnPropertyChanged("ViewFinish");
+                ModifyAndSaveEvent?.Invoke(SelectedElement);
+            }
+        }
+        public double AngleZ
+        {
+            get { return TransferBase.GetAngleZ(); }
+            set
+            {
+                TransferBase.SetAngleZ(value);
+                SelectedElement.SetBase(TransferBase.UCSFinish.GetTeklaCoordinatSystem());
+                this.OnPropertyChanged("AngleZ");
+                this.OnPropertyChanged("AngleX");
+                this.OnPropertyChanged("AngleY");
+                //this.OnPropertyChanged("Angle");
+                //this.OnPropertyChanged("DistanceTransfer");
+                //this.OnPropertyChanged("ViewFinish");
+                ModifyAndSaveEvent?.Invoke(SelectedElement);
+            }
+        }
 
         public ContainerForSelected()
         {
             UDAs = new ObservableCollection<UDALineViewModel>();
+            TransferBase = new TransferBasis();
         }
 
         private void GetUDAs(TreeViewItemViewModel treeViewItemViewModel) 
@@ -75,12 +173,6 @@ namespace PrototypeObserver.ViewModel
         {
             ModifyAndSaveEvent?.Invoke(SelectedElement);
         }
-
-        public void CreatePrototypeSelected() 
-        {
-            CreatePrototype?.Invoke(SelectedElement);
-        }
-
 
         #region INotifyPropertyChanged Members
 

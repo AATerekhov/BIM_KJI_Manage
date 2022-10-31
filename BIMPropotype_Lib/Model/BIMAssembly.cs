@@ -17,7 +17,6 @@ namespace BIMPropotype_Lib.Model
         public List<BIMPart> Children { get; set; }
         public UDACollection UDAList { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
-
         public BIMAssembly() { }
         public BIMAssembly(Assembly assembly, TSM.Model model)
         {
