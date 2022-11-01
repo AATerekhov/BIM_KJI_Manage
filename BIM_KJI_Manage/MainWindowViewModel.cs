@@ -179,7 +179,18 @@ namespace Propotype_Manage
         public void InsertPartXML()
         {
 
-            if (InPrototypeViewModel.InContainerForSelected.SelectedElement is AssemblyViewModel assembly) assembly.InsertNotFather(InPrefixDirectory.Model);
+            if (InPrototypeViewModel.InContainerForSelected.SelectedElement is AssemblyViewModel assembly)
+            {
+                if (InPrototypeViewModel.IsGlobal)
+                {
+                    assembly.Insert(InPrefixDirectory.Model);
+                }
+                else
+                {
+                    assembly.InsertNotFather(InPrefixDirectory.Model);
+                }
+              
+            }
             else 
             {
                 InPrototypeViewModel.InContainerForSelected.SelectedElement.Insert(InPrefixDirectory.Model);

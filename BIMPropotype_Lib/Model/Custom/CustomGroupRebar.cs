@@ -22,14 +22,11 @@ namespace BIMPropotype_Lib.Model.Custom
         public CustomGroupRebar(TSM.RebarGroup rebarGroup)
         {
             Support = new List<SupportPolygon>(from item in GetPolygons(rebarGroup.Polygons) select new SupportPolygon(item.Points));
-            rebarGroup.Polygons = null;
             OnPlaneOffsets = ContertArreyListToDouble(rebarGroup.OnPlaneOffsets);
-            rebarGroup.OnPlaneOffsets = null;
             RadiusValues = ContertArreyListToDouble(rebarGroup.RadiusValues);
-            rebarGroup.RadiusValues = null;
             Spacings = ContertArreyListToDouble(rebarGroup.Spacings);
-            rebarGroup.Spacings = null;
             RebarGroup = rebarGroup;
+            this.Сleaning();
         }
 
         public void FormObject()
@@ -81,6 +78,13 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             FormObject();
             return RebarGroup;
+        }
+        public void Сleaning() 
+        {
+            RebarGroup.Polygons = null;
+            RebarGroup.OnPlaneOffsets = null;
+            RebarGroup.RadiusValues = null;
+            RebarGroup.Spacings = null;
         }
     }
 }

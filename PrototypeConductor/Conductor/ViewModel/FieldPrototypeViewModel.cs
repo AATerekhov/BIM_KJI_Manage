@@ -38,7 +38,7 @@ namespace PrototypeConductor.ViewModel
 
         protected override void LoadChildren()
         {
-            foreach (PrototypeName prototypeName in Database.GetPrototype(_field))
+            foreach (FilterPrototype prototypeName in Database.GetFilterDirectories(_field))
                 base.Children.Add(new PrototypeNameViewModel(prototypeName, this, Database));
         }
     }

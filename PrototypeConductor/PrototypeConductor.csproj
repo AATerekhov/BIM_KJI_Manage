@@ -56,10 +56,10 @@
   <ItemGroup>
     <Compile Include="Conductor\Controller\Database.cs" />
     <Compile Include="Conductor\Model\FieldPrototype.cs" />
+    <Compile Include="Conductor\Model\FilterPrototype.cs" />
     <Compile Include="Conductor\Model\ModelDirectory.cs" />
     <Compile Include="Conductor\Model\PrototypeName.cs" />
     <Compile Include="Conductor\ViewModel\FieldPrototypeViewModel.cs" />
-    <Compile Include="Conductor\ViewModel\FilterPrototypeViewModel.cs" />
     <Compile Include="Conductor\ViewModel\ModelDirectoryViewModel.cs" />
     <Compile Include="Conductor\ViewModel\PrototypeNameViewModel.cs" />
     <Compile Include="Conductor\ViewModel\TreeViewItemViewModel.cs" />

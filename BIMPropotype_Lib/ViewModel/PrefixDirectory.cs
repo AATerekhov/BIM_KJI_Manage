@@ -120,7 +120,6 @@ namespace BIMPropotype_Lib.ViewModel
         }
 
 
-
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;

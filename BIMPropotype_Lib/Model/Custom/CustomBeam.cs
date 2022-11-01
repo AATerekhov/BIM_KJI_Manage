@@ -33,5 +33,6 @@ namespace BIMPropotype_Lib.Model.Custom
             FormObject();
             return Beam;
         }
+        public void Сleaning() { }
     }
 }

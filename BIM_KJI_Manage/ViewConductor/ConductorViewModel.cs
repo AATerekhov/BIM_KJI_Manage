@@ -13,6 +13,7 @@ using UI = Tekla.Structures.Model.UI;
 using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
 using PrototypeObserver;
+using PrototypeConductor.Model;
 
 namespace Propotype_Manage.ViewConductor
 {
@@ -90,23 +91,42 @@ namespace Propotype_Manage.ViewConductor
 
             if (direct == null)
             {
-                var newField = new FieldPrototypeViewModel(new PrototypeConductor.Model.FieldPrototype(Database.PrefixDirectory.FieldName, Database.PrefixDirectory.GetDirectory()), Conductor[0], Database);
-                newField.IsExpanded = true;
-                Conductor[0].Children.Add(newField);
+                Conductor[0].Children.Add(new FieldPrototypeViewModel(new FieldPrototype(Database.PrefixDirectory.FieldName, Database.PrefixDirectory.GetDirectory()), Conductor[0], Database));
+                direct = Conductor[0].Children.Last();                  
+            }
+
+            direct.IsExpanded = true;
+            var selectedpropotype = SearcherPrefix(Conductor.ToList<TreeViewItemViewModel>());
+            if (selectedpropotype == null)
+            {
+                bool metka = false;
+                var prototypeName = new PrototypeName(Database.PrefixDirectory.Prefix);
+
+                foreach (var item in direct.Children)
+                {
+                    if (item is PrototypeNameViewModel prototypeNameViewModel)
+                    {
+                        metka = prototypeNameViewModel._prototypeName.Add(prototypeName);
+
+                        if (metka)
+                        {
+                            prototypeNameViewModel.Children.Add(new PrototypeNameViewModel(new FilterPrototype(prototypeName), prototypeNameViewModel, Database));
+                            prototypeNameViewModel.Children.Last().IsSelected = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!metka)
+                {
+                    direct.Children.Add(new PrototypeNameViewModel(new FilterPrototype(prototypeName), direct, Database));
+                    direct.Children.Last().IsSelected = true;
+                }
             }
             else
             {
-                direct.IsExpanded = true; 
-                var selectedpropotype = SearcherPrefix(Conductor.ToList<TreeViewItemViewModel>());
-                if (selectedpropotype == null)
-                {
-                    direct.Children.Add(new PrototypeNameViewModel(new PrototypeConductor.Model.PrototypeName(Database.PrefixDirectory.Prefix), direct as FieldPrototypeViewModel, Database));
-                }
-                else
-                {
-                    selectedpropotype.IsSelected = true;
-                }                
-            }  
+                selectedpropotype.IsSelected = true;
+            }
         }
 
         /// <summary>
@@ -220,13 +240,14 @@ namespace Propotype_Manage.ViewConductor
                 if (itemConductor.Children?.Count > 0)
                 {
                     var item = SearcherPrefix(itemConductor.Children.ToList<TreeViewItemViewModel>());
-                    if (item != null) return item;
+                    if (item != null) 
+                    {
+                        itemConductor.IsExpanded = true;
+                        return item;
+                    }
                 }
             }
             return null;
         }
-
-
-
     }
 }

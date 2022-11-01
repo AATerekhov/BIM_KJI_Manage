@@ -112,5 +112,6 @@ namespace BIMPropotype_Lib.Model.Custom
             FormObject();
             return BoltGroup;
         }
+        public void Сleaning() { }
     }
 }

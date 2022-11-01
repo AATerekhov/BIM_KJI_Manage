@@ -19,9 +19,9 @@ namespace BIMPropotype_Lib.Model.Custom
         public CustomPolyBeam() { }
         public CustomPolyBeam(TSM.PolyBeam polyBeam)
         {
-            Support = new SupportCountor(Averaging(polyBeam));
-            polyBeam.Contour.ContourPoints.Clear();
             PolyBeam = polyBeam;
+            Support = new SupportCountor(Averaging(polyBeam));
+            this.Сleaning();
         }
         public void FormObject()
         {            
@@ -53,6 +53,10 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             FormObject();
             return PolyBeam;
+        }
+        public void Сleaning()
+        {
+            PolyBeam.Contour.ContourPoints.Clear();
         }
     }
 }

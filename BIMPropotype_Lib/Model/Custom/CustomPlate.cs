@@ -18,7 +18,7 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             ContourPlate = contourPlate;
             Support = new SupportCountor(Averaging(contourPlate));
-            ContourPlate.Contour = null;
+            this.Сleaning();
         }
 
         public void FormObject() 
@@ -112,6 +112,11 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             FormObject();
             return ContourPlate;
+        }
+
+        public void Сleaning()
+        {
+            ContourPlate.Contour = null;
         }
     }
     enum PlateProfileType 

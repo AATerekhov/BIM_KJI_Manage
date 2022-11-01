@@ -26,14 +26,35 @@ namespace PrototypeConductor.Controller
         {
             return new List<FieldPrototype>(from item in PrefixDirectory.GetFields(modelDirectory.Path) select new FieldPrototype(new DirectoryInfo(item).Name, item));
         }
-        public List<PrototypeName> GetPrototype(FieldPrototype fieldPrototype)
-        {
-            return new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
-        }
+        //public List<PrototypeName> GetPrototype(FieldPrototype fieldPrototype)
+        //{
+        //    return new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
+        //}
         public List<ModelDirectory> GetModelDirectories()
         {
             return new List<ModelDirectory>() { new ModelDirectory(PrefixDirectory.GetDataDirectory(), PrefixDirectory.ModelInfo.ModelName) };
+        }
+        
+        public List<FilterPrototype> GetFilterDirectories(FieldPrototype fieldPrototype)
+        {
+            List<PrototypeName> filterNames = new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
+            List<FilterPrototype> filterPrototypes = new List<FilterPrototype>();
 
+            for (int i = 0; i < filterNames.Count; i++)
+            {
+                bool metka = false; 
+                foreach (var item in filterPrototypes)
+                {
+                    metka = item.Add(filterNames[i]);
+                    if (metka) break;                    
+                }
+
+                if (!metka)
+                {
+                    filterPrototypes.Add(new FilterPrototype(filterNames[i]));
+                }
+            }
+            return filterPrototypes;
         }
 
         public void LoadingPrototype() 

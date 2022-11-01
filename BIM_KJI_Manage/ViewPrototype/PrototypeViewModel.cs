@@ -25,6 +25,13 @@ namespace Propotype_Manage.ViewPrototype
         public ContainerForSelected InContainerForSelected { get; set; }
         public SelectObserver InSelectObserver { get; set; }
 
+        private bool _isGlobal;
+        public bool IsGlobal
+        {
+            get { return this._isGlobal; }
+            set { this.SetValue(ref this._isGlobal, value); }
+        }
+
         public void GetPropotypes(BIMAssembly bIMAssemblySelect) 
         {
             if (bIMAssemblySelect != null)
@@ -89,5 +96,6 @@ namespace Propotype_Manage.ViewPrototype
                 }
             }
         }
+
     }
 }

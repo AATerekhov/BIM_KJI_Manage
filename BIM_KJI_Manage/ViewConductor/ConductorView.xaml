@@ -69,12 +69,15 @@
                             <TextBlock Margin="2" Text="{Binding Name}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
-                    <DataTemplate DataType="{x:Type vmtree:PrototypeNameViewModel}">
+
+                    <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:PrototypeNameViewModel}" 
+          ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Width="12" Height="12" Margin="1" Source="Images\Prototype.png" />
-                            <TextBlock Margin="1" Text="{Binding Prefix}" />
+                            <Image Width="14" Height="14" Margin="2" Source="Images\Prototype.png" />
+                            <TextBlock Margin="2" Text="{Binding Prefix}" />
                         </StackPanel>
-                    </DataTemplate>
+                    </HierarchicalDataTemplate>
                 </TreeView.Resources>
             </TreeView>
         </StackPanel>

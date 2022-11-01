@@ -20,7 +20,7 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             SingleRebar = singleRebar;
             Support = new SupportPolygon(singleRebar.Polygon.Points);
-            SingleRebar.Polygon.Points.Clear();
+            this.Сleaning();
         }
 
 
@@ -35,5 +35,10 @@ namespace BIMPropotype_Lib.Model.Custom
             FormObject();
             return SingleRebar;
         }
+        public void Сleaning()
+        {
+            SingleRebar.Polygon.Points.Clear();
+        }
+
     }
 }

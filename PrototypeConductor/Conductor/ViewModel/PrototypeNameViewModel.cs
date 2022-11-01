@@ -10,15 +10,16 @@ namespace PrototypeConductor.ViewModel
 {
     public class PrototypeNameViewModel : TreeViewItemViewModel
     {
-        readonly PrototypeName _prototypeName;
+        public FilterPrototype _prototypeName;
         public Database Database { get; set; }
 
-        public PrototypeNameViewModel(PrototypeName prototypeName, FieldPrototypeViewModel parentField, Database database)
+        public PrototypeNameViewModel(FilterPrototype prototypeName, TreeViewItemViewModel parentField, Database database)
            : base(parentField, false)
         {
-            Database =  database;
+            Database = database;
             _prototypeName = prototypeName;
             this.PropertyChanged += PrototypeNameViewModel_PropertyChanged;
+            if (!_prototypeName.CheckSingle()) this.LoadChildren();
         }
 
         private void PrototypeNameViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -27,16 +28,34 @@ namespace PrototypeConductor.ViewModel
             {
                 if ((sender as TreeViewItemViewModel).IsSelected)
                 {
-                    Database.PrefixDirectory.FieldName = (this.Parent as FieldPrototypeViewModel).Name;
-                    Database.PrefixDirectory.Prefix = Prefix;
+                    Database.PrefixDirectory.FieldName = GetField().Name;
+                    Database.PrefixDirectory.Prefix = _prototypeName.Prototypes[0].Prefix;
                     Database.LoadingPrototype();
                 }
             }
         }
 
+        public FieldPrototypeViewModel GetField() 
+        {
+            if (this.Parent is FieldPrototypeViewModel parentField) return parentField;
+            else if (this.Parent is PrototypeNameViewModel parentPrototype) return parentPrototype.GetField();
+            else return null;
+        }
+
+        protected override void LoadChildren()
+        {
+            foreach (PrototypeName prototypeName in _prototypeName.Prototypes)
+                base.Children.Add(new PrototypeNameViewModel(new FilterPrototype(prototypeName), this, Database));
+        }
+
         public string Prefix
         {
-            get { return _prototypeName.Prefix; }
+            get
+            {
+                if (_prototypeName.CheckSingle()) return _prototypeName.Prototypes[0].Prefix;
+                else return _prototypeName.Prefix;
+            }
+
         }
     }
 }

@@ -19,9 +19,9 @@ namespace BIMPropotype_Lib.Model.Custom
         public CustomCutPlane() { }
         public CustomCutPlane(TSM.CutPlane cutPlane)
         {
-            Support = new SupportPlace(cutPlane.Plane);
             CutPlane = cutPlane;
-            CutPlane.Plane = null;
+            Support = new SupportPlace(cutPlane.Plane);            
+            this.Сleaning();
         }
 
         public void FormObject()
@@ -33,6 +33,11 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             FormObject();
             return CutPlane;
+        }
+
+        public void Сleaning()
+        {
+            CutPlane.Plane = null;
         }
     }
 }

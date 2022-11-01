@@ -21,6 +21,7 @@
                         <Image Width="12" Height="12" Margin="1" Source="Images\Load.png" />
                     </StackPanel>
                 </Button>
+                <CheckBox Margin="5" IsChecked="{Binding IsGlobal, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <TreeView  ItemsSource="{Binding Propotypes,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
                 <TreeView.ItemContainerStyle>

@@ -33,5 +33,7 @@ namespace BIMPropotype_Lib.Model.Custom
             FormObject();
             return Plate.GetModelObject();
         }
+
+        public void Сleaning() { }
     }
 }

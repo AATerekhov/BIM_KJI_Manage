@@ -16,5 +16,6 @@ namespace BIMPropotype_Lib.Model.Custom
         /// </summary>
         void FormObject();
         TSM.ModelObject GetModelObject();
+        void Сleaning();
     }
 }
