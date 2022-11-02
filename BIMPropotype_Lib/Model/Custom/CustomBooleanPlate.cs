@@ -34,6 +34,6 @@ namespace BIMPropotype_Lib.Model.Custom
             return Plate.GetModelObject();
         }
 
-        public void Сleaning() { }
+        public void Сleaning() { Plate.Сleaning(); }
     }
 }

@@ -17,6 +17,11 @@ namespace BIMPropotype_Lib.Model
     //Класс контейнер для обобщенного хранения BIMPart.
     public class BIMPart: IUDAContainer,IStructure
     {
+        [XmlIgnore]
+        public string Class
+        {
+            get { return GetPart().Class; }
+        }
         public List<BIMPartChildren> Children { get; set; }
         #region BoxObject
         public CustomBeam Beam { get; set; }
@@ -107,6 +112,7 @@ namespace BIMPropotype_Lib.Model
                 modelPart.Insert();
                 UDAList.GetUDAToPart(modelPart);
             }
+            customPart.Сleaning();
         }
         public  void InsertMirror(IStructure father)
         {
@@ -159,6 +165,10 @@ namespace BIMPropotype_Lib.Model
                 children.Add(child);
             }
             return children;
+        }
+        public override string ToString()
+        {
+            return $"{Type} {GetPart().Name}";
         }
     }
     public enum PartType

@@ -37,6 +37,7 @@ namespace BIMPropotype_Lib.Model.Custom
         }
         public void Сleaning()
         {
+            SingleRebar.Father = null;
             SingleRebar.Polygon.Points.Clear();
         }
 

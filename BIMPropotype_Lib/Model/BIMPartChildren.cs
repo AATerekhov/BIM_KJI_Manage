@@ -72,9 +72,7 @@ namespace BIMPropotype_Lib.Model
                 workPlaneWorker.GetWorkPlace(BaseStructure);
 
                 cutPlane.Select();
-                cutPlane.Father = null;
-                CutPlane = new CustomCutPlane(cutPlane);
-               
+                CutPlane = new CustomCutPlane(cutPlane);               
             }
             else if (modelObject is TSM.Fitting fitting)
             {
@@ -84,7 +82,6 @@ namespace BIMPropotype_Lib.Model
                 workPlaneWorker.GetWorkPlace(BaseStructure);
 
                 fitting.Select();
-                fitting.Father = null;
                 Fitting = new CustomFitting(fitting);
             }
             else if (modelObject is TSM.SingleRebar singleRebar)
@@ -95,7 +92,6 @@ namespace BIMPropotype_Lib.Model
                 workPlaneWorker.GetWorkPlace(BaseStructure);
 
                 singleRebar.Select();
-                singleRebar.Father = null;
                 SingleRebar = new CustomSingleRebar(singleRebar);
                 UDAList = new UDACollection(singleRebar);
             }
@@ -107,7 +103,6 @@ namespace BIMPropotype_Lib.Model
                 workPlaneWorker.GetWorkPlace(BaseStructure);
 
                 rebarGroup.Select();
-                rebarGroup.Father = null;
                 GroupRebar = new CustomGroupRebar(rebarGroup);
                 UDAList = new UDACollection(rebarGroup);
             }
@@ -152,8 +147,10 @@ namespace BIMPropotype_Lib.Model
                 else operativePart.Insert();
                 TSM.BooleanPart boolean = new TSM.BooleanPart() { Type = booleanType, Father = father.GetPart() };
                 boolean.SetOperativePart(operativePart);
-
                 if (boolean.Insert()) operativePart.Delete();
+
+                if ((int)ChildrenType == 1) BooleanBeam.Сleaning();                
+                else BooleanPlate.Сleaning();                
             }
             else if ((int)ChildrenType == 2)
             {
@@ -161,6 +158,7 @@ namespace BIMPropotype_Lib.Model
                 boolean.Father = father.GetPart();
                 if (mirror) boolean.InsertMirror();
                 else boolean.Insert();
+                CutPlane.Сleaning();
             }
             else if ((int)ChildrenType == 3)
             {
@@ -168,35 +166,45 @@ namespace BIMPropotype_Lib.Model
                 boolean.Father = father.GetPart();
                 if (mirror) boolean.InsertMirror();
                 else boolean.Insert();
+                Fitting.Сleaning();
+
             }
             else if ((int)ChildrenType == 5)
             {
-                Bolt.FormObject();
-                Bolt.BoltGroup.PartToBoltTo = father.GetPart();
-                Bolt.BoltGroup.PartToBeBolted = father.GetPart();
+                var boltGroupe =  Bolt.GetModelObject() as TSM.BoltGroup;
+                boltGroupe.PartToBoltTo = father.GetPart();
+                boltGroupe.PartToBeBolted = father.GetPart();
                 if (mirror) { }//TODO: Зеркальной вставки болтов пока нет, нужно добавить.
                 else
                 {
-                    Bolt.BoltGroup.Insert();
-                    UDAList.GetUDAToPart(Bolt.BoltGroup);
+                    boltGroupe.Insert();
+                    UDAList.GetUDAToPart(boltGroupe);
                 }
+                Bolt.Сleaning();
             }
             else if ((int)ChildrenType == 7)
             {
-                SingleRebar.FormObject();
-                SingleRebar.SingleRebar.Father = father.GetPart();
-                if (mirror) SingleRebar.SingleRebar.InsertMirror();
-                else SingleRebar.SingleRebar.Insert();
-                UDAList.GetUDAToPart(SingleRebar.SingleRebar);
+                var singleRebar = SingleRebar.GetModelObject() as TSM.SingleRebar;
+                singleRebar.Father = father.GetPart();
+                if (mirror) singleRebar.InsertMirror();
+                else singleRebar.Insert();
+                UDAList.GetUDAToPart(singleRebar);
+                SingleRebar.Сleaning();
             }
             else if ((int)ChildrenType == 8)
             {
-                GroupRebar.FormObject();
-                GroupRebar.RebarGroup.Father = father.GetPart();
-                if (mirror) GroupRebar.RebarGroup.InsertMirror();
-                else GroupRebar.RebarGroup.Insert();
-                UDAList.GetUDAToPart(GroupRebar.RebarGroup);
-            }
+                var groupRebar = GroupRebar.GetModelObject() as TSM.RebarGroup;                
+                groupRebar.Father = father.GetPart();
+                if (mirror) groupRebar.InsertMirror();
+                else groupRebar.Insert();
+                UDAList.GetUDAToPart(groupRebar);
+                GroupRebar.Сleaning();
+            }            
+        }
+        public override string ToString()
+        {
+            if (ChildrenType == PartChildrenType.Assembly) return Assembly.ToString();
+            return ChildrenType.ToString();
         }
     }
 

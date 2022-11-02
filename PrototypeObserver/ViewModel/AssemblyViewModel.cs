@@ -45,7 +45,7 @@ namespace PrototypeObserver.ViewModel
 
         public string Name
         {
-            get { return _bIMAssembly.Prefix; }
+            get { return _bIMAssembly.ToString(); }
         }
 
         protected override void LoadChildren()
@@ -86,7 +86,6 @@ namespace PrototypeObserver.ViewModel
 
         public void InsertNotFather(Model model)
         {
-            //WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
             foreach (var item in Children)
             {
                 if (item is PartViewModel assemblyVM) assemblyVM.Insert(model);

@@ -31,6 +31,6 @@ namespace BIMPropotype_Lib.Model.Custom
             FormObject();
             return Beam.GetModelObject();
         }
-        public void Сleaning() { }
+        public void Сleaning() { Beam.Сleaning(); }
     }
 }

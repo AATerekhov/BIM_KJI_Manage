@@ -88,6 +88,7 @@ namespace BIMPropotype_Lib.ViewModel
         {
             ProjectlInfo.SetUserProperty("PROJECT_USERFIELD_1", _modelDirectory);
         }
+
         public string GetFile()
         {
             if (!Directory.Exists(this.GetDirectory())) Directory.CreateDirectory(this.GetDirectory());
@@ -100,6 +101,7 @@ namespace BIMPropotype_Lib.ViewModel
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             return path;
         }
+
         public string GetDataDirectory()
         {
             var path = Path.Combine(ModelDirectory, addModelDirectory);
@@ -113,6 +115,7 @@ namespace BIMPropotype_Lib.ViewModel
             var vs = Directory.GetDirectories(directopy);
             return vs;
         }
+
         public string[] GetFiles(string directopy)
         {
             var vs = Directory.GetFiles(directopy);

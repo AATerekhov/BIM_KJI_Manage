@@ -81,6 +81,7 @@ namespace BIMPropotype_Lib.Model.Custom
         }
         public void Сleaning() 
         {
+            RebarGroup.Father = null;
             RebarGroup.Polygons = null;
             RebarGroup.OnPlaneOffsets = null;
             RebarGroup.RadiusValues = null;

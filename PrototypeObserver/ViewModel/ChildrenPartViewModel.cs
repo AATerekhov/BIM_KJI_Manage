@@ -58,5 +58,10 @@ namespace PrototypeObserver.ViewModel
         {
             _bIMPartChildren.InsertMirror((Parent as PartViewModel)._bIMPart);
         }
+
+        public override string ToString()
+        {
+            return _bIMPartChildren.ToString();
+        }
     }
 }

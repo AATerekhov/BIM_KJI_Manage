@@ -21,7 +21,7 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             Support = new SupportPlace(fitting.Plane);
             Fitting = fitting;
-            Fitting.Plane = null;
+            this.Сleaning();
         }
 
         public void FormObject()
@@ -33,6 +33,11 @@ namespace BIMPropotype_Lib.Model.Custom
         {
             FormObject();
             return Fitting;
+        }
+        public void Сleaning()
+        {
+            Fitting.Father = null;
+            Fitting.Plane = null;
         }
     }
 }

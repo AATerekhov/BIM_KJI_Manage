@@ -141,7 +141,9 @@ namespace BIMPropotype_Lib.Model
         }
         #endregion//Privet
 
-       
-    }
-    
+        public override string ToString()
+        {
+            return $"{Name} {Prefix}";
+        }
+    }    
 }

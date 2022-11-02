@@ -37,6 +37,7 @@ namespace BIMPropotype_Lib.Model.Custom
 
         public void Сleaning()
         {
+            CutPlane.Father = null;
             CutPlane.Plane = null;
         }
     }

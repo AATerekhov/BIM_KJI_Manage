@@ -39,6 +39,7 @@ namespace Propotype_Manage.ViewPrototype
                 Propotypes.Clear();
                 InContainerForSelected.UDAs.Clear();
                 Propotypes.Add(new AssemblyViewModel(bIMAssemblySelect, InContainerForSelected));
+                Propotypes[0].IsSelected = true;
             }
         }
 
