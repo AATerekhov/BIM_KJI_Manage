@@ -94,6 +94,7 @@
     <Compile Include="ViewModel\AssemblyViewModel.cs" />
     <Compile Include="ViewModel\ContainerForSelected.cs" />
     <Compile Include="ViewModel\ChildrenPartViewModel.cs" />
+    <Compile Include="ViewModel\JointViewModel.cs" />
     <Compile Include="ViewModel\PartViewModel.cs" />
     <Compile Include="ViewModel\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModel\UDALineViewModel.cs" />

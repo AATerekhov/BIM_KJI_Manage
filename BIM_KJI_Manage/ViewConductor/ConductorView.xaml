@@ -38,7 +38,8 @@
                 </StackPanel>
             </StackPanel>
            
-            <TreeView ItemsSource="{Binding Conductor,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
+            <TreeView x:Name="Conductor"
+                ItemsSource="{Binding Conductor,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -79,6 +80,9 @@
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
+                <TreeView.InputBindings>
+                    <KeyBinding  Key="Delete" Command="{ui:CommandHandler Delete}"  CommandParameter="{Binding Path=SelectedItem, ElementName=Conductor}"/>                    
+                </TreeView.InputBindings>
             </TreeView>
         </StackPanel>
     </DockPanel>

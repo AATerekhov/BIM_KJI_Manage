@@ -97,6 +97,22 @@ namespace Propotype_Manage.ViewPrototype
                 }
             }
         }
+        
 
+        [CommandHandler]
+        public void AddJoint()
+        {
+            if (InContainerForSelected.SelectedElement != null)
+            {
+                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+                {
+                    assemblyViewModel.AddJoint();
+                }
+                if (InContainerForSelected.SelectedElement.GetOldFather() is AssemblyViewModel assemblyFatherViewModel)
+                {
+                    ModifyBIMAssemblySelect?.Invoke(assemblyFatherViewModel._bIMAssembly);
+                }
+            }
+        }
     }
 }

@@ -110,5 +110,13 @@ namespace PrototypeObserver.ViewModel
             }
         }
 
+        public void AddJoint()
+        {
+            IsExpanded = true;
+            var joint = new BIMJoint();
+            joint.GetStarted();
+            base.Children.Add(new JointViewModel(joint, this, InContainerForSelected));
+            base.Children.Last().IsSelected = true;
+        }
     }
 }

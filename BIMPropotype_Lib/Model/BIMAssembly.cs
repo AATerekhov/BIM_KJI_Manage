@@ -15,6 +15,7 @@ namespace BIMPropotype_Lib.Model
         public string Name { get; set; }
         public string Prefix { get; set; }
         public List<BIMPart> Children { get; set; }
+        public List<BIMJoint> Joints { get; set; }
         public UDACollection UDAList { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
         public BIMAssembly() { }
@@ -29,6 +30,7 @@ namespace BIMPropotype_Lib.Model
                 assembly.Select();
                 var parts = GetPartsToAssembly(assembly);
                 this.Children = new List<BIMPart>();
+                this.Joints = new List<BIMJoint>();
                 for (int i = 0; i < parts.Count; i++)
                 {
                     if (i == 0)

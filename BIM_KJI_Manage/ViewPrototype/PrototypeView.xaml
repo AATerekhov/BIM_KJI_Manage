@@ -21,6 +21,11 @@
                         <Image Width="12" Height="12" Margin="1" Source="Images\Load.png" />
                     </StackPanel>
                 </Button>
+                <Button   Command="{ui:CommandHandler AddJoint}" Background="LightGray" Height="25">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\Joint.png" />
+                    </StackPanel>
+                </Button>
                 <CheckBox Margin="5" IsChecked="{Binding IsGlobal, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <TreeView  ItemsSource="{Binding Propotypes,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
@@ -52,6 +57,16 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Width="12" Height="12" Margin="1" Source="Images\Part.png" />
                             <TextBlock Margin="2" Text="{Binding Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:JointViewModel}" 
+          ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="12" Height="12" Margin="1" Source="Images\Joint.png" />
+                            <TextBlock Margin="2" Text="{Binding Name}" />
+                            <TextBlock>_</TextBlock>
+                            <TextBlock Margin="2" Text="{Binding Number}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>

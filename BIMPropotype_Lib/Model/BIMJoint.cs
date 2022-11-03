@@ -20,6 +20,12 @@ namespace BIMPropotype_Lib.Model
             Templates = new List<BIMTemplate>() {bIMTemplate};
         }
 
+        public void GetStarted() 
+        {
+            Templates = new List<BIMTemplate>();
+            BaseStructure = new CoordinateSystem();
+        }
+
         public void Insert(IStructure father)
         {
             throw new NotImplementedException();

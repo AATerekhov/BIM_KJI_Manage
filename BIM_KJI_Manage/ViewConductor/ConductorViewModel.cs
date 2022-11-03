@@ -133,23 +133,40 @@ namespace Propotype_Manage.ViewConductor
         /// Вставка деталей в модель.
         /// </summary>
         [CommandHandler]
-        public void Delete()
+        public void Delete(object SelectedItem)
         {
-           
+            if (SelectedItem is PrototypeNameViewModel prototypeName)
+            {
+                var msg = this.Host.UI.ShowMessageDialog($"Вы хотите удалить {prototypeName.Prefix}?", "Message", icon: "Geometry.RecycleBin", new string[] { "Delete", "Сancel" });
+                if (msg == "Delete")
+                {
+                    var path = Database.PrefixDirectory.GetFile();
+                    if (File.Exists(path)) File.Delete(path);
+                    var parect = prototypeName.Parent;
+                    parect.Children.Remove(prototypeName);
+                    if (parect.Children.Count > 0)
+                    {
+                        parect.Children.Last().IsSelected = true;
+                    }
+                }
+            }
+            else if (SelectedItem is FieldPrototypeViewModel fieldPrototype)
+            {
+                if (fieldPrototype.Children.Count == 0)
+                {
+                    var path = Database.PrefixDirectory.GetDirectory();
+                    if (Directory.Exists(path)) Directory.Delete(path);
+                    fieldPrototype.Parent.Children.Remove(fieldPrototype);
+                }
+            }
+
             var selected = Searcher(Conductor.ToList<TreeViewItemViewModel>());
             if (selected != null)
             {
 
                 if (CheckPrototype(selected))
                 {
-                    var path = Database.PrefixDirectory.GetFile();
-                    if (File.Exists(path)) File.Delete(path);
-                    var parect = selected.Parent;
-                    parect.Children.Remove(selected);
-                    if (parect.Children.Count > 0)
-                    {
-                        parect.Children.Last().IsSelected = true;
-                    }
+                    
                 }
                 if (CheckFoulder(selected))//Пустая папка.
                 {
