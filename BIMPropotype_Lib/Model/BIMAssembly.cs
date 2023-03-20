@@ -10,14 +10,14 @@ using BIMPropotype_Lib.ExtentionAPI.PartChildren;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : IUDAContainer, IStructure
+    public class BIMAssembly : IUDAContainer, IStructure, IBIMCollection, IReference
     {
         public string Name { get; set; }
         public string Prefix { get; set; }
         public List<BIMPart> Children { get; set; }
-        public List<BIMJoint> Joints { get; set; }
         public UDACollection UDAList { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
+
         public BIMAssembly() { }
         public BIMAssembly(Assembly assembly, TSM.Model model)
         {
@@ -29,19 +29,12 @@ namespace BIMPropotype_Lib.Model
                 workPlaneWorker.GetWorkPlace(BaseStructure);
                 assembly.Select();
                 var parts = GetPartsToAssembly(assembly);
-                this.Children = new List<BIMPart>();
-                this.Joints = new List<BIMJoint>();
-                for (int i = 0; i < parts.Count; i++)
-                {
-                    if (i == 0)
-                    {
-                        Name = parts[0].Name;
-                        Prefix = parts[0].AssemblyNumber.Prefix;
-                    }
+                Name = parts[0].Name;
+                Prefix = parts[0].AssemblyNumber.Prefix;
 
-                    var bimPart = new BIMPart(parts[i], workPlaneWorker.Model);
-                    Children.Add(bimPart);
-                }
+                this.Children = new List<BIMPart>(
+                      (from children in parts
+                       select new BIMPart(children, workPlaneWorker.Model)));
                 workPlaneWorker.ReturnWorkPlace();
             }
         }
@@ -146,6 +139,16 @@ namespace BIMPropotype_Lib.Model
         public override string ToString()
         {
             return $"{Name} {Prefix}";
+        }
+
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
         }
     }    
 }

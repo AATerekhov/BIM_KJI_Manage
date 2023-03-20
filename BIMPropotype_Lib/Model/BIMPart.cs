@@ -15,7 +15,7 @@ namespace BIMPropotype_Lib.Model
 {
     [Serializable]
     //Класс контейнер для обобщенного хранения BIMPart.
-    public class BIMPart: IUDAContainer,IStructure
+    public class BIMPart: IUDAContainer,IStructure, IBIMCollection
     {
         [XmlIgnore]
         public string Class

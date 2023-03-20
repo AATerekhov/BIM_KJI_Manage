@@ -40,6 +40,7 @@ namespace PrototypeConductor.Controller
             List<PrototypeName> filterNames = new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
             List<FilterPrototype> filterPrototypes = new List<FilterPrototype>();
 
+            //Прогон имен файлов.
             for (int i = 0; i < filterNames.Count; i++)
             {
                 bool metka = false; 

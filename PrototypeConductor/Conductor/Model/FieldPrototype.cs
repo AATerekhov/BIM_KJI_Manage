@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeConductor.Model
 {
+    /// <summary>
+    /// Папка в архиве
+    /// </summary>
     public class FieldPrototype
     {
         public string Name { get; private set; }
@@ -18,6 +21,9 @@ namespace PrototypeConductor.Model
         }
 
         readonly List<PrototypeName> _prefix = new List<PrototypeName>();
+        /// <summary>
+        /// Список файлов
+        /// </summary>
         public List<PrototypeName> Prefix
         {
             get { return _prefix; }

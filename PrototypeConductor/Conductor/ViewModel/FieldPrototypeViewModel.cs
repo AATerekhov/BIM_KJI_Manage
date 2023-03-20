@@ -17,7 +17,7 @@ namespace PrototypeConductor.ViewModel
         {
             Database = database;
             _field = field;
-            this.PropertyChanged += FieldPrototypeViewModel_PropertyChanged; ;
+            this.PropertyChanged += FieldPrototypeViewModel_PropertyChanged;
         }
 
         private void FieldPrototypeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

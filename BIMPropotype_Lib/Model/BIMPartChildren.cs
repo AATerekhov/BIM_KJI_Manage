@@ -20,6 +20,7 @@ namespace BIMPropotype_Lib.Model
         public CustomBooleanBeam BooleanBeam { get; set; }//Pruning
         public CustomBooleanPlate BooleanPlate { get; set; }//Pruning
         public BIMAssembly Assembly { get; set; }
+        public BIMJoint Joint { get; set; } //Реализация узла.
         public CustomBolt Bolt { get; set; }
         public CustomSingleRebar SingleRebar { get; set; }//Reinforcement
         public CustomGroupRebar GroupRebar { get; set; }//Reinforcement
@@ -219,5 +220,6 @@ namespace BIMPropotype_Lib.Model
         Assembly = 6,
         singleRebar = 7,
         groupRebar = 8,
+        joint = 9,
     }
 }

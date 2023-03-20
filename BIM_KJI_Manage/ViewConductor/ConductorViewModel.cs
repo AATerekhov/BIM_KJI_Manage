@@ -75,13 +75,30 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (modelEnum.Current is TSM.Assembly assemblyModel)
                 {
-                    //Controller.WorkPlaneWorker workPlaneWorker = new Controller.WorkPlaneWorker(Database.PrefixDirectory.Model, assemblyModel);
-                    //workPlaneWorker.GetWorkPlace();
                     new BeamLoader(assemblyModel, Database.PrefixDirectory);
-                    //workPlaneWorker.RerutnWorkPlace();
                     AddDirect();
                 }
             }
+        }
+
+        
+        /// <summary>
+        /// Сериализовать выбранные сборки.
+        /// </summary>
+        [CommandHandler]
+        public void AddStructure()
+        {
+            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
+            List<TSM.Assembly> structure = new List<TSM.Assembly>();
+            while (modelEnum.MoveNext())
+            {
+                if (modelEnum.Current is TSM.Assembly assemblyModel)
+                {
+                    structure.Add(assemblyModel);
+                }
+            }
+            new BeamLoader(Database.PrefixDirectory).SerializeXMLStructure(structure);
+            AddDirect();
         }
 
         private void AddDirect()

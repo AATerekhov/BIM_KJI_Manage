@@ -29,10 +29,10 @@ namespace PrototypeObserver.ViewModel
             set { _bIMJoint.Name = value;}
         }
 
-        public int Number
+        public string Number
         {
-            get { return _bIMJoint.Number; }
-            set { _bIMJoint.Number = value; }
+            get { return _bIMJoint.Prefix; }
+            set { _bIMJoint.Prefix = value; }
         }
 
         private void PrototypeNameViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

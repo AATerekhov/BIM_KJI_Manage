@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeConductor.Model
 {
+    /// <summary>
+    /// Сортировка файлов в папке
+    /// </summary>
     public class FilterPrototype
     {
         public char _separator = '-';
@@ -43,6 +46,10 @@ namespace PrototypeConductor.Model
             return rezult;
         }
 
+        /// <summary>
+        /// Если один, то True
+        /// </summary>
+        /// <returns></returns>
         public bool CheckSingle() 
         {
             if (Prototypes.Count == 1) return true;

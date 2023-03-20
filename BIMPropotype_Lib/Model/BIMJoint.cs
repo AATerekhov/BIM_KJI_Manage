@@ -8,21 +8,21 @@ using Tekla.Structures.Geometry3d;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMJoint : IStructure
+    public class BIMJoint : IStructure, IBIMCollection, IReference
     {
-        public string Name { get; set; }
-        public int Number { get; set; }
-        public List<BIMTemplate> Templates { get; set; }
+        public List<BIMPartChildren> Children { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
+        public string Name { get; set; }
+        public string Prefix { get; set; }
         public BIMJoint() { }
-        public BIMJoint(BIMTemplate bIMTemplate)
+        public BIMJoint(BIMPartChildren bIMTemplate)
         {
-            Templates = new List<BIMTemplate>() {bIMTemplate};
+            Children = new List<BIMPartChildren>() {bIMTemplate};
         }
 
         public void GetStarted() 
         {
-            Templates = new List<BIMTemplate>();
+            Children = new List<BIMPartChildren>();
             BaseStructure = new CoordinateSystem();
         }
 
@@ -32,6 +32,16 @@ namespace BIMPropotype_Lib.Model
         }
 
         public void InsertMirror(IStructure father)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
         {
             throw new NotImplementedException();
         }

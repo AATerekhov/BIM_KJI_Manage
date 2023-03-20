@@ -10,7 +10,7 @@ namespace PrototypeConductor.ViewModel
 {
     public class PrototypeNameViewModel : TreeViewItemViewModel
     {
-        public FilterPrototype _prototypeName;
+        public FilterPrototype _prototypeName;//Сортировка по именам.
         public Database Database { get; set; }
 
         public PrototypeNameViewModel(FilterPrototype prototypeName, TreeViewItemViewModel parentField, Database database)
@@ -48,6 +48,9 @@ namespace PrototypeConductor.ViewModel
                 base.Children.Add(new PrototypeNameViewModel(new FilterPrototype(prototypeName), this, Database));
         }
 
+        /// <summary>
+        /// Получение имени, если один элемент и если несколько...
+        /// </summary>
         public string Prefix
         {
             get

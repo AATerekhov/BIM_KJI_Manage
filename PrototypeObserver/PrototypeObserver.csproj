@@ -35,10 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DrawingCopierLib">
-      <HintPath>..\..\..\DrawingsWorker\DrawingCopier\DrawingCopierLib\bin\Debug\DrawingCopierLib.dll</HintPath>
+      <HintPath>..\..\DrawingCopier\DrawingCopierLib\bin\Debug\DrawingCopierLib.dll</HintPath>
     </Reference>
     <Reference Include="GridConvert">
-      <HintPath>..\..\..\DrawingsWorker\DrawingCopier\DrawingCopierLib\bin\Debug\GridConvert.dll</HintPath>
+      <HintPath>..\..\DrawingCopier\DrawingCopierLib\bin\Debug\GridConvert.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

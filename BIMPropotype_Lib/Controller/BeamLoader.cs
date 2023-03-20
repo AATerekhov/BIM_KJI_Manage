@@ -32,6 +32,27 @@ namespace BIMPropotype_Lib.Controller
            SerializeXML();
         }
 
+        public void SerializeXMLStructure(List<TSM.Assembly> assemblies)
+        {
+            BIMStructure bIMStructure = new BIMStructure(assemblies, WorkDirectory.Model);
+
+            if (Path != string.Empty)
+            {
+                WorkDirectory.FieldName = bIMStructure.Name;
+                WorkDirectory.Prefix = bIMStructure.Prefix;
+                string path = $"{WorkDirectory.GetFile()}{GetExtention(BIMType.BIMStructure)}";
+                if (File.Exists(path)) File.Delete(path);
+
+                XmlSerializer formatter = new XmlSerializer(typeof(BIMStructure));
+
+                using (FileStream fs = new FileStream(path, FileMode.CreateNew))
+                {
+                    formatter.Serialize(fs, bIMStructure);
+                    fs.Close();
+                }
+            }
+        }
+
         public void SerializeXML()
         {
             if (Path != string.Empty)
@@ -68,34 +89,24 @@ namespace BIMPropotype_Lib.Controller
             }
         }
 
-        /// <summary>
-        /// Вставка балки из xml файла.
-        /// </summary>
-        /// <param name="fileName"></param>
-        //public void InsertPartXML()
-        //{
-        //    DeserializeXML();
-        //    if (InBIMAssembly != null)
-        //    {
-        //        InBIMAssembly.Insert();
-        //        TSM.Model model = new TSM.Model();
-        //        model.CommitChanges();
-        //    }
-        //}
+        public string GetExtention(BIMType type) 
+        {
+            if ((int)type == 1)
+            {
+                return ".str";
+            }
+            else if ((int)type == 2)
+            {
+                return ".jnt";
+            }
+            else return string.Empty;                
+        }
+    }
 
-        /// <summary>
-        /// Вставка балки из xml файла зеркально с сохранением осей главной детали.
-        /// </summary>
-        /// <param name="fileName"></param>
-        //    public void InsertMirror()
-        //    {
-        //        DeserializeXML();
-        //        if (InBIMAssembly != null)
-        //        {
-        //            InBIMAssembly.InsertMirror();
-        //            TSM.Model model = new TSM.Model();
-        //            model.CommitChanges();
-        //        }
-        //    }
+    public enum BIMType 
+    {
+        BIMStructure = 1,
+        BIMAssembly = 0,
+        BIMJoint = 2
     }
 }

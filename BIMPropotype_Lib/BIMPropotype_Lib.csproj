@@ -88,6 +88,7 @@
     <Compile Include="Model\BIMPartChildren.cs" />
     <Compile Include="Model\BIMAssembly.cs" />
     <Compile Include="Model\BIMPart.cs" />
+    <Compile Include="Model\BIMStructure.cs" />
     <Compile Include="Model\BIMUda.cs" />
     <Compile Include="Model\Custom\BoltSet.cs" />
     <Compile Include="Model\Custom\CustomBeam.cs" />
@@ -100,8 +101,9 @@
     <Compile Include="Model\Custom\CustomPolyBeam.cs" />
     <Compile Include="Model\Custom\CustomSingleRebar.cs" />
     <Compile Include="Model\Custom\IFormObject.cs" />
+    <Compile Include="Model\IBIMCollection.cs" />
+    <Compile Include="Model\IReference.cs" />
     <Compile Include="Model\IStructure.cs" />
-    <Compile Include="Model\BIMTemplate.cs" />
     <Compile Include="Model\Support\SupportCountor.cs" />
     <Compile Include="Model\Support\SupportPlace.cs" />
     <Compile Include="Model\Support\SupportPolygon.cs" />

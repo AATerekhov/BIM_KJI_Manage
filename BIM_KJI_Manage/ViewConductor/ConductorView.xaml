@@ -15,17 +15,17 @@
                     <TextBox Height="25" Width="400"  Text="{Binding Path=Database.PrefixDirectory.ModelDirectory, Mode=TwoWay}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button   Command="{ui:CommandHandler Refresh}" Background="LightGray" Height="25">
+                    <Button   Command="{ui:CommandHandler Refresh}" Background="LightGray" Height="25" Cursor="Hand">
                         <StackPanel Orientation="Horizontal">
                             <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Home}"/>
                         </StackPanel>
                     </Button>
-                    <Button   Command="{ui:CommandHandler Delete}" Background="LightGray" Height="25">
+                    <Button   Command="{ui:CommandHandler Delete}" CommandParameter="{Binding Path=SelectedItem, ElementName=Conductor}" Background="LightGray" Height="25" Cursor="Hand">
                         <StackPanel Orientation="Horizontal">
                             <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Error}"/>
                         </StackPanel>
                     </Button>
-                    <Button   Command="{ui:CommandHandler AddAssemblys}" Background="LightGray" Height="25">
+                    <Button   Command="{ui:CommandHandler AddAssemblys}" Background="LightGray" Height="25" Cursor="Hand">
                         <StackPanel Orientation="Horizontal">
                             <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Extensions}"/>
                         </StackPanel>
@@ -34,7 +34,12 @@
                         <StackPanel Orientation="Horizontal">
                             <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.ObjectSteelItem}"/>
                         </StackPanel>
-                    </Button>                   
+                    </Button>
+                    <Button   Command="{ui:CommandHandler AddStructure}" Background="LightGray" Height="25" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="12" Height="12" Margin="0" Source="Images\molecule.png" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </StackPanel>
            

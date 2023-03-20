@@ -199,6 +199,9 @@
   <ItemGroup>
     <Resource Include="ViewPrototype\Images\Joint.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\molecule.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
