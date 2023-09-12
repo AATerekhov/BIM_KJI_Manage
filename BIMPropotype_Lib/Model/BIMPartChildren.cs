@@ -207,6 +207,11 @@ namespace BIMPropotype_Lib.Model
             if (ChildrenType == PartChildrenType.Assembly) return Assembly.ToString();
             return ChildrenType.ToString();
         }
+
+        public void SelectInModel(TSM.Model model)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public enum PartChildrenType

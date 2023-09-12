@@ -23,6 +23,7 @@ namespace PrototypeConductor.Model
         {
             get { return _fields; }
         }
+        
 
         public ModelDirectory(string path, string name) 
         {

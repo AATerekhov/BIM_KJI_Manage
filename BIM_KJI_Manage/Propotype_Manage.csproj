@@ -111,7 +111,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\FolderManager.cs" />
     <Compile Include="Model\ModelPartInfo.cs" />
+    <Compile Include="Model\ShortGUID.cs" />
     <Compile Include="ViewConductor\ConductorView.xaml.cs">
       <DependentUpon>ConductorView.xaml</DependentUpon>
     </Compile>
@@ -201,6 +203,33 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ViewConductor\Images\molecule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\molecule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\upload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\swap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\assign.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\innovation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\rearview-mirror.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

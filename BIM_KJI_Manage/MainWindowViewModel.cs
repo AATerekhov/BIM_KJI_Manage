@@ -24,6 +24,7 @@ namespace Propotype_Manage
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
+    using BIMPropotype_Lib.ExtentionAPI.Conductor;
     using Fusion;
     using PrototypeObserver.ViewModel;
     using TeklaStructures = Tekla.Structures.TeklaStructures;
@@ -33,36 +34,29 @@ namespace Propotype_Manage
         public PrefixDirectory InPrefixDirectory { get; set; }      
         public PrototypeViewModel InPrototypeViewModel { get; set; }
         public MainWindowViewModel(PrefixDirectory inPrefixDirectory, PrototypeViewModel prototypeViewModel)
-        {
+        { 
             InPrefixDirectory = inPrefixDirectory;
             InPrototypeViewModel = prototypeViewModel;
             InPrototypeViewModel.ModifyBIMAssemblySelect += InPrototypeViewModel_ModifyBIMAssemblySelect;
-            InPrototypeViewModel.CreatePrototypeSelect += InPrototypeViewModel_CreatePrototypeSelect;
+            //InPrototypeViewModel.CreatePrototypeSelect += InPrototypeViewModel_CreatePrototypeSelect;
             InPrototypeViewModel.UploadPrototypeSelect += InPrototypeViewModel_UploadPrototypeSelect;
+
             this.Initialize();
         }
 
         private void InPrototypeViewModel_UploadPrototypeSelect(BIMAssembly obj)
         {
-            InPrefixDirectory.FieldName = obj.Name;
-            InPrefixDirectory.Prefix = obj.Prefix;
-            var loader = new BeamLoader(InPrefixDirectory);
-            loader.DeserializeXML();
-            obj.Children = loader.InBIMAssembly.Children;
+            //obj.DeserializeXML();
         }
 
-        private void InPrototypeViewModel_CreatePrototypeSelect(BIMAssembly obj)
-        {
-            var loader = new BeamLoader(InPrefixDirectory);
-            loader.InBIMAssembly = obj;
-            loader.SerializeXML();
-        }
+        //private void InPrototypeViewModel_CreatePrototypeSelect(BIMAssembly obj)
+        //{
+        //    obj.SerializeXML();
+        //}
 
         private void InPrototypeViewModel_ModifyBIMAssemblySelect(BIMAssembly obj)
         {
-            var loader = new BeamLoader(InPrefixDirectory);
-            loader.InBIMAssembly = obj;
-            loader.SerializeXML();
+            //obj.SerializeXML();
         }
 
         /// <summary>
@@ -116,38 +110,8 @@ namespace Propotype_Manage
 
         #endregion //Prototype
 
-        #region Property
-        private string _prefixAssembly;
+        #region Property       
 
-        public string PrefixAssembly
-        {
-            get { return this._prefixAssembly; }
-            set { this.SetValue(ref this._prefixAssembly, value); }
-        }
-
-        private string _numberAssembly;
-
-        public string NumberAssembly
-        {
-            get { return this._numberAssembly; }
-            set { this.SetValue(ref this._numberAssembly, value); }
-        }
-
-        private bool _isMainAssembly;
-
-        public bool IsMainAssembly
-        {
-            get { return this._isMainAssembly; }
-            set { this.SetValue(ref this._isMainAssembly, value); }
-        }
-
-        private bool _isCopyAssembly;
-
-        public bool IsCopyAssembly
-        {
-            get { return this._isCopyAssembly; }
-            set { this.SetValue(ref this._isCopyAssembly, value); }
-        }
 
         #endregion //Property
 
@@ -179,7 +143,7 @@ namespace Propotype_Manage
         public void InsertPartXML()
         {
 
-            if (InPrototypeViewModel.InContainerForSelected.SelectedElement is AssemblyViewModel assembly)
+            if (InPrototypeViewModel.InSelectObserver.InContainerForSelected.SelectedElement is AssemblyViewModel assembly)
             {
                 if (InPrototypeViewModel.IsGlobal)
                 {
@@ -189,121 +153,62 @@ namespace Propotype_Manage
                 {
                     assembly.InsertNotFather(InPrefixDirectory.Model);
                 }
-              
             }
-            else 
+            else if (InPrototypeViewModel.InSelectObserver.InContainerForSelected.SelectedElement is StructureViewModel structure) 
             {
-                InPrototypeViewModel.InContainerForSelected.SelectedElement.Insert(InPrefixDirectory.Model);
+                if (InPrototypeViewModel.IsGlobal)
+                {
+                    structure.Insert(InPrefixDirectory.Model);
+                }
+                else
+                {
+                    structure.InsertNotFather(InPrefixDirectory.Model);
+                }                
             }
-            //var loader = new BeamLoader(InPrefixDirectory);
-            //loader.InsertPartXML();
 
             TSM.Model model = new TSM.Model();
             model.CommitChanges();
         }
 
         /// <summary>
-        /// Вставка деталей в модель.
+        /// Сериализовать выбранные сборки.
         /// </summary>
         [CommandHandler]
-        public void InsertMirror()
-        {
-
-            InPrototypeViewModel.InContainerForSelected.SelectedElement.InsertMirror();
-            //var loader = new BeamLoader(InPrefixDirectory);
-            //loader.InsertMirror();
-            TSM.Model model = new TSM.Model();
-            model.CommitChanges();
-        }
-
-
-        /// <summary>
-        /// Назначить данные в деталь.
-        /// </summary>
-        [CommandHandler]
-        public void ModifySelectedPart()
+        public void AddAssemblys()
         {
             TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-            if (modelEnum.GetSize() == 1)
+
+            if (InPrefixDirectory.Source == BIMType.BIMAssembly)
             {
                 while (modelEnum.MoveNext())
                 {
-                    TSM.Assembly assemblyModel = null;
-                    if (modelEnum.Current is TSM.Assembly assembly)
+                    if (modelEnum.Current is TSM.Assembly assemblyModel)
                     {
-                        assemblyModel = assembly;
-                    }
-                    else if (modelEnum.Current is TSM.Part partModel)
-                    {
-                        assemblyModel = partModel.GetAssembly();
-                     
-                    }
-                    assemblyModel.AssemblyNumber.Prefix = string.Empty;
-                    assemblyModel.AssemblyNumber.StartNumber = 0;
-                    assemblyModel.Modify();
-                    if (assemblyModel.GetMainPart() is TSM.Part mainPart)
-                    {
-                        mainPart.AssemblyNumber.StartNumber = 1;
-                        mainPart.AssemblyNumber.Prefix = $"{PrefixAssembly}-{NumberAssembly}";
-                        mainPart.SetUserProperty("BIM_MARK_KJI", $"{PrefixAssembly}-{NumberAssembly}");
-                        mainPart.SetUserProperty("BIM_MAIN", ConvertBoolByUDA(IsMainAssembly));
-                        mainPart.SetUserProperty("BIM_COPY", ConvertBoolByUDA(IsCopyAssembly));
-                        mainPart.Modify();
+                        InPrototypeViewModel.InSelectObserver.SelectedPrototype = new BIMAssembly(assemblyModel, InPrefixDirectory.Model);
+                        //TODO: временно убираем выбор.
+                        //AddDirect();
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Создание ревизии по заполненным данным. 
-        /// </summary>
-        [CommandHandler]
-        public void GetSelectedPartAttributes()
-        {
-            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-            if (modelEnum.GetSize() == 1)
+            else if (InPrefixDirectory.Source == BIMType.BIMStructure)
             {
+                List<TSM.Assembly> structure = new List<TSM.Assembly>();
                 while (modelEnum.MoveNext())
                 {
-                    TSM.Assembly assemblyModel = null;
-                    if (modelEnum.Current is TSM.Assembly assembly)
+                    if (modelEnum.Current is TSM.Assembly assemblyModel)
                     {
-                        assemblyModel = assembly;
+                        structure.Add(assemblyModel);
                     }
-                    else if (modelEnum.Current is TSM.Part partModel)
-                    {
-                        assemblyModel = partModel.GetAssembly();
-                        
-                    }
-
-                    if (assemblyModel?.GetMainPart() is TSM.Part mainPart)
-                    {
-                        var prefix = mainPart.AssemblyNumber.Prefix;
-                        string[] words = prefix.Split(new char[] { '-' });
-                        PrefixAssembly = string.Empty;
-                        for (int i = 0; i < words.Length-1; i++)
-                        {
-                            PrefixAssembly += words[i];
-                            if (i != words.Length-2) PrefixAssembly += '-';
-                        }
-                        if (words.Length > 1)
-                        {
-                            NumberAssembly = words.Last();
-                        }
-                        else
-                        {
-                            PrefixAssembly = words[0];
-                        }
-                        var bimMain = 0;
-                        mainPart.GetUserProperty("BIM_MAIN", ref bimMain);
-                        IsMainAssembly = ConvertUDAByBool(bimMain);
-                        var bimCopy = 0;
-                        mainPart.GetUserProperty("BIM_COPY", ref bimCopy);
-                        IsCopyAssembly = ConvertUDAByBool(bimCopy);
-                    }
-                    
                 }
+
+                BIMStructure bIMStructure = new BIMStructure(structure, InPrefixDirectory.Model);
+                //bIMStructure.SerializeXML();
+                InPrototypeViewModel.InSelectObserver.SelectedPrototype = bIMStructure;
+                //TODO: временно убираем выбор.
+                //AddDirect(); 
+
             }
+
         }
 
         #endregion //Command.

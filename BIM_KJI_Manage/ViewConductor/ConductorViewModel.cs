@@ -14,6 +14,9 @@ using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
 using PrototypeObserver;
 using PrototypeConductor.Model;
+using System.Diagnostics;
+using BIMPropotype_Lib.Model;
+using BIMPropotype_Lib.ExtentionAPI.Conductor;
 
 namespace Propotype_Manage.ViewConductor
 {
@@ -27,6 +30,8 @@ namespace Propotype_Manage.ViewConductor
             get { return this._isAllOpen; }
             set { this.SetValue(ref this._isAllOpen, value); }
         }
+
+        
         private ObservableCollection<ModelDirectoryViewModel> _conductor;
         public ObservableCollection<ModelDirectoryViewModel> Conductor
         {
@@ -64,86 +69,46 @@ namespace Propotype_Manage.ViewConductor
             }
         }
 
+       
+
         /// <summary>
-        /// Сериализовать выбранные сборки.
+        /// Создание ревизии по заполненным данным. 
         /// </summary>
         [CommandHandler]
-        public void AddAssemblys()
+        public void OpenFolder()
         {
-            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-            while (modelEnum.MoveNext())
-            {
-                if (modelEnum.Current is TSM.Assembly assemblyModel)
-                {
-                    new BeamLoader(assemblyModel, Database.PrefixDirectory);
-                    AddDirect();
-                }
-            }
+            string path = Database.PrefixDirectory.GetFile();
+            Process.Start("explorer.exe", @"/select,""" + path + "\"");
         }
 
+        /// <summary>
+        /// Загрузить прототип в обозреватель.
+        /// </summary>
+        [CommandHandler]
+        public void UploadPrototypeInObserver()
+        {
+            Database.UploadPrototype();
+        }
+
+
+        /// <summary>
+        /// Поиск по имени.
+        /// </summary>
+        [CommandHandler]
+        public void Find()
+        {
+            //TODO: Загрузка прототипов по нескольким каталогам.
+            Conductor[0].PerformSearch();
+        }
         
+
         /// <summary>
-        /// Сериализовать выбранные сборки.
+        /// Заменить выбранный прототип.
         /// </summary>
         [CommandHandler]
-        public void AddStructure()
-        {
-            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-            List<TSM.Assembly> structure = new List<TSM.Assembly>();
-            while (modelEnum.MoveNext())
-            {
-                if (modelEnum.Current is TSM.Assembly assemblyModel)
-                {
-                    structure.Add(assemblyModel);
-                }
-            }
-            new BeamLoader(Database.PrefixDirectory).SerializeXMLStructure(structure);
-            AddDirect();
-        }
-
-        private void AddDirect()
-        {
-            Conductor[0].IsExpanded = true;
-            var direct = SearcherDirect(Conductor.ToList<TreeViewItemViewModel>());
-
-            if (direct == null)
-            {
-                Conductor[0].Children.Add(new FieldPrototypeViewModel(new FieldPrototype(Database.PrefixDirectory.FieldName, Database.PrefixDirectory.GetDirectory()), Conductor[0], Database));
-                direct = Conductor[0].Children.Last();                  
-            }
-
-            direct.IsExpanded = true;
-            var selectedpropotype = SearcherPrefix(Conductor.ToList<TreeViewItemViewModel>());
-            if (selectedpropotype == null)
-            {
-                bool metka = false;
-                var prototypeName = new PrototypeName(Database.PrefixDirectory.Prefix);
-
-                foreach (var item in direct.Children)
-                {
-                    if (item is PrototypeNameViewModel prototypeNameViewModel)
-                    {
-                        metka = prototypeNameViewModel._prototypeName.Add(prototypeName);
-
-                        if (metka)
-                        {
-                            prototypeNameViewModel.Children.Add(new PrototypeNameViewModel(new FilterPrototype(prototypeName), prototypeNameViewModel, Database));
-                            prototypeNameViewModel.Children.Last().IsSelected = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!metka)
-                {
-                    direct.Children.Add(new PrototypeNameViewModel(new FilterPrototype(prototypeName), direct, Database));
-                    direct.Children.Last().IsSelected = true;
-                }
-            }
-            else
-            {
-                selectedpropotype.IsSelected = true;
-            }
+        public void Swap()
+        {           
+            Database.SwapSelectedElement();
         }
 
         /// <summary>
@@ -171,7 +136,7 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (fieldPrototype.Children.Count == 0)
                 {
-                    var path = Database.PrefixDirectory.GetDirectory();
+                    var path = FileExplorerExtentions.GetDataDirectory();
                     if (Directory.Exists(path)) Directory.Delete(path);
                     fieldPrototype.Parent.Children.Remove(fieldPrototype);
                 }
@@ -187,25 +152,12 @@ namespace Propotype_Manage.ViewConductor
                 }
                 if (CheckFoulder(selected))//Пустая папка.
                 {
-                    var path = Database.PrefixDirectory.GetDirectory();
+                    var path = FileExplorerExtentions.GetDataDirectory();
                     if (Directory.Exists(path)) Directory.Delete(path);
                     selected.Parent.Children.Remove(selected);
                 }
             }
         }
-        /// <summary>
-        /// Вставка деталей в модель.
-        /// </summary>
-        [CommandHandler]
-        public void InsertPlugin()
-        {
-            var selected = Searcher(Conductor.ToList<TreeViewItemViewModel>());
-            if (selected != null)
-            {
-                Database.PrefixDirectory.InsetPlugin();
-            }
-        }
-
         private bool CheckFoulder(TreeViewItemViewModel treeViewItemViewModel) 
         {
             if (treeViewItemViewModel is FieldPrototypeViewModel field)
@@ -249,7 +201,7 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (itemConductor is FieldPrototypeViewModel field)
                 {
-                    if (field.Name == Database.PrefixDirectory.FieldName) return field;
+                    if (field.Name == Database.PrefixDirectory.Meta.Name) return field;
                     
                 }
 
@@ -268,7 +220,7 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (itemConductor is PrototypeNameViewModel propotype)
                 {
-                    if (propotype.Prefix == Database.PrefixDirectory.Prefix) return propotype;
+                    if (propotype.Prefix == Database.PrefixDirectory.Meta.Prefix) return propotype;
                 }
 
                 if (itemConductor.Children?.Count > 0)

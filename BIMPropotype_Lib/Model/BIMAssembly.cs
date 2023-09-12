@@ -6,18 +6,20 @@ using TSM = Tekla.Structures.Model;
 using Tekla.Structures.Geometry3d;
 using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.ExtentionAPI.PartChildren;
+using BIMPropotype_Lib.ViewModel;
+using System.Xml.Serialization;
+using System.IO;
+using System.Collections;
+using BIMPropotype_Lib.ExtentionAPI.Conductor;
 
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMAssembly : IUDAContainer, IStructure, IBIMCollection, IReference
+    public class BIMAssembly : Reference, IUDAContainer, IStructure, IBIMCollection
     {
-        public string Name { get; set; }
-        public string Prefix { get; set; }
         public List<BIMPart> Children { get; set; }
         public UDACollection UDAList { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
-
         public BIMAssembly() { }
         public BIMAssembly(Assembly assembly, TSM.Model model)
         {
@@ -29,14 +31,32 @@ namespace BIMPropotype_Lib.Model
                 workPlaneWorker.GetWorkPlace(BaseStructure);
                 assembly.Select();
                 var parts = GetPartsToAssembly(assembly);
-                Name = parts[0].Name;
-                Prefix = parts[0].AssemblyNumber.Prefix;
+              
 
                 this.Children = new List<BIMPart>(
                       (from children in parts
                        select new BIMPart(children, workPlaneWorker.Model)));
                 workPlaneWorker.ReturnWorkPlace();
+
+                Meta = new MetaDirectory(BIMType.BIMAssembly, this.Children[0].GetPart().Name, this.Children[0].GetMainPrefix(), this.Children[0].GetUDANumber("SISAssemNumber"));
             }
+        }
+
+        public BIMAssembly(MetaDirectory meta):base(meta)
+        {
+        }
+        
+        private void CloneAsCurrentObjectNotBase(BIMAssembly clone)
+        {
+            Children = clone.Children;
+            UDAList = clone.UDAList;
+        }
+
+        private void CloneAsCurrentObject(BIMAssembly clone) 
+        {
+            Children = clone.Children;
+            UDAList = clone.UDAList;
+            BaseStructure = clone.BaseStructure;
         }
 
         public  void InsertMirror(IStructure father)
@@ -138,17 +158,15 @@ namespace BIMPropotype_Lib.Model
 
         public override string ToString()
         {
-            return $"{Name} {Prefix}";
+            return Meta.ToString();
         }
-
-        public void Load()
+        public void SelectInModel() 
         {
-            throw new NotImplementedException();
-        }
-
-        public void Save()
-        {
-            throw new NotImplementedException();
+            ArrayList ObjectsToSelect = new ArrayList();
+            Assembly inAssembly = Children[0].GetPart().GetAssembly();
+            ObjectsToSelect.Add(inAssembly);
+            Tekla.Structures.Model.UI.ModelObjectSelector MS = new Tekla.Structures.Model.UI.ModelObjectSelector();
+            MS.Select(ObjectsToSelect);
         }
     }    
 }

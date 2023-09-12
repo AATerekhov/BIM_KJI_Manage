@@ -18,23 +18,34 @@
         </StatusBar>
         <ui:PublishedView DockPanel.Dock="Right" Margin="2" ViewName="Example.Prototype.Prototype" />
         <StackPanel  Margin="5" DockPanel.Dock="Top" VerticalAlignment="Top">
-
             <StackPanel Orientation="Horizontal">
-
-                <Button Margin="2" Height="30" Command="{ui:CommandHandler ModifySelectedPart}">Назначить атрибуты</Button>
-                <Button Margin="2" Height="30" Command="{ui:CommandHandler GetSelectedPartAttributes}">Считать атирбуты</Button>
-                <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertPartXML}" Cursor="Hand">InsertPart</Button>
-                <Button Margin="2" Height="30"  Command="{ui:CommandHandler InsertMirror}" Cursor="Hand">InsertMirror</Button>
+                <Button   Command="{ui:CommandHandler AddAssemblys}" Background="LightGray" Height="30" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:IconView Width="16" Height="16" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Extensions}"/>
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Получить из модели."/>
+                    </Button.ToolTip>
+                </Button>
+                <Button Margin="2"  Background="LightGray" Height="30" Cursor="Hand"  Command="{ui:CommandHandler InsertPartXML}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Margin="0" Source="Images\innovation.png" />
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Вставить выбранный прототип в Модель"/>
+                    </Button.ToolTip>
+                </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Префикс сборки"/>
-                <TextBox Margin="2" Width="80" Text="{Binding Path=PrefixAssembly, Mode=TwoWay}"/>
-                <Label Content="№"/>
-                <TextBox Margin="2" Width="40" Text="{Binding Path=NumberAssembly, Mode=TwoWay}"/>
-                <Label Content="Главная"/>
-                <CheckBox x:Name="mainAssembly" IsChecked="{Binding IsMainAssembly, Mode=TwoWay}"/>
-                <Label Content="Копия"/>
-                <CheckBox x:Name="copyAssembly" IsChecked="{Binding IsCopyAssembly, Mode=TwoWay}"/>
+                <ListBox Margin ="5"   MinWidth="42" MinHeight="23"
+                         ItemsSource="{Binding InPrefixDirectory.ListSources,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                         SelectedItem="{Binding InPrefixDirectory.Source,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
             </StackPanel>
         </StackPanel>
         <StackPanel DockPanel.Dock="Top">

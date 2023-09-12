@@ -11,24 +11,45 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <Button   Command="{ui:CommandHandler CreatePrototype}" Background="LightGray" Height="25">
+                <Button   Command="{ui:CommandHandler CreatePrototype}" Background="LightGray" Height="25" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="12" Height="12" Margin="1" Source="Images\Assembly.png" />
                     </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Сохранить выбранный прототип."/>
+                    </Button.ToolTip>
                 </Button>
-                <Button   Command="{ui:CommandHandler UpdatePrototype}" Background="LightGray" Height="25">
+                <Button   Command="{ui:CommandHandler GetReference}" Background="LightGray" Height="25" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="12" Height="12" Margin="1" Source="Images\Load.png" />
                     </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Преобразовать выбранное в ссылку."/>
+                    </Button.ToolTip>
                 </Button>
                 <Button   Command="{ui:CommandHandler AddJoint}" Background="LightGray" Height="25">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="12" Height="12" Margin="1" Source="Images\Joint.png" />
                     </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Добавить узел в выбранную деталь."/>
+                    </Button.ToolTip>
                 </Button>
-                <CheckBox Margin="5" IsChecked="{Binding IsGlobal, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button   Command="{ui:CommandHandler Select}" Background="LightGray" Height="25" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\select.png" />
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Выбрать в модели."/>
+                    </Button.ToolTip>
+                </Button>
+                <CheckBox Margin="5" IsChecked="{Binding IsGlobal, UpdateSourceTrigger=PropertyChanged}">
+                    <CheckBox.ToolTip>
+                        <ToolTip Content="Вставлять с учетом BasePoint"/>
+                    </CheckBox.ToolTip>
+                </CheckBox>
             </StackPanel>
-            <TreeView  ItemsSource="{Binding Propotypes,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
+            <TreeView  ItemsSource="{Binding Propotypes, UpdateSourceTrigger = PropertyChanged}" MinWidth="200" MaxHeight="400">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -43,12 +64,23 @@
                 </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
                     <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:StructureViewModel}" 
+          ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="12" Height="12" Margin="1" Source="Images\molecule.png" />
+                            <TextBlock Margin="3" Text="{Binding Name}">
+                            </TextBlock>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate 
           DataType="{x:Type vmtree:AssemblyViewModel}" 
           ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
                             <Image Width="12" Height="12" Margin="1" Source="Images\Assembly.png" />
                             <TextBlock Margin="3" Text="{Binding Name}">
                             </TextBlock>
+                            <Image Visibility="{Binding IsLinq,UpdateSourceTrigger=PropertyChanged, Converter={ui:ConvertBooleanToVisibility}}"
+                            Width="16" Height="16" Margin="3,0" Source="Images\Load.png" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate 
@@ -74,29 +106,29 @@
             <StackPanel Orientation="Horizontal" >
                 <StackPanel Orientation="Vertical">
                     <TextBlock  HorizontalAlignment="Center" Text="Путь Х" />
-                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.DistanceX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.DistanceX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock  HorizontalAlignment="Center" Text="Путь Y" />
-                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.DistanceY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.DistanceY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock  HorizontalAlignment="Center" Text="Путь Z" />
-                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.DistanceZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.DistanceZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" >
                 <StackPanel Orientation="Vertical">
                     <TextBlock  HorizontalAlignment="Center" Text="Вокруг X" />
-                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.AngleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.AngleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock  HorizontalAlignment="Center" Text="Вокруг Y" />
-                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.AngleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.AngleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock  HorizontalAlignment="Center" Text="Вокруг Z" />
-                    <TextBox Width="60" Text="{Binding Path=InContainerForSelected.AngleZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.AngleZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </StackPanel>
 
@@ -107,8 +139,8 @@
                   AutoGenerateColumns="False"
                   VerticalAlignment="Stretch" 
                   VerticalScrollBarVisibility="Auto"
-                  ItemsSource="{Binding Path = InContainerForSelected.UDAs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                    
-                  SelectedItem="{Binding Path= InContainerForSelected.SelectedUDA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding Path = InSelectObserver.InContainerForSelected.UDAs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                    
+                  SelectedItem="{Binding Path= InSelectObserver.InContainerForSelected.SelectedUDA, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectionMode="Single"
                   >
             <DataGrid.Columns>

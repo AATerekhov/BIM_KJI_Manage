@@ -12,37 +12,51 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Height="25" Width="400"  Text="{Binding Path=Database.PrefixDirectory.ModelDirectory, Mode=TwoWay}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
                     <Button   Command="{ui:CommandHandler Refresh}" Background="LightGray" Height="25" Cursor="Hand">
                         <StackPanel Orientation="Horizontal">
                             <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Home}"/>
                         </StackPanel>
                     </Button>
-                    <Button   Command="{ui:CommandHandler Delete}" CommandParameter="{Binding Path=SelectedItem, ElementName=Conductor}" Background="LightGray" Height="25" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Error}"/>
-                        </StackPanel>
-                    </Button>
-                    <Button   Command="{ui:CommandHandler AddAssemblys}" Background="LightGray" Height="25" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.Extensions}"/>
-                        </StackPanel>
-                    </Button>
-                    <Button   Command="{ui:CommandHandler InsertPlugin}" Background="LightGray" Height="25">
-                        <StackPanel Orientation="Horizontal">
-                            <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.ObjectSteelItem}"/>
-                        </StackPanel>
-                    </Button>
-                    <Button   Command="{ui:CommandHandler AddStructure}" Background="LightGray" Height="25" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="12" Height="12" Margin="0" Source="Images\molecule.png" />
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Margin="20,0,0,0"  Orientation="Horizontal">
+                        <Button  Command="{ui:CommandHandler OpenFolder}" Background="LightGray" Height="25"  ToolTipService.InitialShowDelay="300" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <controls:IconView Width="12" Height="12" VerticalAlignment="Center" Icon="{DynamicResource Geometry.OpenedFolder}"/>
+                            </StackPanel>
+                            <Button.ToolTip>
+                                <ToolTip Content="Открыть путь к файлу прототипа."/>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button  Command="{ui:CommandHandler UploadPrototypeInObserver}" Background="LightGray" Height="25"  ToolTipService.InitialShowDelay="300" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="12" Height="12" Margin="0" Source="Images\upload.png" />
+                            </StackPanel>
+                            <Button.ToolTip>
+                                <ToolTip Content="Загрузить протопит в обозреватель."/>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button  Command="{ui:CommandHandler Swap}" Background="LightGray" Height="25"  ToolTipService.InitialShowDelay="300" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="12" Height="12" Margin="0" Source="Images\swap.png" />
+                            </StackPanel>
+                            <Button.ToolTip>
+                                <ToolTip Content="Заменить выбранный прототип"/>
+                            </Button.ToolTip>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
-           
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="5" VerticalAlignment="Center">Поиск</TextBlock>
+                <TextBox Height="25" Width="160"  Text="{Binding Path=Database.SearchText, Mode=TwoWay}"/>
+                <Button   Command="{ui:CommandHandler  Find}" Background="LightGray" Height="25" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="0" Source="Images\search.png" />
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Получить как структуру."/>
+                    </Button.ToolTip>
+                </Button>                
+            </StackPanel>
             <TreeView x:Name="Conductor"
                 ItemsSource="{Binding Conductor,UpdateSourceTrigger=PropertyChanged}" MinWidth="200" MaxHeight="400">
                 <TreeView.ItemContainerStyle>
@@ -84,11 +98,21 @@
                             <TextBlock Margin="2" Text="{Binding Prefix}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
+
+                    <HierarchicalDataTemplate 
+          DataType="{x:Type vmtree:StructureFieldViewModel}" 
+          ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="14" Height="14" Margin="2" Source="Images\molecule.png" />
+                            <TextBlock Margin="2" Text="{Binding Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
                 </TreeView.Resources>
                 <TreeView.InputBindings>
-                    <KeyBinding  Key="Delete" Command="{ui:CommandHandler Delete}"  CommandParameter="{Binding Path=SelectedItem, ElementName=Conductor}"/>                    
+                    <KeyBinding  Key="Delete" Command="{ui:CommandHandler Delete}"  CommandParameter="{Binding Path=SelectedItem, ElementName=Conductor}"/>
                 </TreeView.InputBindings>
             </TreeView>
+
         </StackPanel>
     </DockPanel>
 </UserControl>

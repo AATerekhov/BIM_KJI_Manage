@@ -84,6 +84,9 @@ namespace PrototypeObserver.ViewModel
             }
         }
 
-
+        public void SelectInModel()
+        {
+            _bIMPart.SelectInModel();
+        }
     }
 }

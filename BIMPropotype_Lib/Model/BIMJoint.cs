@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tekla.Structures.Geometry3d;
+using TSM = Tekla.Structures.Model;
 
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMJoint : IStructure, IBIMCollection, IReference
+    public class BIMJoint : IStructure, IBIMCollection
     {
         public List<BIMPartChildren> Children { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
@@ -42,6 +43,11 @@ namespace BIMPropotype_Lib.Model
         }
 
         public void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SelectInModel(TSM.Model model)
         {
             throw new NotImplementedException();
         }

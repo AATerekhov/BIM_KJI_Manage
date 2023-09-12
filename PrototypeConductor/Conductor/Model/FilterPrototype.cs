@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BIMPropotype_Lib.Model;
 
 namespace PrototypeConductor.Model
 {
@@ -11,20 +12,19 @@ namespace PrototypeConductor.Model
     /// </summary>
     public class FilterPrototype
     {
-        public char _separator = '-';
         public string Prefix { get; private set; }
 
-        public FilterPrototype(PrototypeName prototypeName)
+        public FilterPrototype(MetaDirectory meta)
         {
-            Prefix = Separation(prototypeName.Prefix);
-            Prototypes.Add(prototypeName);
+            Prefix = meta.Prefix;
+            Prototypes.Add(meta);
         }
 
-        public bool Add(PrototypeName prototypeName) 
+        public bool Add(MetaDirectory meta) 
         {
-            if (Prefix == Separation(prototypeName.Prefix))
+            if (Prefix == meta.Prefix)
             {
-                Prototypes.Add(prototypeName);
+                Prototypes.Add(meta);
                 return true;
             }
             else
@@ -33,17 +33,10 @@ namespace PrototypeConductor.Model
             }
         }
 
-        readonly List<PrototypeName> _prototypes = new List<PrototypeName>();
-        public List<PrototypeName> Prototypes
+        readonly List<MetaDirectory> _prototypes = new List<MetaDirectory>();
+        public List<MetaDirectory> Prototypes
         {
             get { return _prototypes; }
-        }
-
-        private string Separation(string text) 
-        {
-            string rezult = string.Empty;
-            rezult = text.Split(_separator)[0];
-            return rezult;
         }
 
         /// <summary>

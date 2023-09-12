@@ -80,7 +80,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\BeamLoader.cs" />
+    <Compile Include="ExtentionAPI\Conductor\FileExplorerExtentions.cs" />
+    <Compile Include="ExtentionAPI\Conductor\StructureExtentions.cs" />
     <Compile Include="ExtentionAPI\InserPlugin\PrefixDirectoryExtentions.cs" />
     <Compile Include="ExtentionAPI\Mirror\PartExtentions.cs" />
     <Compile Include="ExtentionAPI\PartChildren\PartChildrenExtenthions.cs" />
@@ -102,8 +103,8 @@
     <Compile Include="Model\Custom\CustomSingleRebar.cs" />
     <Compile Include="Model\Custom\IFormObject.cs" />
     <Compile Include="Model\IBIMCollection.cs" />
-    <Compile Include="Model\IReference.cs" />
     <Compile Include="Model\IStructure.cs" />
+    <Compile Include="Model\Reference.cs" />
     <Compile Include="Model\Support\SupportCountor.cs" />
     <Compile Include="Model\Support\SupportPlace.cs" />
     <Compile Include="Model\Support\SupportPolygon.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Model\Support\SupportDistanse.cs" />
     <Compile Include="Model\Support\SupportElement.cs" />
     <Compile Include="Controller\WorkPlaneWorker.cs" />
+    <Compile Include="ViewModel\MetaDirectory.cs" />
     <Compile Include="ViewModel\PrefixDirectory.cs" />
     <Compile Include="Model\PrototypeFile.cs" />
     <Compile Include="Model\UDACollection.cs" />

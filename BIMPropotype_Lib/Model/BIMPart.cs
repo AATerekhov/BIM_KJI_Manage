@@ -10,6 +10,7 @@ using BIMPropotype_Lib.ExtentionAPI.Mirror;
 using BIMPropotype_Lib.Model.Custom;
 using Tekla.Structures.Geometry3d;
 using BIMPropotype_Lib.Controller;
+using System.Collections;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -84,7 +85,7 @@ namespace BIMPropotype_Lib.Model
             if (part is TSM.ContourPlate plate)
             {
                 Type = PartType.plate;
-
+                //TODO:Место возможного переноса точек пластины.
                 BaseStructure = plate.GetBaseStructure().Cloned();
                 workPlaneWorker.GetWorkPlace(BaseStructure);
                 plate.Select();
@@ -103,6 +104,7 @@ namespace BIMPropotype_Lib.Model
 
             workPlaneWorker.ReturnWorkPlace();
         }
+
         public  void Insert(IStructure father)
         {
             var customPart = GetCustomPart();
@@ -169,6 +171,30 @@ namespace BIMPropotype_Lib.Model
         public override string ToString()
         {
             return $"{Type} {GetPart().Name}";
+        }
+
+        public void SelectInModel()
+        {
+            ArrayList ObjectsToSelect = new ArrayList();
+            ObjectsToSelect.Add(this.GetPart());
+            Tekla.Structures.Model.UI.ModelObjectSelector MS = new Tekla.Structures.Model.UI.ModelObjectSelector();
+            MS.Select(ObjectsToSelect);
+        }
+        public string GetUDASting(string key) 
+        {
+            BIMUda select =  UDAList.UDAList.Where(p => p.Key == key).First();
+            if (select != null) return select.Value;
+            else return string.Empty;
+        }
+        public string GetMainPrefix()
+        {
+            return  GetPart().AssemblyNumber.Prefix;
+        }
+        public int GetUDANumber(string key)
+        {
+            BIMUda select = UDAList.UDAList.Where(p => p.Key == key).FirstOrDefault();
+            if (select != null) return select.IntValue;
+            else return 0;
         }
     }
     public enum PartType

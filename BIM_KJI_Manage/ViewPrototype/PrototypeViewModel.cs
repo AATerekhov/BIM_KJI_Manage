@@ -14,16 +14,16 @@ using BIMPropotype_Lib.Model;
 using PrototypeObserver.ViewModel;
 using POVM = PrototypeObserver.ViewModel;
 using PrototypeObserver;
+using BIMPropotype_Lib.ExtentionAPI.Conductor;
 
 namespace Propotype_Manage.ViewPrototype
 {
     public class PrototypeViewModel : Fusion.ViewModel
     {
         public event Action<BIMAssembly> ModifyBIMAssemblySelect;
-        public event Action<BIMAssembly> CreatePrototypeSelect;
+        //public event Action<BIMAssembly> CreatePrototypeSelect;
         public event Action<BIMAssembly> UploadPrototypeSelect;
         public ObservableCollection<POVM.TreeViewItemViewModel> Propotypes { get; set; }
-        public ContainerForSelected InContainerForSelected { get; set; }
         public SelectObserver InSelectObserver { get; set; }
 
         private bool _isGlobal;
@@ -33,13 +33,22 @@ namespace Propotype_Manage.ViewPrototype
             set { this.SetValue(ref this._isGlobal, value); }
         }
 
-        public void GetPropotypes(BIMAssembly bIMAssemblySelect) 
+
+        public void GetPropotypes(Reference bIMReferenceObjectSelect) 
         {
-            if (bIMAssemblySelect != null)
+            if (bIMReferenceObjectSelect != null)
             {
                 Propotypes.Clear();
-                InContainerForSelected.UDAs.Clear();
-                Propotypes.Add(new AssemblyViewModel(bIMAssemblySelect, InContainerForSelected));
+                InSelectObserver.InContainerForSelected.UDAs.Clear();
+                if (bIMReferenceObjectSelect is BIMAssembly bIMAssemblySelect)
+                {
+                    Propotypes.Add(new AssemblyViewModel(bIMAssemblySelect, InSelectObserver.InContainerForSelected));
+                }
+                else if (bIMReferenceObjectSelect is BIMStructure bIMStructureSelect)
+                {
+                    Propotypes.Add(new StructureViewModel(bIMStructureSelect, InSelectObserver.InContainerForSelected));
+                }
+
                 Propotypes[0].IsSelected = true;
             }
         }
@@ -49,76 +58,70 @@ namespace Propotype_Manage.ViewPrototype
             InSelectObserver = selectObserver;
             InSelectObserver.NewSelectPrototype += InSelectObserver_NewSelectPrototype;
             Propotypes = new ObservableCollection<POVM.TreeViewItemViewModel>();
-            InContainerForSelected = new ContainerForSelected();
-            InContainerForSelected.ModifyAndSaveEvent += InContainerForSelected_ModifyAndSaveEvent1;
+            InSelectObserver.InContainerForSelected = new ContainerForSelected();
         }
 
-        private void InSelectObserver_NewSelectPrototype(BIMAssembly obj)
+        /// <summary>
+        /// Получение свойств выбранного элемента.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void InSelectObserver_NewSelectPrototype(Reference obj)
         {
             GetPropotypes(obj);
         }
 
-        private void InContainerForSelected_ModifyAndSaveEvent1(PrototypeObserver.ViewModel.TreeViewItemViewModel obj)
-        {
-            if (obj != null)
-            {
-                if (obj.GetOldFather() is AssemblyViewModel assemblyViewModel)
-                {
-                    ModifyBIMAssemblySelect?.Invoke(assemblyViewModel._bIMAssembly);
-                }
-            }
-        }
         /// <summary>
         /// 
         /// </summary>
         [CommandHandler]
         public void CreatePrototype()
         {
-            if (InContainerForSelected.SelectedElement != null)
-            {
-                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
-                {
-                    CreatePrototypeSelect?.Invoke(assemblyViewModel._bIMAssembly);
-                }
-            }
+            InSelectObserver.CreatePrototype();
+           
         }
-
+        /// <summary>
+        /// Выбрать элемент в модели.
+        /// </summary>
+        [CommandHandler]
+        public void Select() 
+        {
+            InSelectObserver.Select();
+        }
         /// <summary>
         /// 
         /// </summary>
         [CommandHandler]
-        public void UpdatePrototype()
+        public void GetReference()
         {
-
-            if (InContainerForSelected.SelectedElement != null)
+            if (InSelectObserver.InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
             {
-                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+                var meta = assemblyViewModel._bIMAssembly.Meta;
+                var metaFile = meta.CheckSavedFile();
+                if (metaFile != null)
                 {
-                    UploadPrototypeSelect?.Invoke(assemblyViewModel._bIMAssembly); 
-                   
+                    assemblyViewModel._bIMAssembly.Meta.ShortGUID = metaFile.ShortGUID;
+                    assemblyViewModel.IsLinq = true;
                 }
-                if (InContainerForSelected.SelectedElement.GetOldFather() is AssemblyViewModel assemblyFatherViewModel)
-                {
-                    ModifyBIMAssemblySelect?.Invoke(assemblyFatherViewModel._bIMAssembly);
-                }
-            }
+            }           
         }
         
 
         [CommandHandler]
         public void AddJoint()
         {
-            if (InContainerForSelected.SelectedElement != null)
-            {
-                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
-                {
-                    assemblyViewModel.AddJoint();
-                }
-                if (InContainerForSelected.SelectedElement.GetOldFather() is AssemblyViewModel assemblyFatherViewModel)
-                {
-                    ModifyBIMAssemblySelect?.Invoke(assemblyFatherViewModel._bIMAssembly);
-                }
-            }
+            //TODO: Алгоритм добавления узла не отлажен.
+
+            //if (InContainerForSelected.SelectedElement != null)
+            //{
+            //    if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+            //    {
+            //        assemblyViewModel.AddJoint();
+            //    }
+            //    if (InContainerForSelected.SelectedElement.GetOldFather() is AssemblyViewModel assemblyFatherViewModel)
+            //    {
+            //        ModifyBIMAssemblySelect?.Invoke(assemblyFatherViewModel._bIMAssembly);
+            //    }
+            //}
         }
     }
 }

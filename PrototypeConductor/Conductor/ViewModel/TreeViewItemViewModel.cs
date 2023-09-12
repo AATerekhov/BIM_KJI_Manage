@@ -20,14 +20,14 @@ namespace PrototypeConductor.ViewModel
 
         #region Constructors
 
-        protected TreeViewItemViewModel(TreeViewItemViewModel parent, bool lazyLoadChildren)
+        protected TreeViewItemViewModel(TreeViewItemViewModel parent)
         {
             _parent = parent;
 
             _children = new ObservableCollection<TreeViewItemViewModel>();
 
-            if (lazyLoadChildren)
-                _children.Add(DummyChild);
+            //if (lazyLoadChildren)
+            //    _children.Add(DummyChild);
         }
 
         // This is used to create the DummyChild instance.

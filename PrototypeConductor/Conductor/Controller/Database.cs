@@ -8,13 +8,35 @@ using PrototypeConductor.Model;
 using BIMPropotype_Lib.ViewModel;
 using PrototypeObserver;
 using BIMPropotype_Lib.Controller;
+using BIMPropotype_Lib.ExtentionAPI.Conductor;
+using BIMPropotype_Lib.Model;
+using System.ComponentModel;
+using PrototypeConductor.ViewModel;
 
 namespace PrototypeConductor.Controller
 {
-    public class Database//TODO: переделать на объектную
+    public class Database : INotifyPropertyChanged
     {
         public PrefixDirectory PrefixDirectory { get; set; }
         public SelectObserver InSelectObserver { get; set; }
+
+        public IEnumerator<TreeViewItemViewModel> _matchingPeopleEnumerator;
+        string _searchText = String.Empty;
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                if (value == _searchText)
+                    return;
+                _searchText  = value;
+
+                this.OnPropertyChanged("SearchText");
+                _matchingPeopleEnumerator = null;
+            }
+        }
+
 
         public Database(PrefixDirectory prefixDirectory, SelectObserver selectObserver)
         {
@@ -22,22 +44,26 @@ namespace PrototypeConductor.Controller
             PrefixDirectory = prefixDirectory;
         }
 
-        public List<FieldPrototype> GetFieldPrototypes(ModelDirectory modelDirectory)
+        public List<FieldPrototype> GetFieldPrototypes(ModelDirectory modelDirectory) => new List<FieldPrototype>(from item in PrefixDirectory.Meta.Type.GetNameList() select new FieldPrototype(item));
+        
+        public List<StructureField> GetStructure(FieldPrototype fieldPrototype)
         {
-            return new List<FieldPrototype>(from item in PrefixDirectory.GetFields(modelDirectory.Path) select new FieldPrototype(new DirectoryInfo(item).Name, item));
+            List <StructureField> rezult = new List<StructureField>();
+            foreach (var item in BIMType.BIMStructure.GetMetaList(fieldPrototype.Name))
+            {
+                rezult.Add(new StructureField(item.Name));
+            }
+            return rezult;
         }
-        //public List<PrototypeName> GetPrototype(FieldPrototype fieldPrototype)
-        //{
-        //    return new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
-        //}
+
         public List<ModelDirectory> GetModelDirectories()
         {
-            return new List<ModelDirectory>() { new ModelDirectory(PrefixDirectory.GetDataDirectory(), PrefixDirectory.ModelInfo.ModelName) };
+            return new List<ModelDirectory>() { new ModelDirectory(FileExplorerExtentions.GetDataDirectory(), PrefixDirectory.ModelInfo.ModelName) };
         }
         
         public List<FilterPrototype> GetFilterDirectories(FieldPrototype fieldPrototype)
         {
-            List<PrototypeName> filterNames = new List<PrototypeName>(from item in PrefixDirectory.GetFiles(fieldPrototype.Path) select new PrototypeName(new FileInfo(item).Name));
+            List<MetaDirectory> filterNames = new List<MetaDirectory>(PrefixDirectory.Meta.Type.GetMetaList(fieldPrototype.Name));
             List<FilterPrototype> filterPrototypes = new List<FilterPrototype>();
 
             //Прогон имен файлов.
@@ -57,13 +83,59 @@ namespace PrototypeConductor.Controller
             }
             return filterPrototypes;
         }
-
-        public void LoadingPrototype() 
+        
+        public List<FilterPrototype> GetFilterDirectories(StructureField structureField)
         {
-            var loader = new BeamLoader(PrefixDirectory);
-            loader.DeserializeXML();
-            InSelectObserver.SelectedPrototype = loader.InBIMAssembly;
+            List<MetaDirectory> filterNames = new List<MetaDirectory>(PrefixDirectory.Meta.Type.GetMetaList(structureField.Name));
+            List<FilterPrototype> filterPrototypes = new List<FilterPrototype>();
+
+            //Прогон имен файлов.
+            for (int i = 0; i < filterNames.Count; i++)
+            {
+                bool metka = false;
+                foreach (var item in filterPrototypes)
+                {
+                    metka = item.Add(filterNames[i]);
+                    if (metka) break;
+                }
+
+                if (!metka)
+                {
+                    filterPrototypes.Add(new FilterPrototype(filterNames[i]));
+                }
+            }
+            return filterPrototypes;
         }
 
+        public void UploadPrototype() 
+        {
+            if (PrefixDirectory.Meta.Type == BIMType.BIMStructure)
+            {
+                InSelectObserver.SelectedPrototype = PrefixDirectory.Meta.DeserializeXMLStructure();
+            }
+            else if (PrefixDirectory.Meta.Type == BIMType.BIMAssembly) 
+            {
+                InSelectObserver.SelectedPrototype = PrefixDirectory.Meta.DeserializeXML();
+            }
+        }
+
+        public void SwapSelectedElement() 
+        {
+            InSelectObserver.Swap(PrefixDirectory.Meta.Type);
+            //TODO: Выполнить реализацию.
+        }
+
+        
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion // INotifyPropertyChanged Members
     }
 }

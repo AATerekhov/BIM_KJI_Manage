@@ -7,14 +7,11 @@ using BIMPropotype_Lib.Model;
 
 namespace PrototypeConductor.Model
 {
-    /// <summary>
-    /// Папка в архиве
-    /// </summary>
-    public class FieldPrototype
+    public class StructureField
     {
         public string Name { get; private set; }
 
-        public FieldPrototype(string name)
+        public StructureField(string name)
         {
             Name = name;
         }

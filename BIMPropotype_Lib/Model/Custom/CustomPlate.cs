@@ -16,8 +16,8 @@ namespace BIMPropotype_Lib.Model.Custom
         public CustomPlate() { }
         public CustomPlate(TSM.ContourPlate contourPlate)
         {
-            ContourPlate = contourPlate;
             Support = new SupportCountor(Averaging(contourPlate));
+            ContourPlate = contourPlate;
             this.Сleaning();
         }
 
@@ -45,33 +45,38 @@ namespace BIMPropotype_Lib.Model.Custom
         private List<TSM.ContourPoint> Averaging(TSM.ContourPlate contourPlate) 
         {            
           var listPoint = GetPoints(contourPlate.Contour);
-            TSG.Vector vectorX = new TSG.Vector(listPoint[1]- listPoint[0]);
-            TSG.Vector vectorY = new TSG.Vector(listPoint[listPoint.Count-1] - listPoint[0]);
+            //TODO:Рассмотреть возможность адоптации отцентровки пластин под новый алгоритм вставки.
+            //Определение направления толщины.
+            //TSG.Vector vectorX = new TSG.Vector(listPoint[1]- listPoint[0]);
+            //TSG.Vector vectorY = new TSG.Vector(listPoint[listPoint.Count-1] - listPoint[0]);
+            //var vectorZ = vectorX.Cross(vectorY);
 
-            var vectorZ = vectorX.Cross(vectorY);
+            //if (contourPlate.Position.Depth == Position.DepthEnum.MIDDLE) 
+            //{
+            //    if (contourPlate.Position.DepthOffset == 0) { return listPoint; }
+            //    else
+            //    {
+            //        vectorZ.Normalize(contourPlate.Position.DepthOffset);
+            //        return PointShift(listPoint, vectorZ);
+            //    }
+            //}
 
-            if (contourPlate.Position.Depth == Position.DepthEnum.MIDDLE) 
-            {
-                if (contourPlate.Position.DepthOffset == 0) { return listPoint; }
-                else
-                {
-                    vectorZ.Normalize(contourPlate.Position.DepthOffset);
-                    return PointShift(listPoint, vectorZ);
-                }
-            }
+            //double wightPlate = GetWightFromProfile(contourPlate.Profile.ProfileString);
 
-            double wightPlate = GetWightFromProfile(contourPlate.Profile.ProfileString);
+            //if (contourPlate.Position.Depth == Position.DepthEnum.FRONT)
+            //{
+            //    vectorZ.Normalize(contourPlate.Position.DepthOffset + wightPlate/2);
+            //    contourPlate.Position.Depth = Position.DepthEnum.MIDDLE;
+            //    return PointShift(listPoint, vectorZ);
+            //}
+            //if (contourPlate.Position.Depth == Position.DepthEnum.BEHIND)
+            //{
+            //    vectorZ.Normalize(contourPlate.Position.DepthOffset + wightPlate / 2);
+            //    contourPlate.Position.Depth = Position.DepthEnum.MIDDLE;
+            //    return PointShift(listPoint, -1*vectorZ);
+            //}
 
-            if (contourPlate.Position.Depth == Position.DepthEnum.FRONT)
-            {
-                vectorZ.Normalize(contourPlate.Position.DepthOffset + wightPlate/2);
-                return PointShift(listPoint, vectorZ);
-            }
-            if (contourPlate.Position.Depth == Position.DepthEnum.BEHIND)
-            {
-                vectorZ.Normalize(contourPlate.Position.DepthOffset + wightPlate / 2);
-                return PointShift(listPoint, -1*vectorZ);
-            }
+            //Закоменченный старый алгоритм перемещения по толщине.
             
             return listPoint;
         }

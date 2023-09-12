@@ -13,7 +13,6 @@ namespace PrototypeObserver.ViewModel
 {
     public class ContainerForSelected : INotifyPropertyChanged
     {
-        public event Action<TreeViewItemViewModel> ModifyAndSaveEvent;
 
         private TreeViewItemViewModel _selectedElement;
 
@@ -44,16 +43,8 @@ namespace PrototypeObserver.ViewModel
         {
             get { return _selectedUDA; }
             set
-            {
-                if (_selectedUDA != null)
-                {
-                    _selectedUDA.ModifyAndSaveEvent -= Item_ModifyAndSaveEvent;
-                }
-                _selectedUDA = value;
-                if (_selectedUDA != null)
-                {
-                    _selectedUDA.ModifyAndSaveEvent += Item_ModifyAndSaveEvent;
-                }
+            {               
+                _selectedUDA = value;               
                 this.OnPropertyChanged("SelectedUDA");
             }
         }
@@ -69,7 +60,6 @@ namespace PrototypeObserver.ViewModel
                 this.OnPropertyChanged("DistanceX");
                 //this.OnPropertyChanged("DistanceTransfer");
                 //this.OnPropertyChanged("ViewFinish");
-                ModifyAndSaveEvent?.Invoke(SelectedElement);
             }
         }
         public double DistanceY
@@ -82,7 +72,6 @@ namespace PrototypeObserver.ViewModel
                 this.OnPropertyChanged("DistanceY");
                 //this.OnPropertyChanged("DistanceTransfer");
                 //this.OnPropertyChanged("ViewFinish");
-                ModifyAndSaveEvent?.Invoke(SelectedElement);
             }
         }
         public double DistanceZ
@@ -95,7 +84,6 @@ namespace PrototypeObserver.ViewModel
                 this.OnPropertyChanged("DistanceZ");
                 //this.OnPropertyChanged("DistanceTransfer");
                 //this.OnPropertyChanged("ViewFinish");
-                ModifyAndSaveEvent?.Invoke(SelectedElement);
             }
         }
         public double AngleX
@@ -111,7 +99,6 @@ namespace PrototypeObserver.ViewModel
                 //this.OnPropertyChanged("Angle");
                 //this.OnPropertyChanged("DistanceTransfer");
                 //this.OnPropertyChanged("ViewFinish");
-                ModifyAndSaveEvent?.Invoke(SelectedElement);
             }
         }
         public double AngleY
@@ -127,7 +114,6 @@ namespace PrototypeObserver.ViewModel
                 //this.OnPropertyChanged("Angle");
                 //this.OnPropertyChanged("DistanceTransfer");
                 //this.OnPropertyChanged("ViewFinish");
-                ModifyAndSaveEvent?.Invoke(SelectedElement);
             }
         }
         public double AngleZ
@@ -143,7 +129,6 @@ namespace PrototypeObserver.ViewModel
                 //this.OnPropertyChanged("Angle");
                 //this.OnPropertyChanged("DistanceTransfer");
                 //this.OnPropertyChanged("ViewFinish");
-                ModifyAndSaveEvent?.Invoke(SelectedElement);
             }
         }
 
@@ -168,11 +153,7 @@ namespace PrototypeObserver.ViewModel
                 }
             }
         }
-      
-        private void Item_ModifyAndSaveEvent()
-        {
-            ModifyAndSaveEvent?.Invoke(SelectedElement);
-        }
+     
 
         #region INotifyPropertyChanged Members
 

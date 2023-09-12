@@ -23,8 +23,8 @@ namespace BIMPropotype_Lib.ExtentionAPI.InserPlugin
                     if (component.Name == "BIMPropotypePlugin")
                     {
                         metka = true;
-                        component.SetAttribute("selectField", prefixDirectory.FieldName);
-                        component.SetAttribute("selectPrototypeName", prefixDirectory.Prefix);
+                        component.SetAttribute("selectField", prefixDirectory.Meta.Name);
+                        component.SetAttribute("selectPrototypeName", prefixDirectory.Meta.Prefix);
                         component.Modify();
                     }
                 }
@@ -41,8 +41,8 @@ namespace BIMPropotype_Lib.ExtentionAPI.InserPlugin
                     Number = TSM.BaseComponent.PLUGIN_OBJECT_NUMBER
                 };
 
-                assignmentsPlugin.SetAttribute("selectField", prefixDirectory.FieldName);
-                assignmentsPlugin.SetAttribute("selectPrototypeName", prefixDirectory.Prefix);
+                assignmentsPlugin.SetAttribute("selectField", prefixDirectory.Meta.Name);
+                assignmentsPlugin.SetAttribute("selectPrototypeName", prefixDirectory.Meta.Prefix);
                 assignmentsPlugin.Insert();
             }                   
         }
