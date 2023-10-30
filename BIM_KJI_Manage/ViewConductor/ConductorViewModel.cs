@@ -11,6 +11,12 @@ using PrototypeConductor.Controller;
 using TSM = Tekla.Structures.Model;
 using UI = Tekla.Structures.Model.UI;
 using BIMPropotype_Lib.Controller;
+using BIMPropotype_Lib.ExtentionAPI.InserPlugin;
+using PrototypeObserver;
+using PrototypeConductor.Model;
+using System.Diagnostics;
+using BIMPropotype_Lib.Model;
+using BIMPropotype_Lib.ExtentionAPI.Conductor;
 
 namespace Propotype_Manage.ViewConductor
 {
@@ -24,6 +30,8 @@ namespace Propotype_Manage.ViewConductor
             get { return this._isAllOpen; }
             set { this.SetValue(ref this._isAllOpen, value); }
         }
+
+        
         private ObservableCollection<ModelDirectoryViewModel> _conductor;
         public ObservableCollection<ModelDirectoryViewModel> Conductor
         {
@@ -38,10 +46,9 @@ namespace Propotype_Manage.ViewConductor
             private set { this.SetValue(ref this._database, value); }
         }
 
-
-        public ConductorViewModel(PrefixDirectory InPrefixDirectory)
+        public ConductorViewModel(PrefixDirectory InPrefixDirectory, SelectObserver selectObserver)
         {
-            Database = new Database(InPrefixDirectory);
+            Database = new Database(InPrefixDirectory, selectObserver);
             _conductor = new ObservableCollection<ModelDirectoryViewModel>(
                   (from directory in Database.GetModelDirectories()
                    select new ModelDirectoryViewModel(directory, Database))
@@ -62,85 +69,95 @@ namespace Propotype_Manage.ViewConductor
             }
         }
 
+       
+
         /// <summary>
-        /// Сериализовать выбранные сборки.
+        /// Создание ревизии по заполненным данным. 
         /// </summary>
         [CommandHandler]
-        public void AddAssemblys()
+        public void OpenFolder()
         {
-
-            TSM.ModelObjectEnumerator modelEnum = new UI.ModelObjectSelector().GetSelectedObjects();
-            while (modelEnum.MoveNext())
-            {
-                if (modelEnum.Current is TSM.Assembly assemblyModel)
-                {
-                    Controller.WorkPlaneWorker workPlaneWorker = new Controller.WorkPlaneWorker(Database.PrefixDirectory.Model, assemblyModel);
-                    workPlaneWorker.GetWorkPlace();
-                    new BeamLoader(assemblyModel, Database.PrefixDirectory);
-                    workPlaneWorker.RerutnWorkPlace();
-                    AddDirect();
-                }
-            }
+            string path = Database.PrefixDirectory.GetFile();
+            Process.Start("explorer.exe", @"/select,""" + path + "\"");
         }
 
-        private void AddDirect()
+        /// <summary>
+        /// Загрузить прототип в обозреватель.
+        /// </summary>
+        [CommandHandler]
+        public void UploadPrototypeInObserver()
         {
-            Conductor[0].IsExpanded = true;
-            var direct = SearcherDirect(Conductor.ToList<TreeViewItemViewModel>());
+            Database.UploadPrototype();
+        }
 
-            if (direct == null)
-            {
-                var newField = new FieldPrototypeViewModel(new PrototypeConductor.Model.FieldPrototype(Database.PrefixDirectory.FieldName, Database.PrefixDirectory.GetDirectory()), Conductor[0], Database);
-                newField.IsExpanded = true;
-                Conductor[0].Children.Add(newField);
-            }
-            else
-            {
-                direct.IsExpanded = true; 
-                var selectedpropotype = SearcherPrefix(Conductor.ToList<TreeViewItemViewModel>());
-                if (selectedpropotype == null)
-                {
-                    direct.Children.Add(new PrototypeNameViewModel(new PrototypeConductor.Model.PrototypeName(Database.PrefixDirectory.Prefix), direct as FieldPrototypeViewModel, Database));
-                }
-                else
-                {
-                    selectedpropotype.IsSelected = true;
-                }                
-            }  
+
+        /// <summary>
+        /// Поиск по имени.
+        /// </summary>
+        [CommandHandler]
+        public void Find()
+        {
+            //TODO: Загрузка прототипов по нескольким каталогам.
+            Conductor[0].PerformSearch();
+        }
+        
+
+        /// <summary>
+        /// Заменить выбранный прототип.
+        /// </summary>
+        [CommandHandler]
+        public void Swap()
+        {           
+            Database.SwapSelectedElement();
         }
 
         /// <summary>
         /// Вставка деталей в модель.
         /// </summary>
         [CommandHandler]
-        public void Delete()
+        public void Delete(object SelectedItem)
         {
-           
+            if (SelectedItem is PrototypeNameViewModel prototypeName)
+            {
+                var msg = this.Host.UI.ShowMessageDialog($"Вы хотите удалить {prototypeName.Prefix}?", "Message", icon: "Geometry.RecycleBin", new string[] { "Delete", "Сancel" });
+                if (msg == "Delete")
+                {
+                    var path = Database.PrefixDirectory.GetFile();
+                    if (File.Exists(path)) File.Delete(path);
+                    var parect = prototypeName.Parent;
+                    parect.Children.Remove(prototypeName);
+                    if (parect.Children.Count > 0)
+                    {
+                        parect.Children.Last().IsSelected = true;
+                    }
+                }
+            }
+            else if (SelectedItem is FieldPrototypeViewModel fieldPrototype)
+            {
+                if (fieldPrototype.Children.Count == 0)
+                {
+                    var path = FileExplorerExtentions.GetDataDirectory();
+                    if (Directory.Exists(path)) Directory.Delete(path);
+                    fieldPrototype.Parent.Children.Remove(fieldPrototype);
+                }
+            }
+
             var selected = Searcher(Conductor.ToList<TreeViewItemViewModel>());
             if (selected != null)
             {
 
                 if (CheckPrototype(selected))
                 {
-                    var path = Database.PrefixDirectory.GetFile();
-                    if (File.Exists(path)) File.Delete(path);
-                    var parect = selected.Parent;
-                    parect.Children.Remove(selected);
-                    if (parect.Children.Count > 0)
-                    {
-                        parect.Children.Last().IsSelected = true;
-                    }
+                    
                 }
                 if (CheckFoulder(selected))//Пустая папка.
                 {
-                    var path = Database.PrefixDirectory.GetDirectory();
+                    var path = FileExplorerExtentions.GetDataDirectory();
                     if (Directory.Exists(path)) Directory.Delete(path);
                     selected.Parent.Children.Remove(selected);
                 }
             }
-
         }
-
         private bool CheckFoulder(TreeViewItemViewModel treeViewItemViewModel) 
         {
             if (treeViewItemViewModel is FieldPrototypeViewModel field)
@@ -184,7 +201,7 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (itemConductor is FieldPrototypeViewModel field)
                 {
-                    if (field.Name == Database.PrefixDirectory.FieldName) return field;
+                    if (field.Name == Database.PrefixDirectory.Meta.Name) return field;
                     
                 }
 
@@ -203,19 +220,20 @@ namespace Propotype_Manage.ViewConductor
             {
                 if (itemConductor is PrototypeNameViewModel propotype)
                 {
-                    if (propotype.Prefix == Database.PrefixDirectory.Prefix) return propotype;
+                    if (propotype.Prefix == Database.PrefixDirectory.Meta.Prefix) return propotype;
                 }
 
                 if (itemConductor.Children?.Count > 0)
                 {
                     var item = SearcherPrefix(itemConductor.Children.ToList<TreeViewItemViewModel>());
-                    if (item != null) return item;
+                    if (item != null) 
+                    {
+                        itemConductor.IsExpanded = true;
+                        return item;
+                    }
                 }
             }
             return null;
         }
-
-
-
     }
 }

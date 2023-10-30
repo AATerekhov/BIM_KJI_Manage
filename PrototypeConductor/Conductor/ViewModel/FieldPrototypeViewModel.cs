@@ -13,21 +13,23 @@ namespace PrototypeConductor.ViewModel
         readonly FieldPrototype _field;
         public Database Database { get; set; }
         public FieldPrototypeViewModel(FieldPrototype field,ModelDirectoryViewModel parentDirectory , Database database)
-            : base(parentDirectory, true)
+            : base(parentDirectory)
         {
             Database = database;
-            _field = field;
-            this.PropertyChanged += FieldPrototypeViewModel_PropertyChanged; ;
+            _field = field; 
+            LoadChildren();
+
+            this.PropertyChanged += FieldPrototypeViewModel_PropertyChanged;            
         }
 
         private void FieldPrototypeViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsSelected")
             {
-                if ((sender as TreeViewItemViewModel).IsSelected)
-                {
-                    Database.PrefixDirectory.FieldName = Name;
-                }
+                //if ((sender as TreeViewItemViewModel).IsSelected)
+                //{
+                //    Database.PrefixDirectory.Meta.Name = Name;
+                //}
             }
         }
 
@@ -38,7 +40,10 @@ namespace PrototypeConductor.ViewModel
 
         protected override void LoadChildren()
         {
-            foreach (PrototypeName prototypeName in Database.GetPrototype(_field))
+            //foreach (StructureField structureField in Database.GetStructure(_field))
+            //    base.Children.Add(new StructureFieldViewModel(structureField, this, Database));
+
+            foreach (FilterPrototype prototypeName in Database.GetFilterDirectories(_field))
                 base.Children.Add(new PrototypeNameViewModel(prototypeName, this, Database));
         }
     }

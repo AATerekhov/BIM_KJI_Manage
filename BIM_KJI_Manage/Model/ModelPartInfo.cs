@@ -10,6 +10,7 @@ namespace Propotype_Manage.Model
 {
     public class ModelPartInfo
     {
+        //TODO: Устаревший класс, найза современную замену. Струкрутирование атрибутивной информации.
         public ModelObject InObject { get; set; }
         public  ModelObject.ModelObjectEnum TeklaType { get; set; }
         public double Weight { get; set; }

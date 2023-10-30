@@ -5,7 +5,9 @@ namespace Propotype_Manage
     using System.Windows.Input;
     using Fusion;
     using Propotype_Manage.ViewConductor;
+    using Propotype_Manage.ViewPrototype;
     using BIMPropotype_Lib.ViewModel;
+    using PrototypeObserver;
 
     /// <summary>
     /// Example application.
@@ -13,6 +15,7 @@ namespace Propotype_Manage
     public class ExampleApp : Fusion.App
     {
         public ConductorViewModel InConductorViewModel { get; set; }
+        public PrototypeViewModel InPrototypeViewModel { get; set; }
         public PrefixDirectory InPrefixDirectory { get; set; }
         /// <summary>
         /// Определяет точку входа в приложение.
@@ -21,10 +24,12 @@ namespace Propotype_Manage
         public static void Main()
         {
             var prefixDirectory = new PrefixDirectory();
+            SelectObserver selectObserver = new SelectObserver();
             Fusion.App.Start(new ExampleApp()
             {
                 InPrefixDirectory = prefixDirectory,
-                InConductorViewModel = new ConductorViewModel(prefixDirectory),
+                InConductorViewModel = new ConductorViewModel(prefixDirectory, selectObserver),
+                InPrototypeViewModel = new PrototypeViewModel(selectObserver)
             });
         }
 
@@ -36,7 +41,7 @@ namespace Propotype_Manage
         [PublishedView("App.MainWindow")]
         public ViewModel CreateMainWindow(object parameter)
         {
-            return new MainWindowViewModel(InPrefixDirectory);
+            return new MainWindowViewModel(InPrefixDirectory, InPrototypeViewModel);
         }
 
         /// <summary>
@@ -48,6 +53,16 @@ namespace Propotype_Manage
         public ViewModel ConductorView(object parameter)
         {
             return InConductorViewModel;
+        }
+        /// <summary>
+         /// TreeView просетов.
+         /// </summary>
+         /// <param name="parameter">The parameter.</param>
+         /// <returns>Модель просмотра главного окна.</returns>
+        [PublishedView("Example.Prototype.Prototype")]
+        public ViewModel PrototypeView(object parameter)
+        {
+            return InPrototypeViewModel;
         }
 
 

@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Propotype_Manage</RootNamespace>
     <AssemblyName>Propotype_Manage</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -32,6 +32,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,11 +54,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Fusion, Version=3.0.0.0, Culture=neutral, PublicKeyToken=175f9db2faa2c710, processorArchitecture=MSIL">
-      <HintPath>..\packages\TeklaFusion.3.5.278\lib\net451\Fusion.dll</HintPath>
+    <Reference Include="Fusion, Version=4.0.0.0, Culture=neutral, PublicKeyToken=175f9db2faa2c710, processorArchitecture=MSIL">
+      <HintPath>..\packages\TeklaFusion.4.0.13\lib\net48\Fusion.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -111,12 +116,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\WorkPlaneWorker.cs" />
+    <Compile Include="Model\FolderManager.cs" />
     <Compile Include="Model\ModelPartInfo.cs" />
+    <Compile Include="Model\ShortGUID.cs" />
     <Compile Include="ViewConductor\ConductorView.xaml.cs">
       <DependentUpon>ConductorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewConductor\ConductorViewModel.cs" />
+    <Compile Include="ViewPrototype\PrototypeView.xaml.cs">
+      <DependentUpon>PrototypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewPrototype\PrototypeViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -133,6 +143,10 @@
     <Page Include="ViewConductor\ConductorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewPrototype\PrototypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -169,15 +183,70 @@
       <Project>{63758fba-0176-4f02-b441-c3f68c5d3007}</Project>
       <Name>PrototypeConductor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrototypeObserver\PrototypeObserver.csproj">
+      <Project>{30e908c1-fc3e-4b09-8f76-1a810aad2c64}</Project>
+      <Name>PrototypeObserver</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ViewConductor\Images\Block.png" />
+    <Folder Include="Controller\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ViewConductor\Images\Preset.png" />
+    <Resource Include="ViewConductor\Images\Foulder.png" />
+    <Resource Include="ViewConductor\Images\NameSet.png" />
+    <Resource Include="ViewConductor\Images\Prototype.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ViewConductor\Images\Space.png" />
+    <Resource Include="ViewPrototype\Images\Assembly.png" />
+    <Resource Include="ViewPrototype\Images\Part.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\Load.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\Joint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\molecule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\molecule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\upload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewConductor\Images\swap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\assign.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\innovation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\rearview-mirror.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\MainPart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\beam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewPrototype\Images\plus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
