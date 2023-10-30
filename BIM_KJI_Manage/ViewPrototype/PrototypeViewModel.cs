@@ -79,6 +79,27 @@ namespace Propotype_Manage.ViewPrototype
             InSelectObserver.CreatePrototype();
            
         }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        [CommandHandler]
+        public void CreatePreset()
+        {
+            InSelectObserver.CreatePreset();
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [CommandHandler]
+        public void SavePresets()
+        {
+            InSelectObserver.SavePresets();
+
+        }
+        
         /// <summary>
         /// Выбрать элемент в модели.
         /// </summary>
@@ -109,19 +130,14 @@ namespace Propotype_Manage.ViewPrototype
         [CommandHandler]
         public void AddJoint()
         {
-            //TODO: Алгоритм добавления узла не отлажен.
 
-            //if (InContainerForSelected.SelectedElement != null)
-            //{
-            //    if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
-            //    {
-            //        assemblyViewModel.AddJoint();
-            //    }
-            //    if (InContainerForSelected.SelectedElement.GetOldFather() is AssemblyViewModel assemblyFatherViewModel)
-            //    {
-            //        ModifyBIMAssemblySelect?.Invoke(assemblyFatherViewModel._bIMAssembly);
-            //    }
-            //}
+            if (InSelectObserver.InContainerForSelected.SelectedElement != null)
+            {
+                if (InSelectObserver.InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+                {
+                    assemblyViewModel.AddJoint();
+                }
+            }
         }
     }
 }

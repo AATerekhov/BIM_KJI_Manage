@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BIMPropotype_Lib.Controller;
 using BIMPropotype_Lib.Model;
 using Tekla.Structures.Model;
 using TSG = Tekla.Structures.Geometry3d;
@@ -15,6 +16,9 @@ namespace PrototypeObserver.ViewModel
     {
 
         #region Data
+
+        public ObservableCollection<DynamicProperty> DynamicProperties { get; set; }
+
 
         static readonly TreeViewItemViewModel DummyChild = new TreeViewItemViewModel();
 
@@ -171,15 +175,29 @@ namespace PrototypeObserver.ViewModel
             }
         }
 
+
         private bool CheckParent() 
         {
             if (Parent == null) return false;
             else return true;            
         }
+        public AssemblyViewModel GetAssemblyFather()
+        {
+            if (!CheckParentAssembly()) return Parent as AssemblyViewModel;
+            else
+            {
+                return Parent.GetAssemblyFather();
+            }
+        }
+
+        private bool CheckParentAssembly()
+        {
+            if (Parent is AssemblyViewModel) return false;
+            else return true;
+        }
 
         public virtual void Insert(Model model)
         {
-            throw new NotImplementedException();
         }
 
         public virtual void InsertMirror()

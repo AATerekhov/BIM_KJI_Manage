@@ -186,7 +186,6 @@ namespace BIMPropotype_Lib.ViewModel
         BIMAssembly = 0,
         BIMStructure = 1,
         BIMJoint = 2,
-        BIMPart = 3,
         Error = 10,
     }
 }

@@ -49,20 +49,37 @@ namespace PrototypeObserver.ViewModel
                 base.Children.Add(new ChildrenPartViewModel(reinforcement, this, InContainerForSelected));
             foreach (BIMPartChildren bolts in _bIMPart.Children.GetBolts())
                 base.Children.Add(new ChildrenPartViewModel(bolts, this, InContainerForSelected));
+            foreach (BIMPartChildren joints in _bIMPart.Children.GetJoints())
+                base.Children.Add(new JointViewModel(joints, this, InContainerForSelected));
         }
 
         public override void Insert(Model model)
         {
             WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
             workPlaneWorker.GetWorkPlace(_bIMPart.BaseStructure);
-            _bIMPart.Insert((Parent as AssemblyViewModel)._bIMAssembly);
+
+            _bIMPart.Insert((this.GetAssemblyFather())._bIMAssembly);
+
             foreach (var item in Children)
             {
                 if (item is AssemblyViewModel assemblyVM) assemblyVM.Insert(model);
                 else if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.Insert(model);
+                else if (item is JointViewModel jointViewModel) jointViewModel.Insert(model);
             }
             workPlaneWorker.ReturnWorkPlace();
         }
+        private bool _isMainPart;
+
+        public bool IsMainPart
+        {
+            get { return _isMainPart; }
+            set 
+            {
+                _isMainPart = value;
+                this.OnPropertyChanged("IsMainPart");
+            }
+        }
+
 
         public override CoordinateSystem GetBase()
         {

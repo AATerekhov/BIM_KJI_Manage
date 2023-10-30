@@ -14,6 +14,7 @@ using BIMPropotype_Lib.ViewModel;
 using System.IO;
 using System.Xml.Serialization;
 using BIMPropotype_Lib.ExtentionAPI.Conductor;
+using System.Collections.ObjectModel;
 
 namespace PrototypeObserver.ViewModel
 {
@@ -23,20 +24,54 @@ namespace PrototypeObserver.ViewModel
         public PrefixDirectory InPrefixDirectory { get; set; }
         public ContainerForSelected InContainerForSelected { get; set; }
 
-        public AssemblyViewModel(BIMAssembly assembly, TreeViewItemViewModel parentField, ContainerForSelected containerForSelected )
+    public AssemblyViewModel(BIMAssembly assembly, TreeViewItemViewModel parentField, ContainerForSelected containerForSelected )
            : base(parentField, false)
         {
             _bIMAssembly = assembly;
             InContainerForSelected = containerForSelected;
             this.PropertyChanged += PrototypeNameViewModel_PropertyChanged;
+
+            DynamicProperties = new ObservableCollection<DynamicProperty>();
+
             LoadChildren();
         }
+
 
         public AssemblyViewModel(BIMAssembly assembly, ContainerForSelected containerForSelected) 
             : this(assembly, null, containerForSelected)
         {
 
         }
+        protected override void LoadChildren()
+        {
+            foreach (BIMPart partBox in _bIMAssembly.Children)
+            {
+                base.Children.Add(new PartViewModel(partBox, this, InContainerForSelected));
+            }
+
+            if (Children.Count > 0)
+                (Children[0] as PartViewModel).IsMainPart = true;
+
+            DynamicProperties.Clear();
+            var distance = _bIMAssembly.CheckDistance();
+            if (distance != 0.0)
+            {
+                DynamicProperties.Add(new DynamicProperty(distance));
+                DynamicProperties[0].PropertyChanged += AssemblyViewModel_PropertyChanged;
+            }
+        }
+
+        private void AssemblyViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!IsLinq)
+            {
+                if (e.PropertyName == "BIMProperty")
+                {
+                    _bIMAssembly.ModifyDistance((sender as DynamicProperty).BIMProperty);
+                }
+            }            
+        }
+
         private void PrototypeNameViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsSelected")
@@ -67,6 +102,17 @@ namespace PrototypeObserver.ViewModel
                 this.OnPropertyChanged("IsLinq");
             }
         }
+        public bool IsBeam
+        {
+            get 
+            {
+                if (_bIMAssembly.Children.Count >0)
+                {
+                    if (_bIMAssembly.Children[0].Type == PartType.beam) return true;
+                }
+                return false;
+            } 
+        }
 
         private void Clining()
         {
@@ -74,13 +120,6 @@ namespace PrototypeObserver.ViewModel
             base.Children.Clear();
         }
 
-        protected override void LoadChildren()
-        {
-            foreach (BIMPart partBox in _bIMAssembly.Children)
-            {
-                base.Children.Add(new PartViewModel(partBox, this, InContainerForSelected)); 
-            }
-        }
 
         public override CoordinateSystem GetBase()
         {
@@ -142,76 +181,43 @@ namespace PrototypeObserver.ViewModel
             if (IsLinq) Clining();
         }
 
-        public override void InsertMirror()
-        {
-            //foreach (var item in Children)
-            //{
-            //    if (item is PartViewModel assemblyVM) assemblyVM.InsertMirror();
-            //}
-
-            //if (Parent == null)
-            //{
-            //    _bIMAssembly.InsertMirror(null);
-            //}
-            //else
-            //{
-            //    _bIMAssembly.InsertMirror((Parent as PartViewModel)._bIMPart);
-            //}
-        }
         public void SelectInModel()
         {
             if(!IsLinq)
             _bIMAssembly.SelectInModel();
         }
-
-        public void Swap(MetaDirectory meta)
-        {
-            //TODO: Отладить данный метод на Meta!
-
-            //InPrefixDirectory.Meta = meta;
-
-            //this.DeserializeXMLNotBase();
-            //Children.Clear();
-            //LoadChildren();
-            //this.OnPropertyChanged("Name");
-        }
-
-        //TODO: Требуется отладка метода. Не реализован алгоритм работы.
-        public void AddJoint()
-        {
-            IsExpanded = true;
-            var joint = new BIMJoint();
-            joint.GetStarted();
-            base.Children.Add(new JointViewModel(joint, this, InContainerForSelected));
-            base.Children.Last().IsSelected = true;
-        }
-
-        public void DeserializeXML()
-        {
-            throw new NotImplementedException();
-        }
         public void SerializeXML()
         {
             _bIMAssembly.SerializeXML();
         }
+        public void AddJoint()
+        {
+            if (IsBeam)
+            {
+                _bIMAssembly.TransformationОfТodes();
+                base.Children.Clear();
+                this.LoadChildren();
+            }
+        }
+
+        public override void InsertMirror()
+        {
+        }
+
+        public void Swap(MetaDirectory meta)
+        {
+        }
+
+
+        public void DeserializeXML()
+        {
+        }
         public void DeserializeXMLNotBase()
         {
-            //UpdateDataDirectory(BIMType.BIMAssembly);
-            //var path = InPrefixDirectory.GetFile();
-            //if (File.Exists(path))
-            //{
-            //    var formatter = new XmlSerializer(typeof(BIMAssembly));
-
-            //    using (var fs = new FileStream(path, FileMode.OpenOrCreate))
-            //    {
-            //        var rezult = (BIMAssembly)formatter.Deserialize(fs);
-            //        this.CloneAsCurrentObjectNotBase(rezult);
-            //    }
-            //}
         }
         public void UpdateMetaDirectory(MetaDirectory meta)
         {
-            InPrefixDirectory.Meta = meta;
+
         }
 
     }

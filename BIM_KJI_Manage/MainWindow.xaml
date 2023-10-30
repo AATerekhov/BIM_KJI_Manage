@@ -17,7 +17,7 @@
             </TextBlock>
         </StatusBar>
         <ui:PublishedView DockPanel.Dock="Right" Margin="2" ViewName="Example.Prototype.Prototype" />
-        <StackPanel  Margin="5" DockPanel.Dock="Top" VerticalAlignment="Top">
+        <StackPanel  Margin="5" DockPanel.Dock="Left" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal">
                 <Button   Command="{ui:CommandHandler AddAssemblys}" Background="LightGray" Height="30" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
@@ -47,9 +47,9 @@
                     </ListBox.ItemsPanel>
                 </ListBox>
             </StackPanel>
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Top">
-            <ui:PublishedView Margin="2" ViewName="Example.Conductor.Conductor" />
+            <StackPanel>
+                <ui:PublishedView Margin="2" ViewName="Example.Conductor.Conductor" />
+            </StackPanel>
         </StackPanel>
     </DockPanel>
 </Window>

@@ -39,7 +39,17 @@ namespace PrototypeObserver.ViewModel
             WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
             workPlaneWorker.GetWorkPlace(_bIMPartChildren.BaseStructure);
 
-            _bIMPartChildren.Insert((Parent as PartViewModel)._bIMPart);
+            if (Parent is PartViewModel partPerent)
+            {
+                _bIMPartChildren.Insert((partPerent)._bIMPart);
+            }
+            else
+            {
+               if (Parent.Parent is PartViewModel partPerentPerent)
+                {
+                    _bIMPartChildren.Insert((partPerentPerent)._bIMPart);
+                }
+            }
 
             workPlaneWorker.ReturnWorkPlace();
         }

@@ -7,7 +7,7 @@
              xmlns:vmtree="clr-namespace:PrototypeConductor.ViewModel;assembly=PrototypeConductor"
              xmlns:controls ="clr-namespace:Tekla.Structures.Ui.WpfKit.Controls;assembly=Tekla.Structures.Ui.WpfKit"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="300">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <StackPanel Orientation="Vertical">
@@ -32,14 +32,6 @@
                             </StackPanel>
                             <Button.ToolTip>
                                 <ToolTip Content="Загрузить протопит в обозреватель."/>
-                            </Button.ToolTip>
-                        </Button>
-                        <Button  Command="{ui:CommandHandler Swap}" Background="LightGray" Height="25"  ToolTipService.InitialShowDelay="300" Cursor="Hand">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Width="12" Height="12" Margin="0" Source="Images\swap.png" />
-                            </StackPanel>
-                            <Button.ToolTip>
-                                <ToolTip Content="Заменить выбранный прототип"/>
                             </Button.ToolTip>
                         </Button>
                     </StackPanel>

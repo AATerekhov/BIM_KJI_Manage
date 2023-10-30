@@ -90,6 +90,17 @@ namespace BIMPropotype_Lib.Model
         {
             Assembly assembly = GetAssembly();
 
+            List<Part> parts = new List<Part>();
+            foreach (var item in Children)
+            {
+                parts.AddRange(item.GetPartJoint());
+            }
+
+            foreach (var part in parts)
+            {
+                assembly.Add(part);
+            }
+
             for (int i = 1; i < Children.Count; i++)
             {
                 assembly.Add(Children[i].GetPart());
@@ -167,6 +178,21 @@ namespace BIMPropotype_Lib.Model
             ObjectsToSelect.Add(inAssembly);
             Tekla.Structures.Model.UI.ModelObjectSelector MS = new Tekla.Structures.Model.UI.ModelObjectSelector();
             MS.Select(ObjectsToSelect);
+        }
+        public void TransformationОfТodes() 
+        {
+            Children[0].TransformationОfТodes(Meta);
+
+            var children = new List<BIMPart>(Children);
+
+            for (int i = 1; i < children.Count; i++)
+            {
+
+                if (Children[0].AddBIMPart(children[i]))
+                {
+                    Children.Remove(children[i]);
+                }
+            }
         }
     }    
 }

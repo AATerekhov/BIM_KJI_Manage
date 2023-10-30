@@ -121,6 +121,13 @@ namespace BIMPropotype_Lib.Model
 
             if (ChildrenType != PartChildrenType.Assembly) workPlaneWorker.ReturnWorkPlace();
         }
+        public BIMPartChildren(Point point, MetaDirectory meta) 
+        {
+            ChildrenType = PartChildrenType.joint;
+            BaseStructure = new CoordinateSystem();
+            BaseStructure.Origin = point;
+            Joint = new BIMJoint(meta, BaseStructure);
+        }
         public  void Insert(IStructure father) => InsertAs(false, father as BIMPart);
         public  void InsertMirror(IStructure father) => InsertAs(true, father as BIMPart);
         public void InsertAs(bool mirror, BIMPart father)

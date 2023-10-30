@@ -9,11 +9,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <DockPanel>
+
+        <DataGrid DockPanel.Dock="Left"
+                      Margin="10,0,10,0"
+                      AutoGenerateColumns="True"
+                  VerticalAlignment="Stretch" 
+                  VerticalScrollBarVisibility="Auto"
+                   Visibility="{Binding Path = InSelectObserver.InContainerForSelected.IsDynamic, Mode=OneWay, Converter={ui:ConvertBooleanToVisibility}}"
+                  ItemsSource="{Binding Path = InSelectObserver.InContainerForSelected.PresetElements, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path= InSelectObserver.InContainerForSelected.SelectPreset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  >
+        </DataGrid>
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <Button   Command="{ui:CommandHandler CreatePrototype}" Background="LightGray" Height="25" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="12" Height="12" Margin="1" Source="Images\Assembly.png" />
+                        <Image Width="12" Height="12" Margin="1" Source="Images\save.png" />
                     </StackPanel>
                     <Button.ToolTip>
                         <ToolTip Content="Сохранить выбранный прототип."/>
@@ -27,7 +38,7 @@
                         <ToolTip Content="Преобразовать выбранное в ссылку."/>
                     </Button.ToolTip>
                 </Button>
-                <Button   Command="{ui:CommandHandler AddJoint}" Background="LightGray" Height="25">
+                <Button   Command="{ui:CommandHandler AddJoint}" Background="LightGray" Height="25" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <Image Width="12" Height="12" Margin="1" Source="Images\Joint.png" />
                     </StackPanel>
@@ -49,7 +60,7 @@
                     </CheckBox.ToolTip>
                 </CheckBox>
             </StackPanel>
-            <TreeView  ItemsSource="{Binding Propotypes, UpdateSourceTrigger = PropertyChanged}" MinWidth="200" MaxHeight="400">
+            <TreeView  ItemsSource="{Binding Propotypes, UpdateSourceTrigger = PropertyChanged}" MinWidth="200" MaxHeight="300">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -81,6 +92,8 @@
                             </TextBlock>
                             <Image Visibility="{Binding IsLinq,UpdateSourceTrigger=PropertyChanged, Converter={ui:ConvertBooleanToVisibility}}"
                             Width="16" Height="16" Margin="3,0" Source="Images\Load.png" />
+                            <Image Visibility="{Binding IsBeam,UpdateSourceTrigger=PropertyChanged, Converter={ui:ConvertBooleanToVisibility}}"
+                            Width="16" Height="16" Margin="3,0" Source="Images\beam.png" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate 
@@ -89,6 +102,8 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Width="12" Height="12" Margin="1" Source="Images\Part.png" />
                             <TextBlock Margin="2" Text="{Binding Name}" />
+                            <Image Visibility="{Binding IsMainPart,UpdateSourceTrigger=PropertyChanged, Converter={ui:ConvertBooleanToVisibility}}"
+                            Width="16" Height="16" Margin="3,0" Source="Images\MainPart.png" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate 
@@ -97,8 +112,6 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Width="12" Height="12" Margin="1" Source="Images\Joint.png" />
                             <TextBlock Margin="2" Text="{Binding Name}" />
-                            <TextBlock>_</TextBlock>
-                            <TextBlock Margin="2" Text="{Binding Number}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
@@ -131,8 +144,34 @@
                     <TextBox Width="60" Text="{Binding Path=InSelectObserver.InContainerForSelected.AngleZ, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </StackPanel>
-
+            
+            <DataGrid Margin="10,0,10,0"
+                      AutoGenerateColumns="True"
+                  VerticalAlignment="Stretch" 
+                  VerticalScrollBarVisibility="Auto"
+                   Visibility="{Binding Path = InSelectObserver.InContainerForSelected.IsDynamic, Mode=OneWay, Converter={ui:ConvertBooleanToVisibility}}"
+                  ItemsSource="{Binding Path = InSelectObserver.InContainerForSelected.SelectedElement.DynamicProperties, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                  >
+            </DataGrid>
+            <StackPanel Orientation="Horizontal"  Visibility="{Binding Path = InSelectObserver.InContainerForSelected.IsDynamic, Mode=OneWay, Converter={ui:ConvertBooleanToVisibility}}">
+                <Button   Command="{ui:CommandHandler CreatePreset}" Background="LightGray" Height="28" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\plus.png" />
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Сохранить пресет"/>
+                    </Button.ToolTip>
+                </Button>
+                <Button   Command="{ui:CommandHandler SavePresets}" Background="LightGray" Height="28" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="12" Height="12" Margin="1" Source="Images\save.png" />
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip Content="Сохранить пресет"/>
+                    </Button.ToolTip>
+                </Button>
             </StackPanel>
+        </StackPanel>
         
        
         <DataGrid DockPanel.Dock="Right"

@@ -9,27 +9,31 @@ using TSM = Tekla.Structures.Model;
 namespace BIMPropotype_Lib.Model
 {
     [Serializable]
-    public class BIMJoint : IStructure, IBIMCollection
+    public class BIMJoint :Reference, IStructure, IBIMCollection
     {
-        public List<BIMPartChildren> Children { get; set; }
+        public List<BIMPart> Children { get; set; }
+        public List<BIMPartChildren> OwnChildren { get; set; }
         public CoordinateSystem BaseStructure { get; set; }
-        public string Name { get; set; }
-        public string Prefix { get; set; }
         public BIMJoint() { }
-        public BIMJoint(BIMPartChildren bIMTemplate)
+        public BIMJoint(MetaDirectory Meta, CoordinateSystem cs ) :base(Meta)
         {
-            Children = new List<BIMPartChildren>() {bIMTemplate};
+            Children = new List<BIMPart>();
+            OwnChildren = new List<BIMPartChildren>();
+            BaseStructure = cs;
         }
 
-        public void GetStarted() 
+        public void AddOwn(BIMPartChildren bIMPartChildren, Matrix matrix) 
         {
-            Children = new List<BIMPartChildren>();
-            BaseStructure = new CoordinateSystem();
+            bIMPartChildren.BaseStructure.Origin = matrix.Transform(bIMPartChildren.BaseStructure.Origin);
+            OwnChildren.Add(bIMPartChildren);
+        }
+        public void AddPart(BIMPart bIMPart )
+        {
+            Children.Add(bIMPart);
         }
 
         public void Insert(IStructure father)
-        {
-            throw new NotImplementedException();
+        { 
         }
 
         public void InsertMirror(IStructure father)
@@ -50,6 +54,10 @@ namespace BIMPropotype_Lib.Model
         public void SelectInModel(TSM.Model model)
         {
             throw new NotImplementedException();
+        }
+        public override string ToString()
+        {
+            return Meta.ToString();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using BIMPropotype_Lib.Model;
 using PrototypeObserver.ViewModel;
 using BIMPropotype_Lib.ViewModel;
+using PrototypeObserver.Extentions;
 
 namespace PrototypeObserver
 {
@@ -71,6 +72,35 @@ namespace PrototypeObserver
                 }
             }
         }
+
+        public void CreatePreset() 
+        {
+            if (InContainerForSelected.IsDynamic)
+            {
+                var count = InContainerForSelected.PresetElements.Count;
+                var value = InContainerForSelected.SelectedElement.DynamicProperties[0].BIMProperty;
+
+                var copy = InContainerForSelected.PresetElements.Where(x => x.Distance == value).FirstOrDefault();
+                if (copy == null)
+                {
+                    InContainerForSelected.PresetElements.Add(new PresetElement(count + 1, value));
+                    InContainerForSelected.SelectPreset = InContainerForSelected.PresetElements.Last();
+                }
+            }
+        }
+        public void SavePresets()
+        {
+            if (InContainerForSelected.IsDynamic)
+            {
+                if (InContainerForSelected.SelectedElement is AssemblyViewModel assemblyViewModel)
+                {
+                    var meta = assemblyViewModel._bIMAssembly.Meta;
+                    meta.SerializeXMLPresets(InContainerForSelected.PresetElements.ToList());
+                }  
+            }
+        }
+        
+
 
         public SelectObserver()
         {

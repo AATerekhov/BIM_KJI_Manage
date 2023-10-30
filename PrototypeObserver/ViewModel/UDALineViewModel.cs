@@ -34,7 +34,7 @@ namespace PrototypeObserver.ViewModel
         {
             get
             {
-                if (BIMUdaView.Value != null) return BIMUdaView.Value;
+                if (!string.IsNullOrEmpty(BIMUdaView.Value)) return BIMUdaView.Value;
                 if (BIMUdaView.IntValue != 0) return BIMUdaView.IntValue.ToString();
                 if (BIMUdaView.DoubleValue != 0) return BIMUdaView.DoubleValue.ToString();
                 return string.Empty;

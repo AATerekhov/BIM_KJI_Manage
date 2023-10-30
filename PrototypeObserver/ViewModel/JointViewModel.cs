@@ -15,24 +15,17 @@ namespace PrototypeObserver.ViewModel
     {
         public BIMJoint _bIMJoint { get; set; }
         public ContainerForSelected InContainerForSelected { get; set; }
-        public JointViewModel(BIMJoint joint, TreeViewItemViewModel parentDirectory, ContainerForSelected containerForSelected)
+        public JointViewModel(BIMPartChildren joint, TreeViewItemViewModel parentDirectory, ContainerForSelected containerForSelected)
             : base(parentDirectory, false)
         {
-            _bIMJoint = joint;
+            _bIMJoint = joint.Joint;
             InContainerForSelected = containerForSelected;
             this.PropertyChanged += PrototypeNameViewModel_PropertyChanged;
             LoadChildren();
         }
         public string Name
         {
-            get { return _bIMJoint.Name; }
-            set { _bIMJoint.Name = value;}
-        }
-
-        public string Number
-        {
-            get { return _bIMJoint.Prefix; }
-            set { _bIMJoint.Prefix = value; }
+            get { return _bIMJoint.ToString(); }
         }
 
         private void PrototypeNameViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -48,6 +41,22 @@ namespace PrototypeObserver.ViewModel
 
         protected override void LoadChildren()
         {
+            foreach (BIMPartChildren assembly in _bIMJoint.OwnChildren.GetAssembly())
+                base.Children.Add(new AssemblyViewModel(assembly.Assembly, this, InContainerForSelected));
+            foreach (BIMPartChildren boolean in _bIMJoint.OwnChildren.GetBoolean())
+                base.Children.Add(new ChildrenPartViewModel(boolean, this, InContainerForSelected));
+            foreach (BIMPartChildren reinforcement in _bIMJoint.OwnChildren.GetReinforcement())
+                base.Children.Add(new ChildrenPartViewModel(reinforcement, this, InContainerForSelected));
+            foreach (BIMPartChildren bolts in _bIMJoint.OwnChildren.GetBolts())
+                base.Children.Add(new ChildrenPartViewModel(bolts, this, InContainerForSelected));
+            foreach (BIMPartChildren joints in _bIMJoint.OwnChildren.GetJoints())
+                base.Children.Add(new JointViewModel(joints, this, InContainerForSelected));
+
+            foreach (BIMPart partBox in _bIMJoint.Children)
+            {
+                base.Children.Add(new PartViewModel(partBox, this, InContainerForSelected));
+            }
+
         }
         public override CoordinateSystem GetBase()
         {
@@ -60,7 +69,20 @@ namespace PrototypeObserver.ViewModel
 
         public override string ToString()
         {
-            return $"{Name}_{Number}";
+            return _bIMJoint.ToString();
+        }
+        public override void Insert(Model model)
+        {
+            WorkPlaneWorker workPlaneWorker = new WorkPlaneWorker(model);
+            workPlaneWorker.GetWorkPlace(_bIMJoint.BaseStructure);
+
+            foreach (var item in Children)
+            {
+                if (item is ChildrenPartViewModel childrenPartVM) childrenPartVM.Insert(model);
+                else if (item is PartViewModel partViewModel) partViewModel.Insert(model);
+            }
+
+            workPlaneWorker.ReturnWorkPlace();
         }
     }
 }

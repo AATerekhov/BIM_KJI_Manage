@@ -89,6 +89,18 @@ namespace BIMPropotype_Lib.ExtentionAPI.PartChildren
             }
             return bolts;
         }
+        public static List<BIMPartChildren> GetJoints(this List<BIMPartChildren> children)
+        {
+            List<BIMPartChildren> joints = new List<BIMPartChildren>();
+            foreach (var child in children)
+            {
+                if (child.ChildrenType == PartChildrenType.joint)
+                {
+                    joints.Add(child);
+                }
+            }
+            return joints;
+        }
 
         public static CoordinateSystem GetBaseStructure(this Beam beam) 
         {
@@ -146,7 +158,19 @@ namespace BIMPropotype_Lib.ExtentionAPI.PartChildren
             cloneCS.AxisY = cs.AxisY;
             return cloneCS;
         }
+        public static List<Part> GetPartJoint(this BIMPart bIMPart)
+        {
+            List<Part> parts = new List<Part>();
+            var joints = bIMPart.Children.Where(p => p.ChildrenType == PartChildrenType.joint).ToList();
 
-
+            foreach (var joint in joints) 
+            {
+                foreach (var item in joint.Joint.Children)
+                {
+                    parts.Add(item.GetPart());
+                }
+            }
+            return parts;
+        }
     }
 }

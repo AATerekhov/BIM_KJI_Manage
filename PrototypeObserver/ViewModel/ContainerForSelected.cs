@@ -8,11 +8,46 @@ using System.Threading.Tasks;
 using BIMPropotype_Lib.Model;
 using DrawingCopierLib.Transfer.Model;
 using TeklaGridConverting.Model;
+using PrototypeObserver.Extentions;
 
 namespace PrototypeObserver.ViewModel
 {
     public class ContainerForSelected : INotifyPropertyChanged
     {
+        public ObservableCollection<PresetElement> PresetElements{ get; set; }
+
+        private PresetElement _selectPreset;
+        public PresetElement SelectPreset
+        {
+            get { return _selectPreset; }
+            set
+            {
+                _selectPreset = value;
+
+                if (_selectPreset != null)
+                    if (IsDynamic)
+                        if (SelectedElement != null) 
+                            if (_selectPreset.Distance != 0)
+                                if (SelectedElement.DynamicProperties[0].BIMProperty != _selectPreset.Distance)
+                                    SelectedElement.DynamicProperties[0].BIMProperty = _selectPreset.Distance;
+
+                this.OnPropertyChanged("SelectPreset");
+            }
+        }
+
+        private bool _isDynamic = false;
+        public bool IsDynamic
+        {
+            get
+            {
+                return _isDynamic;
+            }
+            set 
+            { 
+                _isDynamic = value;
+                this.OnPropertyChanged("IsDynamic");
+            }
+        }
 
         private TreeViewItemViewModel _selectedElement;
 
@@ -27,6 +62,8 @@ namespace PrototypeObserver.ViewModel
                     GetUDAs(_selectedElement);
                     TransferBase.UCSFinish = _selectedElement.GetBase().CreateUniversalCoordinatSystem();
 
+                    IsDynamic = CheckIsDynamic(_selectedElement);
+
                     this.OnPropertyChanged("DistanceX");
                     this.OnPropertyChanged("DistanceY");
                     this.OnPropertyChanged("DistanceZ");
@@ -34,6 +71,37 @@ namespace PrototypeObserver.ViewModel
                     this.OnPropertyChanged("AngleX");
                     this.OnPropertyChanged("AngleZ");
                 }
+                this.OnPropertyChanged("SelectedElement");
+            }
+        }
+
+        private bool CheckIsDynamic(TreeViewItemViewModel treeViewItemViewModel)
+        {
+            PresetElements.Clear();
+            if (treeViewItemViewModel.DynamicProperties != null)
+            {
+                if (treeViewItemViewModel.DynamicProperties.Count > 0) 
+                {
+                    if (treeViewItemViewModel is AssemblyViewModel assemblyViewModel)
+                    {
+                        var listPreset = assemblyViewModel._bIMAssembly.Meta.DeserializeXMLPresets();
+
+                        foreach (var item in listPreset)
+                        {
+                            PresetElements.Add(item);
+                        }
+
+                        SelectPreset = PresetElements.Where(x => x.Distance == treeViewItemViewModel.DynamicProperties[0].BIMProperty).FirstOrDefault();
+                    }
+
+
+                    return true; 
+                }
+                else return false;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -136,6 +204,7 @@ namespace PrototypeObserver.ViewModel
         {
             UDAs = new ObservableCollection<UDALineViewModel>();
             TransferBase = new TransferBasis();
+            PresetElements = new ObservableCollection<PresetElement>();
         }
 
         private void GetUDAs(TreeViewItemViewModel treeViewItemViewModel) 

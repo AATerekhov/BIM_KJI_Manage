@@ -65,10 +65,6 @@ namespace BIMPropotype_Lib.ExtentionAPI.Conductor
             {
                 return BIMType.BIMJoint;
             }
-            if (list[3] == Extention)
-            {
-                return BIMType.BIMPart;
-            }
             return BIMType.Error;
         }
 
@@ -86,7 +82,7 @@ namespace BIMPropotype_Lib.ExtentionAPI.Conductor
 
         public static string[] GetExtentionList()
         {
-            return new string[4] { ".ass", ".str", ".jnt", ".prt" };
+            return new string[3] { ".ass", ".str", ".jnt"};
         }
 
         public static string GetNewShortGUID()
@@ -103,7 +99,19 @@ namespace BIMPropotype_Lib.ExtentionAPI.Conductor
             else return '_';
             //Дать при вызове проверку на пустоту.
         }
-        public static string GetModelDirectory(this TSM.Model model) => model.GetInfo().ModelPath;
+        public static string GetModelDirectory(this TSM.Model model) 
+        {
+            if (model.GetConnectionStatus())
+            {
+                var path = model.GetInfo().ModelPath;
+                if (path != null)
+                {
+                    return path;
+                }
+            }
+
+            return string.Empty;
+        }
         public static string GetDataDirectory()
         {
             string foulderName = "SISPrototipeTemplate";
@@ -172,6 +180,7 @@ namespace BIMPropotype_Lib.ExtentionAPI.Conductor
         public static string GetFilePath(this MetaDirectory meta) => Path.Combine(GetDataDirectory(), meta.GetNameFile());
         public static string GetNameFile(this BIMAssembly bIMAssembly) => bIMAssembly.Meta.GetNameFile();        
         public static string GetNameFile(this MetaDirectory meta) => $"{meta}{meta.Type.GetMetaSepporate()}{meta.ShortGUID}{meta.Type.GetExtention()}";
+        public static string GetNameFilePresets(this MetaDirectory meta) => $"{meta}{meta.Type.GetMetaSepporate()}{meta.ShortGUID}.aps";
         public static List<string> GetNameList(this BIMType type)
         {
             List<string> rezult = new List<string>();

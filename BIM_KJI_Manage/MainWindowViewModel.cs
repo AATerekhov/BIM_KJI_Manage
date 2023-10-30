@@ -49,10 +49,6 @@ namespace Propotype_Manage
             //obj.DeserializeXML();
         }
 
-        //private void InPrototypeViewModel_CreatePrototypeSelect(BIMAssembly obj)
-        //{
-        //    obj.SerializeXML();
-        //}
 
         private void InPrototypeViewModel_ModifyBIMAssemblySelect(BIMAssembly obj)
         {

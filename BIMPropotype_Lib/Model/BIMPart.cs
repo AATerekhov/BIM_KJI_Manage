@@ -11,6 +11,7 @@ using BIMPropotype_Lib.Model.Custom;
 using Tekla.Structures.Geometry3d;
 using BIMPropotype_Lib.Controller;
 using System.Collections;
+using BIMPropotype_Lib.ViewModel;
 
 namespace BIMPropotype_Lib.Model
 {
@@ -18,11 +19,6 @@ namespace BIMPropotype_Lib.Model
     //Класс контейнер для обобщенного хранения BIMPart.
     public class BIMPart: IUDAContainer,IStructure, IBIMCollection
     {
-        [XmlIgnore]
-        public string Class
-        {
-            get { return GetPart().Class; }
-        }
         public List<BIMPartChildren> Children { get; set; }
         #region BoxObject
         public CustomBeam Beam { get; set; }
@@ -104,6 +100,77 @@ namespace BIMPropotype_Lib.Model
 
             workPlaneWorker.ReturnWorkPlace();
         }
+
+        public void TransformationОfТodes(MetaDirectory metaAssembly)
+        {
+            var startPoint = Beam.Support.GetFirst();
+            var start = new BIMPartChildren(startPoint, new MetaDirectory(BIMType.BIMJoint, "StartPoint", metaAssembly.ToMark(), 1));
+            var endPoint = Beam.Support.GetSecond();
+            var end = new BIMPartChildren(Beam.Support.GetSecond(), new MetaDirectory(BIMType.BIMJoint, "EndPoint", metaAssembly.ToMark(), 2));
+            var startMatrix = MatrixFactory.ByCoordinateSystems(this.BaseStructure, start.BaseStructure);
+            var endMatrix = MatrixFactory.ByCoordinateSystems(this.BaseStructure, end.BaseStructure);
+            var children = new List<BIMPartChildren>(Children);
+            foreach (var сhild in children)
+            {
+                var point = сhild.BaseStructure.Origin;
+                var startDistance = Distance.PointToPoint(startPoint, point);
+                var endDistance = Distance.PointToPoint(endPoint, point);
+
+                if (startDistance < endDistance)
+                {
+                    if (startDistance < 1000)
+                    {
+                        Children.Remove(сhild);
+
+                        start.Joint.AddOwn(сhild, startMatrix);
+                    }
+                }
+                else
+                {
+                    if (endDistance < 1000)
+                    {
+                        Children.Remove(сhild);
+                        end.Joint.AddOwn(сhild, endMatrix);
+                    }
+                }
+            }
+
+            Children.Add(start);
+            Children.Add(end);
+        }
+
+        public bool AddBIMPart(BIMPart bIMPart ) 
+        {
+            var point = bIMPart.BaseStructure.Origin;
+
+            var start = Children.Where(p => p.ChildrenType == PartChildrenType.joint && p.Joint.Meta.Number == 1).FirstOrDefault();
+            var end = Children.Where(p => p.ChildrenType == PartChildrenType.joint && p.Joint.Meta.Number == 2).FirstOrDefault();
+
+            var startDistance = Distance.PointToPoint(start.BaseStructure.Origin, point);
+            var endDistance = Distance.PointToPoint(end.BaseStructure.Origin, point);
+
+            if (startDistance < endDistance)
+            {
+                if (startDistance < 1500)
+                {
+                    start.Joint.AddPart(bIMPart);
+                    return true;
+                }
+            }
+            else
+            {
+                if (endDistance < 1500)
+                {
+                    var matrix = MatrixFactory.ByCoordinateSystems(this.BaseStructure, end.BaseStructure);
+                    bIMPart.BaseStructure.Origin = matrix.Transform(bIMPart.BaseStructure.Origin);
+                    end.Joint.AddPart(bIMPart);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
 
         public  void Insert(IStructure father)
         {

@@ -84,6 +84,7 @@
     <Compile Include="ExtentionAPI\Conductor\StructureExtentions.cs" />
     <Compile Include="ExtentionAPI\InserPlugin\PrefixDirectoryExtentions.cs" />
     <Compile Include="ExtentionAPI\Mirror\PartExtentions.cs" />
+    <Compile Include="ExtentionAPI\PartChildren\AssemblyExtentions.cs" />
     <Compile Include="ExtentionAPI\PartChildren\PartChildrenExtenthions.cs" />
     <Compile Include="Model\BIMJoint.cs" />
     <Compile Include="Model\BIMPartChildren.cs" />
